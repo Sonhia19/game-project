@@ -1,11 +1,10 @@
 /** @type {import("../typings/phaser")}  */
 
-import { LoadScene } from './scenes/LoadScene.js';
-import { MenuScene } from './scenes/MenuScene.js';
-import { GameScene } from './scenes/GameScene.js';
-import { WebSocketClient } from './client/WebSocketClient.js';
+import { LoadScene } from '..';
+// import { MenuScene } from './scenes/MenuScene.js';
+// import { GameScene } from './scenes/GameScene.js';
+// import { WebSocketClient } from './client/WebSocketClient.js';
 
-// var users = {};
 
 var config = {
     scale: {

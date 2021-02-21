@@ -1,4 +1,16 @@
+// import { Plane } from './objects/plane.js';
+// import { Turret } from './objects/turret.js';
+// import { Bullet } from './objects/bullet.js';
+// import { Enemy } from './objects/enemy.js';
+// import { Tower } from './objects/tower.js';
+// import { Fuel } from './objects/fuel.js';
+// import { Hangar } from './objects/hangar.js';
+// import { Bomb } from './objects/bomb.js';
+// import { Black } from './objects/black.js';
+
+
 export class LoadScene extends Phaser.Scene {  
+
     constructor() {
         super('GAME');
     } 
@@ -7,11 +19,10 @@ export class LoadScene extends Phaser.Scene {
         
     }
     
-	var ENEMY_SPEED = 1 / 10000;
+	ENEMY_SPEED = 1 / 10000;
+	BULLET_DAMAGE = 25;
 	
-	var BULLET_DAMAGE = 25;
-	
-	function preload() {
+	preload() {
 	    this.load.image('field', 'assets/field.jpg');
 	    this.load.image('black', 'assets/black.png');
 	    this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
@@ -23,7 +34,7 @@ export class LoadScene extends Phaser.Scene {
 	    this.load.image("explosionPlane", "./assets/explosion2.png");
 	}
 	
-	function create() {
+	create() {
 	
 	    this.add.image(500, 300, 'field');
 	
@@ -102,7 +113,7 @@ export class LoadScene extends Phaser.Scene {
 	
 	}
 	
-	function drawLines(graphics) {
+	drawLines(graphics) {
 	    graphics.lineStyle(1, 0x0000ff, 0.8);
 	    for (var i = 0; i < 8; i++) {
 	        graphics.moveTo(0, i * 64);
@@ -115,7 +126,7 @@ export class LoadScene extends Phaser.Scene {
 	    graphics.strokePath();
 	}
 	
-	function update(time, delta) {
+	update(time, delta) {
 	    if (Phaser.Input.Keyboard.JustDown(keyOne)) {
 	        if (planeOne.scene) {
 	            selectPlane(planeOne);
@@ -228,4 +239,6 @@ export class LoadScene extends Phaser.Scene {
 	            this.nextEnemy = time + 2000;
 	        }
 	    }
-	 } 
+	 }
+} 
+	 
