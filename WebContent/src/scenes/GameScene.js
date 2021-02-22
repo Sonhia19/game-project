@@ -9,7 +9,7 @@ import { Bomb } from '../objects/bomb.js';
 import { Black } from '../objects/black.js';
 
 
-export class LoadScene extends Phaser.Scene {  
+export class GameScene extends Phaser.Scene {  
 
     constructor() {
         super('GAME');
