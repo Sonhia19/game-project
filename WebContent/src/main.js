@@ -1,16 +1,7 @@
 
 import { LoadScene } from '../src/scenes/LoadScene.js';
 import { GameScene } from '../src/scenes/GameScene.js';
-import { GameHandler } from '../src/handler/GameHandler.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
-
-var contexto;
-window.onload = () => {
-	// Contexto
-	contexto = {
-        idBarco: 2,
-    }
-}
 
 var config = {
     scale: {
@@ -18,30 +9,33 @@ var config = {
         height: 600,
     },
     scene: [
-        GameScene
-    ]
+        LoadScene, GameScene
+    ],
+    webSocket: {},
+    functions: {},
+    messagesFormat: {}
 };
-var game = new Phaser.Game(config);
-game.config.webSocket = new WebSocketClient();
-//game.config.handler = new GameHandler();
 
 var functions = {
     changeScene: (last, next) => {
-        game.scene.remove(last);
-        game.scene.start(next);
+        context.game.scene.remove(last);
+        context.game.scene.start(next);
     },
 
     sendMessage: (message) => {
         console.log('FROM MAIN');
         console.log(message);
-        console.log(game.config.webSocket);
-        game.config.webSocket.sendMessage(message);
+        context.webSocket.sendMessage(message);
     },
 
     broadcastWebSocket: (webSocket) => {
+        console.log('On broadcast');
+        webSocket.onopen = (event) => {
+            console.log("conexion establecida");
+            console.log(event);
+        }
         webSocket.onmessage = (event) => {
             response = JSON.parse(event.data);
-
             console.log("nuevo mensaje del servidor");
             console.log(response);
         }
@@ -82,9 +76,10 @@ var messagesFormat = {
         })
     }
 };
-    
 
-
-game.config.functions = functions;
-//game.config.handler = new GameHandler();
-game.config.messagesFormat = messagesFormat;
+export const context = {
+    game: new Phaser.Game(config),
+    webSocket: new WebSocketClient(),
+    functions: functions,
+    messagesFormat: messagesFormat
+};

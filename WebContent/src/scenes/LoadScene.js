@@ -1,4 +1,6 @@
 
+import { context } from '../../src/main.js';
+
 export class LoadScene extends Phaser.Scene {  
     constructor() {
         super('LOAD');
@@ -11,7 +13,8 @@ export class LoadScene extends Phaser.Scene {
     preload() {
 
         console.log('FROM LOAD');
-        this.sys.game.config.webSocket.connect();
+        console.log(context);
+        context.webSocket.connect();
 
         //this.load.image('background_load', 'img/background-load.jpg');
 

@@ -7,7 +7,7 @@ import { Fuel } from '../objects/fuel.js';
 import { Hangar } from '../objects/hangar.js';
 import { Bomb } from '../objects/bomb.js';
 import { Black } from '../objects/black.js';
-
+import { context } from '../../src/main.js';
 
 export class GameScene extends Phaser.Scene {  
 
@@ -34,10 +34,10 @@ export class GameScene extends Phaser.Scene {
 	    // this.load.image("bomb", "./assets/bomb.png");
 	    // this.load.image("explosionPlane", "./assets/explosion2.png");
 		console.log('FROM GAME');
-		this.sys.game.config.webSocket.connect();
-		var message = this.sys.game.config.messagesFormat.chat('Se ha conectado un nuevo jugador');
+		//context.webSocket.connect();
+		var message = context.messagesFormat.chat('Se ha conectado un nuevo jugador');
 		console.log('Sending message to server' + message);
-		this.sys.game.config.webSocket.sendMessage(message);
+		context.webSocket.sendMessage(message);
 	}
 	
 	create() {

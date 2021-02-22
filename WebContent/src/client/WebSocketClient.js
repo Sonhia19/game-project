@@ -1,3 +1,5 @@
+import { context } from '../../src/main.js';
+
 export class WebSocketClient {
 	
 	constructor() {
@@ -6,8 +8,7 @@ export class WebSocketClient {
 	connect() {
 		try {
 			this.webSocket = new WebSocket("ws://localhost:8080/game-project/websocketendpoint");
-			console.log(this);
-			this.game.config.functions.broadcastWebSocket(this.webSocket);
+			context.functions.broadcastWebSocket(this.webSocket);
 		} catch (excepcion) {			
 			console.log(excepcion);
 		}
@@ -15,9 +16,7 @@ export class WebSocketClient {
 	
 	sendMessage(message) {
 		console.log('ws sending');
-		console.log('otro');
 		console.log(this.webSocket.readyState);
-		console.log(contexto);
 		if (this.webSocket.readyState == WebSocket.OPEN) {
 			this.webSocket.send(message);
 		}
