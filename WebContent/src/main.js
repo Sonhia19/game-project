@@ -1,8 +1,7 @@
 /** @type {import("../typings/phaser")}  */
 
-import { LoadScene } from '..';
-// import { MenuScene } from './scenes/MenuScene.js';
-// import { GameScene } from './scenes/GameScene.js';
+import { LoadScene } from '../src/scenes/LoadScene.js';
+import { GameScene } from '../src/scenes/GameScene.js';
 // import { WebSocketClient } from './client/WebSocketClient.js';
 
 
@@ -20,4 +19,4 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-game.config.webSocket = new WebSocketClient();
+// game.config.webSocket = new WebSocketClient();

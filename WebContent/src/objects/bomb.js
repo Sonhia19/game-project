@@ -1,21 +1,17 @@
-var Bomb = new Phaser.Class({
+export class Bomb extends Phaser.GameObjects.Image {
 
-    Extends: Phaser.GameObjects.Image,
+    constructor(scene) {
+        Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bomb');
 
-    initialize:
+        this.reach = 0;
+        this.incX = 0;
+        this.incY = 0;
+        this.lifespan = 0;
+        this.bombAngle = ANGLE_90;
+        this.speed = Phaser.Math.GetSpeed(150, 1);
+    }
 
-        function Bomb(scene) {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bomb');
-
-            this.reach = 0;
-            this.incX = 0;
-            this.incY = 0;
-            this.lifespan = 0;
-            this.bombAngle = ANGLE_90;
-            this.speed = Phaser.Math.GetSpeed(150, 1);
-        },
-
-    fire: function (x, y, angle, reach) {
+    fire (x, y, angle, reach) {
         switch (angle) {
             case ANGLE_90:
                 this.setPosition(x + 20, y);
@@ -35,9 +31,9 @@ var Bomb = new Phaser.Class({
         this.reach = reach;
         this.setActive(true);
         this.setVisible(true);
-    },
-
-    update: function (time, delta) {
+    }
+    
+    update (time, delta) {
         switch (this.bombAngle) {
             case ANGLE_90:
                 this.x += this.speed * delta;
@@ -64,27 +60,28 @@ var Bomb = new Phaser.Class({
                 }
                 break;
         }
-    },
-
-});
-
-function explosionHangar(hangar, bomb) {
-    if (hangar.active === true && bomb.active === true) {
-        hangar.destroy();
-        bomb.destroy();
     }
+
+    explosionHangar(hangar, bomb) {
+        if (hangar.active === true && bomb.active === true) {
+            hangar.destroy();
+            bomb.destroy();
+        }
+    }
+    
+    explosionFuel(fuel, bomb) {
+        if (fuel.active === true && bomb.active === true) {
+            fuel.destroy();
+            bomb.destroy();
+        }
+    }
+    
+    explosionTower(tower, bomb) {
+        if (tower.active === true && bomb.active === true) {
+            tower.destroy();
+            bomb.destroy();
+        }
+    }
+
 }
 
-function explosionFuel(fuel, bomb) {
-    if (fuel.active === true && bomb.active === true) {
-        fuel.destroy();
-        bomb.destroy();
-    }
-}
-
-function explosionTower(tower, bomb) {
-    if (tower.active === true && bomb.active === true) {
-        tower.destroy();
-        bomb.destroy();
-    }
-}

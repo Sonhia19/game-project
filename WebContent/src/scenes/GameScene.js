@@ -1,12 +1,12 @@
-// import { Plane } from './objects/plane.js';
-// import { Turret } from './objects/turret.js';
-// import { Bullet } from './objects/bullet.js';
-// import { Enemy } from './objects/enemy.js';
-// import { Tower } from './objects/tower.js';
-// import { Fuel } from './objects/fuel.js';
-// import { Hangar } from './objects/hangar.js';
-// import { Bomb } from './objects/bomb.js';
-// import { Black } from './objects/black.js';
+import { Plane } from '../objects/plane.js';
+import { Turret } from '../objects/turret.js';
+import { Bullet } from '../objects/bullet.js';
+import { Enemy } from '../objects/enemy.js';
+import { Tower } from '../objects/tower.js';
+import { Fuel } from '../objects/fuel.js';
+import { Hangar } from '../objects/hangar.js';
+import { Bomb } from '../objects/bomb.js';
+import { Black } from '../objects/black.js';
 
 
 export class LoadScene extends Phaser.Scene {  
@@ -93,9 +93,9 @@ export class LoadScene extends Phaser.Scene {
 	
 	    this.physics.add.overlap(enemies, bullets, damageEnemy);
 	
-	    this.physics.add.overlap(bombs, hangars, explosionHangar);
-	    this.physics.add.overlap(bombs, fuels, explosionFuel);
-	    this.physics.add.overlap(bombs, towers, explosionTower);
+	    this.physics.add.overlap(bombs, hangars, Bomb.explosionHangar());
+	    this.physics.add.overlap(bombs, fuels, Bomb.explosionFuel());
+	    this.physics.add.overlap(bombs, towers, Bomb.explosionTower());
 	
 	    cursors = this.input.keyboard.createCursorKeys();
 	    placeTurret(75, 850);
