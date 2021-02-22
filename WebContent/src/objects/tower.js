@@ -1,21 +1,17 @@
-var Tower = new Phaser.Class({
+export class Tower extends Phaser.GameObjects.Image {
 
-    Extends: Phaser.GameObjects.Image,
-
-    initialize:
-
-        function Tower(scene) {
+    constructor(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesBase', 'tower');
             this.nextTic = 0;
-        },
-    place: function (i, j) {
-        this.y = i;
-        this.x = j;
+    }
+    place (i2, j2) {
+        this.y = i2;
+        this.x = j2;
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.3);
-    },
-    fire: function () {
+    }
+    fire () {
         if (plane != null) {
             if (plane.scene) {
                 var angle = Phaser.Math.Angle.Between(this.x, this.y, plane.x, plane.y);
@@ -26,11 +22,11 @@ var Tower = new Phaser.Class({
                 //this.angle = (angle + Math.PI/2) * Phaser.Math.RAD_TO_DEG;
             }
         }
-    },
-    update: function (time, delta) {
+    }
+    update (time, delta) {
         if (time > this.nextTic) {
             this.fire();
             this.nextTic = time + 1500;
         }
     }
-});
+}

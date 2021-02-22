@@ -6,13 +6,10 @@
 //     } 
 // }
 
-var Plane = new Phaser.Class({
+export class Plane extends Phaser.GameObjects.Image{
 
-    Extends: Phaser.GameObjects.Image,
-
-    initialize:
-
-        function Plane(scene) {
+    constructor(scene) 
+    {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'sprites', 'plane');
             this.fuel = 100;
             this.hp = 100;
@@ -23,17 +20,17 @@ var Plane = new Phaser.Class({
             this.planeAngle = ANGLE_90;
             this.speed = Phaser.Math.GetSpeed(100, 1);
             this.cadency = 0;
-        },
-    place: function (i, j) {
+        }
+    place (i, j) {
         this.y = i;
         this.x = j;
         this.setActive(true);
         this.setVisible(true);
-    },
+    }
     emptyTank() {
         var i = 1;
         this.startCrash(i);
-    },
+    }
     startCrash(i) {
         setTimeout(function () {
             i++;
@@ -44,8 +41,8 @@ var Plane = new Phaser.Class({
             }
             setTimeout("plane.crash();", 250)
         }, 2000)
-    },
-    fire: function (time) {
+    }
+    fire (time) {
         var bullet = bullets.get();
         var reach;
         if (bullet) {
@@ -67,15 +64,15 @@ var Plane = new Phaser.Class({
 
             this.cadency = time + 150;
         }
-    },
-    receiveDamage: function (damage) {
+    }
+    receiveDamage (damage) {
         this.hp -= damage;
 
         if (this.hp <= 0) {
             this.crash();
         }
-    },
-    fireBomb: function () {
+    }
+    fireBomb () {
         var bomb = bombs.get();
         bomb.setScale(0.1);
         var reach;
@@ -97,8 +94,8 @@ var Plane = new Phaser.Class({
             bomb.fire(plane.x, plane.y, this.planeAngle, reach);
             plane.withBomb = false;
         }
-    },
-    place: function (i, j, item, world, angle) {
+    }
+    place (i, j, item, world, angle) {
         this.y = i;
         this.x = j;
         var largo = 50;
@@ -122,26 +119,26 @@ var Plane = new Phaser.Class({
         }
         world.physics.add.overlap(bulletsTurret, this, torretPlane);
         world.physics.add.overlap(this, blacks, exploreMap);
-    },
-    update: function (time, delta) {
+    }
+    update (time, delta) {
 
-    },
-    consumeFuel: function () {
+    }
+    consumeFuel () {
         if (this.fuel > 0) {
             //this.fuel -= this.highFly ? 0.2 : 0.1;
         }
         if (this.fuel < 0 && this.fuel > -1) {
             this.emptyTank();
         }
-    },
+    }
     crash() {
         this.black = false;
         plane.destroy();
-    },
+    }
     takeOff() {
         this.flying = true;
         this.setTexture('sprites', 'plane_flying');
-    },
+    }
     land() {
         if (this.x < SAFE_ZONE_X) {
             this.flying = false;
@@ -154,7 +151,7 @@ var Plane = new Phaser.Class({
         }
 
 
-    },
+    }
     fly(move, angle, orientation, errase, delta) {
         if (this.flying) {
             if (move) {
@@ -184,80 +181,80 @@ var Plane = new Phaser.Class({
 
     }
 
-});
 
-function placePlane(i, j, item, world, angle) {
-    var plane = planes.get();
-    if (plane) {
-        plane.place(i, j, item, world, angle);
+    placePlane(i, j, item, world, angle) {
+        var plane = planes.get();
+        if (plane) {
+            plane.place(i, j, item, world, angle);
+        }
     }
-}
 
-function selectPlane(p) {
-    if (plane != p) {
-        if (!checkOtherPlaneFlying(p)) {
-            angle = ANGLE_90;
-            if (planeOne.scene) { unselectPlane(planeOne); };
-            if (planeTwo.scene) { unselectPlane(planeTwo); };
-            if (planeThree.scene) { unselectPlane(planeThree); };
-            if (planeFour.scene) { unselectPlane(planeFour); };
-            plane = p;
-            plane.angle = angle;
-            plane.planeAngle = angle;
-            p.flying = false;
-            p.setTexture('sprites', 'plane_landed');
+    selectPlane(p) {
+        if (plane != p) {
+            if (!checkOtherPlaneFlying(p)) {
+                angle = ANGLE_90;
+                if (planeOne.scene) { unselectPlane(planeOne); };
+                if (planeTwo.scene) { unselectPlane(planeTwo); };
+                if (planeThree.scene) { unselectPlane(planeThree); };
+                if (planeFour.scene) { unselectPlane(planeFour); };
+                plane = p;
+                plane.angle = angle;
+                plane.planeAngle = angle;
+                p.flying = false;
+                p.setTexture('sprites', 'plane_landed');
+
+            }
+            else {
+                console.log("No puede volar");
+            }
 
         }
-        else {
-            console.log("No puede volar");
+    }
+    unselectPlane(p) {
+        p.setTexture('sprites', 'plane');
+        p.flying = false;
+    }
+
+    checkOtherPlaneFlying(p) {
+        var oneFlying = false, twoFlying = false, threeFlying = false, fourFlying = false
+        if (p != planeOne) {
+            oneFlying = planeOne.flying;
+        }
+        if (p != planeTwo) {
+            twoFlying = planeTwo.flying;
+        }
+        if (p != planeThree) {
+            threeFlying = planeThree.flying;
+        }
+        if (p != planeFour) {
+            fourFlying = planeFour.flying;
+        }
+        return oneFlying || twoFlying || threeFlying || fourFlying;
+    }
+
+    // explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
+    collisionPlane() {
+        if (plane.active === true && plane2.active === true) {
+            plane.destroy();
+            plane2.destroy();
+            collision.setVisible(true);
+            setTimeout("collision.setVisible(false)", 150)
+            //collision.setVisible(false);
+
         }
 
-    }
-}
-function unselectPlane(p) {
-    p.setTexture('sprites', 'plane');
-    p.flying = false;
-}
-
-function checkOtherPlaneFlying(p) {
-    var oneFlying = false, twoFlying = false, threeFlying = false, fourFlying = false
-    if (p != planeOne) {
-        oneFlying = planeOne.flying;
-    }
-    if (p != planeTwo) {
-        twoFlying = planeTwo.flying;
-    }
-    if (p != planeThree) {
-        threeFlying = planeThree.flying;
-    }
-    if (p != planeFour) {
-        fourFlying = planeFour.flying;
-    }
-    return oneFlying || twoFlying || threeFlying || fourFlying;
-}
-
-// explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
-function collisionPlane() {
-    if (plane.active === true && plane2.active === true) {
-        plane.destroy();
-        plane2.destroy();
-        collision.setVisible(true);
-        setTimeout("collision.setVisible(false)", 150)
-        //collision.setVisible(false);
-
+        //alert("Choque aviones");
     }
 
-    //alert("Choque aviones");
-}
+    highFlyPlane(plane) {
 
-function highFlyPlane(plane) {
+        //Tamaño
+        var height = 50;
+        plane.displayWidth = plane.highFly ? height * 1.2 : height;
+        plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
 
-    //Tamaño
-    var height = 50;
-    plane.displayWidth = plane.highFly ? height * 1.2 : height;
-    plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
+        //Velocidad
+        plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
 
-    //Velocidad
-    plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
-
+    }
 }

@@ -16,4 +16,4 @@ export class Fuel extends Phaser.GameObjects.Image {
     {
         
     }
-});
+}

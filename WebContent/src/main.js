@@ -7,13 +7,14 @@ import { GameScene } from '../src/scenes/GameScene.js';
 
 var config = {
     scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
+        //mode: Phaser.Scale.FIT,
+        //autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 500,
         height: 500,
     },
     scene: [
-        LoadScene, MenuScene, GameScene
+        //LoadScene, MenuScene, GameScene
+        LoadScene, GameScene
     ]
     
 };
