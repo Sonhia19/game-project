@@ -12,6 +12,7 @@ public class WsServer {
 	@OnOpen
 	public void onOpen(){
 		System.out.println("Open Connection ...");
+		String echoMsg = "Echo from the server : ";
 	}
 	
 	@OnClose

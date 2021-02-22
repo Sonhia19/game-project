@@ -9,7 +9,8 @@ export class LoadScene extends Phaser.Scene {
 
     preload() {
 
-        // this.game.config.webSocket.connect();
+        console.log(game)
+        //game.config.webSocket.connect();
 
         this.load.image("background_load", "./assets/background-load.jpg");
         this.load.image("background_menu", "./assets/background-menu.jpg");
