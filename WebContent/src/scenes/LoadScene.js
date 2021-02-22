@@ -1,3 +1,4 @@
+
 export class LoadScene extends Phaser.Scene {  
     constructor() {
         super('LOAD');
@@ -9,30 +10,31 @@ export class LoadScene extends Phaser.Scene {
 
     preload() {
 
-        console.log(game)
-        //game.config.webSocket.connect();
+        this.sys.game.config.webSocket.connect();
 
-        this.load.image("background_load", "./assets/background-load.jpg");
-        this.load.image("background_menu", "./assets/background-menu.jpg");
+        this.load.image('background_load', 'img/background-load.jpg');
 
-        this.load.audio("landing_sound", "./assets/landing-sound.mp3");
+        // this.load.image("background_load", "img/background-load.jpg");
+        // this.add.image(900, 600, 'background_load');
+        // this.load.image("background_menu", "/assets/background-menu.jpg");
+        // this.load.audio("landing_sound", "/assets/load-sound.mp3");
 
-        let progressBar = this.add.graphics({
-            fillStyle: {
-                color: 0xFFFFFF
-            }
-        })
+        // let progressBar = this.add.graphics({
+        //     fillStyle: {
+        //         color: 0xFFFFFF
+        //     }
+        // })
 
-        this.load.on("progress", (percent)=> {
+        // this.load.on("progress", (percent)=> {
 
-            progressBar.fillRect(0, this.game.renderer.height / 2,
-                this.game.renderer.width * percent, 50);
-            console.log(percent);
-        })
+        //     progressBar.fillRect(0, this.game.renderer.height / 2,
+        //         this.game.renderer.width * percent, 50);
+        //     console.log(percent);
+        // })
 
-        this.load.on("complete", (percent)=> {
-            console.log("done");
-        })
+        // this.load.on("complete", (percent)=> {
+        //     console.log("done");
+        // })
         
     }
 
