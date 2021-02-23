@@ -1,6 +1,7 @@
 
 import { LoadScene } from '../src/scenes/LoadScene.js';
 import { GameScene } from '../src/scenes/GameScene.js';
+import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 
 var config = {
@@ -9,11 +10,8 @@ var config = {
         height: 600,
     },
     scene: [
-        LoadScene, GameScene
-    ],
-    webSocket: {},
-    functions: {},
-    messagesFormat: {}
+        LoadScene, NewGameScene, GameScene
+    ]
 };
 
 var functions = {
@@ -23,8 +21,6 @@ var functions = {
     },
 
     sendMessage: (message) => {
-        console.log('FROM MAIN');
-        console.log(message);
         context.webSocket.sendMessage(message);
     },
 
@@ -35,11 +31,30 @@ var functions = {
             console.log(event);
         }
         webSocket.onmessage = (event) => {
-            response = JSON.parse(event.data);
+            var response = JSON.parse(event.data);
             console.log("nuevo mensaje del servidor");
             console.log(response);
+
+            if (response.action.name == 'newGame') {
+                context.gameId = parseInt(response.responses[0].value);
+                //este send message seria para obtener informacion luego de iniciada la partida
+                //context.functions.sendMessage(context.messagesFormat.newGame());
+                context.functions.changeScene('NEWGAME','GAME');
+            }
+
+            if (response.action.name == 'connectToGame') {
+                context.gameId = parseInt(response.responses[0].value);
+               //context.functions.sendMessage(context.messagesFormat.syncGame());
+                context.functions.changeScene('LOAD','GAME');
+            }
+            
+            if (response.action.name == 'syncGame') {
+                context.gameSession = JSON.parse(response.responses[0].value);
+            }
         }
     },
+
+    
 };
 
 var messagesFormat = {
@@ -65,21 +80,45 @@ var messagesFormat = {
             }
         })
     },
-    chat: (message) => {
+    // chat: (message) => {
+    //     return JSON.stringify({
+    //         action: {
+    //             name: 'chat',
+    //             parameters: {
+    //                 userMessage: message
+    //             }
+    //         }
+    //     })
+    // },
+    connectToGame: () => {
         return JSON.stringify({
             action: {
-                name: 'chat',
+                name: 'connectToGame',
                 parameters: {
-                    userMessage: message
+                    gameId: context.gameId
                 }
             }
         })
-    }
+    },
+    
+    syncGame: () => {
+        return JSON.stringify({
+            action: {
+                name: 'syncGame',
+                parameters: {
+                    gameId: context.gameId,
+                }
+            }
+        })
+    },
 };
 
 export const context = {
     game: new Phaser.Game(config),
     webSocket: new WebSocketClient(),
     functions: functions,
-    messagesFormat: messagesFormat
+    messagesFormat: messagesFormat,
+    gameId: null,
+    gameSession: {},
+    currentScene: 'LOAD'
 };

@@ -13,7 +13,6 @@ export class LoadScene extends Phaser.Scene {
     preload() {
 
         console.log('FROM LOAD');
-        console.log(context);
         context.webSocket.connect();
 
         //this.load.image('background_load', 'img/background-load.jpg');
@@ -43,6 +42,6 @@ export class LoadScene extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start("GAME", "hello from LOAD scene");
+        this.scene.start("NEWGAME", "hello from LOAD scene");
     }
 }

@@ -18,8 +18,12 @@ public class Facade implements IFacade {
 
     public static Facade getInstance() {
 
-        if (!(instance instanceof Facade))
+        if (!(instance instanceof Facade)) {
+        	System.out.println("New facade");
             instance = new Facade();
+            gameSessionsMap.put(1, new HashMap());
+        }
+        	
 
         return instance;
     }
@@ -33,17 +37,20 @@ public class Facade implements IFacade {
 
     	final WsResponse response = new WsResponse();
     	final Game game = new Game(1);
-        //gameSessionsMap.put(1, new HashMap());
-        
+
         response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		return response;
 		
     }
 
-    public void connectGameSession(final int gameId, final Session session) {
+    public WsResponse connectGameSession(final int gameId, final Session session) {
 
+    	final WsResponse response = new WsResponse();
         final HashMap<String, Session> gameSession = gameSessionsMap.get(gameId);
         gameSession.put(session.getId(), session);
+    	response.generateResponse("gameId", String.valueOf(gameId), "int");
+    	
+		return response;
     }
 
     public int disconnectGameSession(final Session session) {
@@ -53,11 +60,31 @@ public class Facade implements IFacade {
         sessions.remove(session);
         return 1;
     }
+    
+	public WsResponse getJsonGameSession(final int gameId, final String userId) {
+		WsResponse response = new WsResponse();
+		
+		// Verificamos si existe la partida.
+		/*if (!partidas.existe(idPartida)) {
+			r.setExito(false, "No existe la partida");
+			return r;
+		}
+		
+		// Obtenemos la partida.
+		Partida partida = partidas.obtener(idPartida);*/
+		final HashMap<String, Session> gameSession = gameSessionsMap.get(gameId);
+		final Game game = new Game(1, userId, gameSession.size());
+		response.generateResponse("usersCount", String.valueOf(gameSession.size()), "int");
+		// Agregamos la partida en formato string de json al resultado.
+		response.generateResponse("game", game.toJson().toString(), "json");
+		
+		return response;
+	}
 
     public HashMap<String, Session> getGameSessions(final int gameId) {
         return gameSessionsMap.get(gameId);
     }
-
+    
     public int getGameId(final Session session) {
 
         for (final HashMap sessionsMap : gameSessionsMap.values() ) {
@@ -68,4 +95,5 @@ public class Facade implements IFacade {
         }
         return 1;
     }
+
 }

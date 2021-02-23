@@ -22,7 +22,6 @@ export class WebSocketClient {
 		}
 	}
 	
-	
 	dissconect() {
 		if (this.webSocket.readyState == WebSocket.OPEN) {
 			this.webSocket.close();

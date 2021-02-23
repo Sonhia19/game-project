@@ -13,8 +13,8 @@ public class WsResponse {
 	private JSONArray responses;
 	
 	public WsResponse() {
-		this.responses = new JSONArray();
-		this.setResult(true, "");
+		responses = new JSONArray();
+		//this.setResult(true, "");
 	}
 	
 	public void setAction(final JSONObject action) {
@@ -23,17 +23,17 @@ public class WsResponse {
 
 	public void setResult(final boolean state, final String message) {
 		this.result = new JSONObject();
-		this.result.put("estado", state);
-		this.result.put("mensaje", message);
+		this.result.put("state", state);
+		this.result.put("message", message);
 	}
 	
 	public void generateResponse(final String name, final String value, final String type) {
 		JSONObject response = new JSONObject();
-		response.put("nombre", name);
-		response.put("valor", value);
-		response.put("tipo", type);
+		response.put("name", name);
+		response.put("value", value);
+		response.put("type", type);
 		
-		this.responses.put(response);
+		responses.put(response);
 	}
 	
 	public void deleteResponse(final String name) {
@@ -49,9 +49,9 @@ public class WsResponse {
 	
 	public String toParsedString() {
 		JSONObject response = new JSONObject();
-		response.put("operacion", this.action);
-		response.put("exito", this.result);
-		response.put("respuestas", this.responses);
+		response.put("action", this.action);
+		response.put("result", this.result);
+		response.put("responses", this.responses);
 		
 		return response.toString();
 	}

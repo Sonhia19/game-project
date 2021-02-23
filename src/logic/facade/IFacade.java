@@ -10,9 +10,11 @@ public interface IFacade {
 
 	WsResponse newGame();
 
-    void connectGameSession(final int gameId, final Session session);
+	WsResponse connectGameSession(final int gameId, final Session session);
 
     int disconnectGameSession(final Session session);
+    
+    WsResponse getJsonGameSession(final int gameId, final String userId);
 
     HashMap<String, Session> getGameSessions(final int gameId);
 

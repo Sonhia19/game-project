@@ -34,18 +34,22 @@ export class GameScene extends Phaser.Scene {
 	    // this.load.image("bomb", "./assets/bomb.png");
 	    // this.load.image("explosionPlane", "./assets/explosion2.png");
 		console.log('FROM GAME');
-		//context.webSocket.connect();
-		var message = context.messagesFormat.chat('Se ha conectado un nuevo jugador');
-		console.log('Sending message to server' + message);
-		context.webSocket.sendMessage(message);
+
+		this.time.addEvent({
+			delay: 500,
+			callback: ()=>{
+				var message = context.messagesFormat.syncGame();
+				context.functions.sendMessage(message);
+			},
+			loop: false
+		})
+		
+		
 	}
 	
 	create() {
 		
-		// var message = this.sys.game.config.messagesFormat.chat('Se ha conectado un nuevo jugador');
-		// console.log('Sending message to server' + message);
-		// this.sys.game.config.webSocket.sendMessage(message);
-		//this.sys.game.config.functions.sendMessage(message);
+		
 	}
 	update () {
 

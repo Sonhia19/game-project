@@ -1,8 +1,11 @@
 package logic.models;
 
+import org.json.JSONObject;
+
 public class Game {
 
 	private int id;
+	private String userId;
 //
 //	/**
 //	 * Cantidad de combustible disponible de las patrullas.
@@ -32,7 +35,20 @@ public class Game {
 //	/**
 //	 * Cantidad de jugadores conectados actualmente.
 //	 */
-//	private int cantidadJugadoresConectados;
+	private int usersCount;
+
+	public Game(final int gameId, final String userId, final int usersCount) {
+		
+		this.id = gameId;
+		this.userId = userId;
+		this.usersCount = usersCount;
+	}
+
+	public Game(final int gameId, final String userId) {
+		
+		this.id = gameId;
+		this.userId = userId;
+	}
 
 	public Game(final int gameId) {
 		
@@ -43,5 +59,22 @@ public class Game {
 		return id;
 	}
 	
+	
+	public String getUserId() {
+		return userId;
+	}
+	
+	public int getUsersCount() {
+		return usersCount;
+	}
+	
+	public JSONObject toJson() {
+		JSONObject game = new JSONObject();
+		
+		game.put("gameId", id);
+		game.put("userId", userId);
+		game.put("usersCount", usersCount);
+		return game;
+	}
 
 }

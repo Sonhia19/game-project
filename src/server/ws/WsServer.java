@@ -1,6 +1,7 @@
 package server.ws;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -50,16 +51,58 @@ public class WsServer {
 		try {
 		// Nueva partida
 			if (action.getString("name").equalsIgnoreCase("newGame")) {
+				System.out.println("New game " + session.getId());
 				response = facade.newGame();
+				facade.connectGameSession(1, session);
 				
 				// Seteamos la operación al resultado y enviamos el mensaje
 				// al cliente.
 				response.setAction(action);
 				session.getBasicRemote().sendText(response.toParsedString());
 			}
+			// Conectar el jugador a la partida.
+			if (action.getString("name").equalsIgnoreCase("connectToGame")) {
+				System.out.println("Connect to game");
+				response = facade.connectGameSession(parameters.getInt("gameId"), session);
+				
+				// Seteamos la operación al resultado y enviamos el mensaje
+				// al cliente.
+				response.setAction(action);
+				session.getBasicRemote().sendText(response.toParsedString());
+				
+				syncGame(parameters.getInt("gameId"), session.getId());
+			}
+			
+			// Sincroniza la partida con el cliente. Obtiene el objeto Partida en
+			// formato JSON y se lo manda al jugador.
+			if (action.getString("name").equalsIgnoreCase("syncGame")) {
+				System.out.println("Sync game");
+				/*response = facade.getJsonGameSession(parameters.getInt("gameId"), session.getId());
+				
+				// Seteamos la operación al resultado y enviamos el mensaje
+				// al cliente.
+				response.setAction(action);
+				session.getBasicRemote().sendText(response.toParsedString());*/
+				
+				syncGame(parameters.getInt("gameId"), session.getId());
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	private void syncGame(final int gameId, final String userId) throws IOException {
+		// Obtenemos la partida como JSON y agregamos el nombre de la operación.
+		final WsResponse response = facade.getJsonGameSession(gameId, userId);
+		response.setAction((new JSONObject()).put("name", "syncGame"));
+		
+		final HashMap<String, Session> sessiones = facade.getGameSessions(gameId);
+		if (sessiones != null) {
+			for(final Session session : sessiones.values()) {
+				session.getBasicRemote().sendText(response.toParsedString());
+			}
+				
 		}
 	}
 
