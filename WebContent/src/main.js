@@ -2,15 +2,21 @@
 import { LoadScene } from '../src/scenes/LoadScene.js';
 import { GameScene } from '../src/scenes/GameScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
+import { MenuScene } from '../src/scenes/MenuScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
+
+//import Phaser from '/phaser';
 
 var config = {
     scale: {
-        width: 900,
+        //mode: Phaser.Scale.FIT,
+		//autoCenter: Phaser.Scale.CENTER_BOTH,
+        //scaleMode: Phaser.ScaleManager.SHOW_ALL,
+        width: 1500,
         height: 600,
     },
     scene: [
-        LoadScene, NewGameScene, GameScene
+        LoadScene, MenuScene, NewGameScene, GameScene
     ]
 };
 

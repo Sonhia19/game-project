@@ -24,15 +24,15 @@ export class GameScene extends Phaser.Scene {
 	
 
 	preload() {
-	    // this.load.image('field', 'assets/field.jpg');
-	    // this.load.image('black', 'assets/black.png');
-	    // this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
-	    // this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
-	    // this.load.image('bullet', 'assets/Bullet3.png');
-	    // this.load.image("plane", "./assets/avion_1.png");
-	    // this.load.image("bulletTorret", "./assets/bullet.png");
-	    // this.load.image("bomb", "./assets/bomb.png");
-	    // this.load.image("explosionPlane", "./assets/explosion2.png");
+	    this.load.image('field', 'assets/field.jpg');
+	    this.load.image('black', 'assets/black.png');
+	    this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
+	    this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
+	    this.load.image('bullet', 'assets/Bullet3.png');
+	    this.load.image("plane", "./assets/avion_1.png");
+	    this.load.image("bulletTorret", "./assets/bullet.png");
+	    this.load.image("bomb", "./assets/bomb.png");
+	    this.load.image("explosionPlane", "./assets/explosion2.png");
 		console.log('FROM GAME');
 
 		this.time.addEvent({
@@ -47,16 +47,13 @@ export class GameScene extends Phaser.Scene {
 		
 	}
 	
-	create() {
-		
-		
-	}
+	
 	update () {
 
 	}
-	// create() {
+	 create() {
 	
-	//     this.add.image(500, 300, 'field');
+	     this.add.image(500, 300, 'field');
 	
 	
 	//     //capturar tecla control
@@ -131,7 +128,7 @@ export class GameScene extends Phaser.Scene {
 	//     placePlane(400, 50, 4, this, ANGLE_90);
 	
 	
-	// }
+	}
 	
 	// drawLines(graphics) {
 	//     graphics.lineStyle(1, 0x0000ff, 0.8);
