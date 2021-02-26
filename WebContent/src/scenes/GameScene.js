@@ -10,7 +10,7 @@ import { Black } from '../objects/black.js';
 import { context } from '../../src/main.js';
 import { Objects } from '../auxiliar.js'
 import { Collections } from '../auxiliar.js'
-
+import { ENEMY_SPEED, BULLET_DAMAGE } from '../constants/GameConstants.js';
 
 let MINUS_Y = 0, MINUS_X = 1, MORE_Y = 2, MORE_X = 3,
 	ANGLE_0 = 0, ANGLE_45 = 45, ANGLE_90 = 90, ANGLE_135 = 135, ANGLE_180 = 180, ANGLE_225 = 225, ANGLE_270 = 270, ANGLE_315 = 315,
@@ -37,9 +37,11 @@ export class GameScene extends Phaser.Scene {
 
 	// ENEMY_SPEED = 1 / 10000;
 	// BULLET_DAMAGE = 25;
-
+	
 
 	preload() {
+
+		console.log('Constant ' + ENEMY_SPEED);
 		this.load.image('field', 'assets/field.jpg');
 		this.load.image('black', 'assets/black.png');
 		this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
