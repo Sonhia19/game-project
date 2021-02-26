@@ -1,8 +1,9 @@
+import { Bullet } from '../objects/bullet.js';
+
 export class Plane extends Phaser.GameObjects.Image {
 
     constructor(scene, x, y, angle) {
         super(scene, x, y, 'plane');
-        //Phaser.GameObjects.Image.call(this, scene, 0, 0, 'sprites', 'plane');
         scene.add.existing(this);
         this.fuel = 100;
         this.hp = 100;
@@ -19,20 +20,6 @@ export class Plane extends Phaser.GameObjects.Image {
         this.displayHeight = ancho;
         
        this.angle = angle;
-        // switch (item) {
-        //     case 1:
-        //         planeOne = this;
-        //         break;
-        //     case 2:
-        //         planeTwo = this;
-        //         break;
-        //     case 3:
-        //         planeThree = this;
-        //         break;
-        //     case 4:
-        //         planeFour = this;
-        //         break;
-        // }
     }
     emptyTank() {
         let i = 1;
@@ -49,25 +36,26 @@ export class Plane extends Phaser.GameObjects.Image {
             setTimeout("plane.crash();", 250)
         }, 2000)
     }
-    fire(time) {
+    fire(time, bullets) {
+        console.log(bullets);
         let bullet = bullets.get();
         let reach;
         if (bullet) {
             switch (this.planeAngle) {
-                case ANGLE_90:
-                    reach = (plane.x + plane.height)
+                case 90:
+                    reach = (this.x + this.height)
                     break;
-                case ANGLE_270:
-                    reach = (plane.x - plane.height)
+                case 270:
+                    reach = (this.x - this.height)
                     break;
-                case ANGLE_180:
-                    reach = (plane.y + plane.height)
+                case 180:
+                    reach = (this.y + this.height)
                     break;
-                case ANGLE_0:
-                    reach = (plane.y - plane.height)
+                case 0:
+                    reach = (this.y - this.height)
                     break;
             }
-            bullet.fire(plane.x, plane.y, this.planeAngle, reach);
+            bullet.fire(this.x, this.y, this.planeAngle, reach);
 
             this.cadency = time + 150;
         }
@@ -102,9 +90,7 @@ export class Plane extends Phaser.GameObjects.Image {
             plane.withBomb = false;
         }
     }
-    place(i, j, item, world, angle) {
-        // this.y = i;
-        // this.x = j;
+    place(i, j, item, scene, angle) {
         let largo = 50;
         let ancho = largo * this.height / this.width;
         this.displayWidth = largo;
@@ -127,8 +113,8 @@ export class Plane extends Phaser.GameObjects.Image {
 
         // this.setActive(true);
         // this.setVisible(true);
-        //world.physics.add.overlap(bulletsTurret, this, torretPlane);
-        //world.physics.add.overlap(this, blacks, exploreMap);
+        //scene.physics.add.overlap(bulletsTurret, this, torretPlane);
+        //scene.physics.add.overlap(this, blacks, exploreMap);
     }
     update(time, delta) {
 
@@ -195,14 +181,6 @@ export class Plane extends Phaser.GameObjects.Image {
 
     }
 
-
-    // placePlane(i, j, item, world, angle) {
-    //     let plane = planes.get();
-    //     if (plane) {
-    //         plane.place(i, j, item, world, angle);
-    //     }
-    // }
-
     // explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
     collisionPlane() {
         if (plane.active === true && plane2.active === true) {
@@ -217,15 +195,16 @@ export class Plane extends Phaser.GameObjects.Image {
         //alert("Choque aviones");
     }
 
-    highFlyPlane(plane) {
+    highFlyPlane() {
 
+        this.highFly = !this.highFly;
         //Tamaño
         let height = 50;
-        plane.displayWidth = plane.highFly ? height * 1.2 : height;
-        plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
+        this.displayWidth = this.highFly ? height * 1.2 : height;
+        this.displayHeight = this.displayWidth * (this.height / this.width);
 
         //Velocidad
-        plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
+        this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
 
     }
 }

@@ -1,6 +1,6 @@
 import { Plane } from '../objects/plane.js';
 import { Turret } from '../objects/turret.js';
-import { Bullet } from '../objects/bullet.js';
+//import { Bullet } from '../objects/bullet.js';
 import { Enemy } from '../objects/enemy.js';
 import { Tower } from '../objects/tower.js';
 import { Fuel } from '../objects/fuel.js';
@@ -21,6 +21,8 @@ let keyCtrl, keyOne, keyTwo, keyThree, keyFour, keyF, keyShift;
 let myPlaneSelected, myPlaneOne, myPlaneTwo, myPlaneThree, myPlaneFour;
 let enemyPlaneSelected, enemyPlaneOne, enemyPlaneTwo, enemyPlaneThree, enemyPlaneFour;
 let cursors;
+
+let bullets;
 
 
 export class GameScene extends Phaser.Scene {
@@ -46,7 +48,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image('black', 'assets/black.png');
 		this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
 		this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
-		this.load.image('bullet', 'assets/Bullet3.png');
+		this.load.image('bullet', './assets/Bullet3.png');
 		this.load.image("plane", "./assets/avion_1.png");
 		this.load.image("bulletTorret", "./assets/bullet.png");
 		this.load.image("bomb", "./assets/bomb.png");
@@ -100,43 +102,73 @@ export class GameScene extends Phaser.Scene {
 		}
 		if (myPlaneSelected != null) {
 			if (myPlaneSelected.scene) {
-
 				if (Phaser.Input.Keyboard.JustDown(keyShift)) {
-					myPlaneSelected.highFly = !plane.highFly;
-					highFlyPlane(plane);
+					myPlaneSelected.highFlyPlane();
 				}
-		
 				//Si el avion se encuentra dentro de su zona, limpia todo el mapa
 				if (myPlaneSelected.x < SAFE_ZONE_X) {
 					myPlaneSelected.black = null;
 				}
-
-				if (cursors.left.isDown) {
+				if (cursors.left.isDown && cursors.up.isDown) {
+					myPlaneSelected.fly(false, ANGLE_315, null, true, null);
+				}
+				else if (cursors.left.isDown && cursors.down.isDown) {
+					myPlaneSelected.fly(false, ANGLE_225, null, true, null);
+				}
+				else if (cursors.right.isDown && cursors.down.isDown) {
+					myPlaneSelected.fly(false, ANGLE_135, null, true, null);
+				}
+				else if (cursors.right.isDown && cursors.up.isDown) {
+					myPlaneSelected.fly(false, ANGLE_45, null, true, null);
+				}
+				else if (cursors.left.isDown) {
 					myPlaneSelected.fly(true, ANGLE_270, MINUS_X, false, delta);
 				}
 				else if (cursors.right.isDown) {
 					myPlaneSelected.fly(true, ANGLE_90, MORE_X, false, delta);
 				}
-				if (cursors.up.isDown) {
+				else if (cursors.up.isDown) {
 					myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, false, delta);
 				}
 				else if (cursors.down.isDown) {
 					myPlaneSelected.fly(true, ANGLE_180, MORE_Y, false, delta);
 				}
-				if (cursors.left.isDown && cursors.up.isDown) {
-					myPlaneSelected.fly(false, ANGLE_315, null, true, null);
+
+				
+
+				if (cursors.space.isDown && time > myPlaneSelected.cadency) {
+					if (myPlaneSelected.flying) {
+						switch (myPlaneSelected.planeAngle) {
+							case ANGLE_0:
+							case ANGLE_90:
+							case ANGLE_180:
+							case ANGLE_270:
+								myPlaneSelected.fire(time, bullets);
+								break;
+						}
+					}
+					else {
+						console.log("tiene que despegar");
+					}
+
+
 				}
-				if (cursors.left.isDown && cursors.down.isDown) {
-					myPlaneSelected.fly(false, ANGLE_225, null, true, null);
-				}
-				if (cursors.right.isDown && cursors.down.isDown) {
-					myPlaneSelected.fly(false, ANGLE_135, null, true, null);
-				}
-				if (cursors.right.isDown && cursors.up.isDown) {
-					myPlaneSelected.fly(false, ANGLE_45, null, true, null);
+				if (Phaser.Input.Keyboard.JustDown(keyCtrl)) {
+					if (plane.flying) {
+						if (plane.withBomb) {
+							plane.fireBomb();
+						}
+						else {
+							console.log("no tiene bomba");
+						}
+
+					}
+					else {
+						console.log("tiene que despegar");
+					}
+
 				}
 			}
-
 		}
 	}
 	create() {
@@ -169,6 +201,8 @@ export class GameScene extends Phaser.Scene {
 
 
 		graphics.lineStyle(3, 0xffffff, 1);
+		bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
+
 		path.draw(graphics);
 
 
@@ -182,7 +216,7 @@ export class GameScene extends Phaser.Scene {
 
 		//  Collections.turrets = this.add.group({ classType: Turret, runChildUpdate: true });
 
-		//  Collections.bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
+		
 
 		//  Collections.bulletsTurret = this.physics.add.group({ classType: BulletTorret, runChildUpdate: true });
 
@@ -390,4 +424,140 @@ export class GameScene extends Phaser.Scene {
 	//         }
 	//     }
 	//  }
+}
+
+var Bullet = new Phaser.Class({
+
+    Extends: Phaser.GameObjects.Image,
+
+    initialize:
+
+        function Bullet(scene) {
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+            this.reach = 0;
+            this.incX = 0;
+            this.incY = 0;
+            this.speed = Phaser.Math.GetSpeed(400, 1);
+            this.bulletAngle = ANGLE_90;
+        },
+
+    fire: function (x, y, angle, reach) {
+        switch (angle) {
+            case 90:
+                this.setPosition(x + 20, y);
+                this.angle = angle;
+                break;
+            case 270:
+                this.setPosition(x - 20, y);
+                this.angle = angle;
+                break;
+            case 180:
+                this.setPosition(x, y + 20);
+                break;
+            case 0:
+                this.setPosition(x, y - 20);
+                break;
+        }
+        this.bulletAngle = angle;
+        this.reach = reach;
+        this.setActive(true);
+        this.setVisible(true);
+    },
+
+    update: function (time, delta) {
+        // if (erraseBullets) {
+        //     this.destroy();
+        // }
+        switch (this.bulletAngle) {
+            case 90:
+                this.x += this.speed * delta;
+                if (this.x > this.reach) {
+                    this.destroy();
+                }
+                break;
+            case 270:
+                this.x -= this.speed * delta;
+                if (this.x < this.reach) {
+                    this.destroy();
+                }
+                break;
+            case 180:
+                this.y += this.speed * delta;
+                if (this.y > this.reach) {
+                    this.destroy();
+                }
+                break;
+            case 0:
+                this.y -= this.speed * delta;
+                if (this.y < this.reach) {
+                    this.destroy();
+                }
+                break;
+        }
+    }
+
+});
+
+var BulletTorret = new Phaser.Class({
+
+    Extends: Phaser.GameObjects.Image,
+
+    initialize:
+
+        function Bullet(scene) {
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bulletTorret');
+
+            this.incX = 0;
+            this.incY = 0;
+            this.lifespan = 0;
+
+            this.speed = Phaser.Math.GetSpeed(100, 1);
+        },
+
+    fireTorret: function (x, y, angle) {
+        this.setActive(true);
+        this.setVisible(true);
+        //  Bullets fire from the middle of the screen to the given x/y
+        this.setPosition(x, y);
+
+        //  we don't need to rotate the bullets as they are round
+        //    this.setRotation(angle);
+
+        this.dx = Math.cos(angle);
+        this.dy = Math.sin(angle);
+
+        this.lifespan = 1000;
+    },
+
+    update: function (time, delta) {
+        this.lifespan -= delta;
+
+        this.x += this.dx * (this.speed * delta);
+        this.y += this.dy * (this.speed * delta);
+    }
+
+});
+
+function addBullet(x, y) {
+    var bullet = bullets.get();
+    if (bullet) {
+        bullet.fire(x, y);
+    }
+}
+
+function addBulletTorret(x, y, angle) {
+
+    var bullet = bulletsTurret.get();
+
+    if (bullet) {
+        bullet.fireTorret(x, y, angle);
+    }
+}
+
+function torretPlane(plane, bullet) {
+
+    if (plane.active === true && bullet.active === true) {
+        bullet.destroy();
+        plane.receiveDamage(BULLET_DAMAGE);
+    }
 }
