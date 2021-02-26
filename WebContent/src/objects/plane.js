@@ -1,11 +1,3 @@
-// class Plane extends Phaser.GameObjects.Image {  
-//     constructor(config) {
-//         super(config.scene, config.x, config.y, "plane");
-//         config.scene.add.existing(this);
-//         this.scene.physics.add;
-//     } 
-// }
-
 export class Plane extends Phaser.GameObjects.Image {
 
     constructor(scene, x, y, angle) {
@@ -21,12 +13,12 @@ export class Plane extends Phaser.GameObjects.Image {
         this.planeAngle = angle;
         this.speed = Phaser.Math.GetSpeed(100, 1);
         this.cadency = 0;
-
-        var largo = 50;
-        var ancho = largo * this.height / this.width;
-        //this.displayWidth = largo;
-        //this.displayHeight = ancho;
-        //this.angle = angle;
+        let largo = 50;
+        let ancho = largo * this.height / this.width;
+        this.displayWidth = largo;
+        this.displayHeight = ancho;
+        
+       this.angle = angle;
         // switch (item) {
         //     case 1:
         //         planeOne = this;
@@ -41,10 +33,9 @@ export class Plane extends Phaser.GameObjects.Image {
         //         planeFour = this;
         //         break;
         // }
-        console.log(this);
     }
     emptyTank() {
-        var i = 1;
+        let i = 1;
         this.startCrash(i);
     }
     startCrash(i) {
@@ -59,8 +50,8 @@ export class Plane extends Phaser.GameObjects.Image {
         }, 2000)
     }
     fire(time) {
-        var bullet = bullets.get();
-        var reach;
+        let bullet = bullets.get();
+        let reach;
         if (bullet) {
             switch (this.planeAngle) {
                 case ANGLE_90:
@@ -89,9 +80,9 @@ export class Plane extends Phaser.GameObjects.Image {
         }
     }
     fireBomb() {
-        var bomb = bombs.get();
+        let bomb = bombs.get();
         bomb.setScale(0.1);
-        var reach;
+        let reach;
         if (bomb) {
             switch (this.planeAngle) {
                 case ANGLE_90:
@@ -114,8 +105,8 @@ export class Plane extends Phaser.GameObjects.Image {
     place(i, j, item, world, angle) {
         // this.y = i;
         // this.x = j;
-        var largo = 50;
-        var ancho = largo * this.height / this.width;
+        let largo = 50;
+        let ancho = largo * this.height / this.width;
         this.displayWidth = largo;
         this.displayHeight = ancho;
         this.angle = angle;
@@ -158,8 +149,8 @@ export class Plane extends Phaser.GameObjects.Image {
         this.flying = true;
         this.setTexture('sprites', 'plane_flying');
     }
-    land() {
-        if (this.x < SAFE_ZONE_X) {
+    land(safe_zone) {
+        if (this.x < safe_zone) {
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
@@ -175,24 +166,28 @@ export class Plane extends Phaser.GameObjects.Image {
         if (this.flying) {
             if (move) {
                 switch (orientation) {
-                    case MINUS_X:
+                	//MINUS_X
+                    case 1:
                         this.x -= this.speed * delta;
                         break;
-                    case MINUS_Y:
-                        plane.y -= this.speed * delta;
+                    //MINUS_Y
+                    case 0:
+                        this.y -= this.speed * delta;
                         break;
-                    case MORE_X:
-                        plane.x += this.speed * delta;
+                    //MORE_X
+                    case 3:
+                        this.x += this.speed * delta;
                         break;
-                    case MORE_Y:
-                        plane.y += this.speed * delta;
+                    //MORE_Y
+                    case 2:
+                        this.y += this.speed * delta;
                         break;
                 }
             }
             this.angle = angle;
             this.planeAngle = angle;
             this.consumeFuel();
-            erraseBullets = errase;
+            //erraseBullets = errase;
         }
         else {
             console.log("tiene que despegar");
@@ -201,55 +196,12 @@ export class Plane extends Phaser.GameObjects.Image {
     }
 
 
-    placePlane(i, j, item, world, angle) {
-        var plane = planes.get();
-        if (plane) {
-            plane.place(i, j, item, world, angle);
-        }
-    }
-
-    selectPlane(p) {
-        if (plane != p) {
-            if (!checkOtherPlaneFlying(p)) {
-                angle = ANGLE_90;
-                if (planeOne.scene) { unselectPlane(planeOne); };
-                if (planeTwo.scene) { unselectPlane(planeTwo); };
-                if (planeThree.scene) { unselectPlane(planeThree); };
-                if (planeFour.scene) { unselectPlane(planeFour); };
-                plane = p;
-                plane.angle = angle;
-                plane.planeAngle = angle;
-                p.flying = false;
-                p.setTexture('sprites', 'plane_landed');
-
-            }
-            else {
-                console.log("No puede volar");
-            }
-
-        }
-    }
-    unselectPlane(p) {
-        p.setTexture('sprites', 'plane');
-        p.flying = false;
-    }
-
-    checkOtherPlaneFlying(p) {
-        var oneFlying = false, twoFlying = false, threeFlying = false, fourFlying = false
-        if (p != planeOne) {
-            oneFlying = planeOne.flying;
-        }
-        if (p != planeTwo) {
-            twoFlying = planeTwo.flying;
-        }
-        if (p != planeThree) {
-            threeFlying = planeThree.flying;
-        }
-        if (p != planeFour) {
-            fourFlying = planeFour.flying;
-        }
-        return oneFlying || twoFlying || threeFlying || fourFlying;
-    }
+    // placePlane(i, j, item, world, angle) {
+    //     let plane = planes.get();
+    //     if (plane) {
+    //         plane.place(i, j, item, world, angle);
+    //     }
+    // }
 
     // explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
     collisionPlane() {
@@ -268,7 +220,7 @@ export class Plane extends Phaser.GameObjects.Image {
     highFlyPlane(plane) {
 
         //Tamaño
-        var height = 50;
+        let height = 50;
         plane.displayWidth = plane.highFly ? height * 1.2 : height;
         plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
 
