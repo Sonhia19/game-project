@@ -6,26 +6,42 @@
 //     } 
 // }
 
-export class Plane extends Phaser.GameObjects.Image{
+export class Plane extends Phaser.GameObjects.Image {
 
-    constructor(scene) 
-    {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'sprites', 'plane');
-            this.fuel = 100;
-            this.hp = 100;
-            this.withBomb = true;
-            this.black = null;
-            this.highFly = false;
-            this.flying = false;
-            this.planeAngle = ANGLE_90;
-            this.speed = Phaser.Math.GetSpeed(100, 1);
-            this.cadency = 0;
-        }
-    place (i, j) {
-        this.y = i;
-        this.x = j;
-        this.setActive(true);
-        this.setVisible(true);
+    constructor(scene, x, y, angle) {
+        super(scene, x, y, 'plane');
+        //Phaser.GameObjects.Image.call(this, scene, 0, 0, 'sprites', 'plane');
+        scene.add.existing(this);
+        this.fuel = 100;
+        this.hp = 100;
+        this.withBomb = true;
+        this.black = null;
+        this.highFly = false;
+        this.flying = false;
+        this.planeAngle = angle;
+        this.speed = Phaser.Math.GetSpeed(100, 1);
+        this.cadency = 0;
+
+        var largo = 50;
+        var ancho = largo * this.height / this.width;
+        //this.displayWidth = largo;
+        //this.displayHeight = ancho;
+        //this.angle = angle;
+        // switch (item) {
+        //     case 1:
+        //         planeOne = this;
+        //         break;
+        //     case 2:
+        //         planeTwo = this;
+        //         break;
+        //     case 3:
+        //         planeThree = this;
+        //         break;
+        //     case 4:
+        //         planeFour = this;
+        //         break;
+        // }
+        console.log(this);
     }
     emptyTank() {
         var i = 1;
@@ -42,7 +58,7 @@ export class Plane extends Phaser.GameObjects.Image{
             setTimeout("plane.crash();", 250)
         }, 2000)
     }
-    fire (time) {
+    fire(time) {
         var bullet = bullets.get();
         var reach;
         if (bullet) {
@@ -65,14 +81,14 @@ export class Plane extends Phaser.GameObjects.Image{
             this.cadency = time + 150;
         }
     }
-    receiveDamage (damage) {
+    receiveDamage(damage) {
         this.hp -= damage;
 
         if (this.hp <= 0) {
             this.crash();
         }
     }
-    fireBomb () {
+    fireBomb() {
         var bomb = bombs.get();
         bomb.setScale(0.1);
         var reach;
@@ -95,9 +111,9 @@ export class Plane extends Phaser.GameObjects.Image{
             plane.withBomb = false;
         }
     }
-    place (i, j, item, world, angle) {
-        this.y = i;
-        this.x = j;
+    place(i, j, item, world, angle) {
+        // this.y = i;
+        // this.x = j;
         var largo = 50;
         var ancho = largo * this.height / this.width;
         this.displayWidth = largo;
@@ -117,13 +133,16 @@ export class Plane extends Phaser.GameObjects.Image{
                 planeFour = this;
                 break;
         }
-        world.physics.add.overlap(bulletsTurret, this, torretPlane);
-        world.physics.add.overlap(this, blacks, exploreMap);
+
+        // this.setActive(true);
+        // this.setVisible(true);
+        //world.physics.add.overlap(bulletsTurret, this, torretPlane);
+        //world.physics.add.overlap(this, blacks, exploreMap);
     }
-    update (time, delta) {
+    update(time, delta) {
 
     }
-    consumeFuel () {
+    consumeFuel() {
         if (this.fuel > 0) {
             //this.fuel -= this.highFly ? 0.2 : 0.1;
         }

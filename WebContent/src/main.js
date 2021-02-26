@@ -15,6 +15,11 @@ var config = {
         width: 1500,
         height: 600,
     },
+    physics: {
+        default: "arcade",
+        arcade: {
+        }
+    },
     scene: [
         LoadScene, MenuScene, NewGameScene, GameScene
     ]

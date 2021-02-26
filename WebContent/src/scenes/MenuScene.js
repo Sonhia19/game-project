@@ -30,6 +30,6 @@ export class MenuScene extends Phaser.Scene {
         var joinGameButton = this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.60, "joingame_font").setDepth(0);
         joinGameButton.setInteractive();
 
-        //this.scene.start("NEWGAME", "hello from MENU scene");
+        this.scene.start("GAME", "hello from MENU scene");
     }
 }

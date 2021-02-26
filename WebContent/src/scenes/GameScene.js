@@ -8,6 +8,10 @@ import { Hangar } from '../objects/hangar.js';
 import { Bomb } from '../objects/bomb.js';
 import { Black } from '../objects/black.js';
 import { context } from '../../src/main.js';
+import { Enums } from '../auxiliar.js'
+import { Keys } from '../auxiliar.js'
+import { Objects } from '../auxiliar.js'
+import { Collections } from '../auxiliar.js'
 
 export class GameScene extends Phaser.Scene {  
 
@@ -57,75 +61,80 @@ export class GameScene extends Phaser.Scene {
 	
 	
 	//     //capturar tecla control
-	//     keyCtrl = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
-	//     keyOne = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-	//     keyTwo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
-	//     keyThree = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
-	//     keyFour = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
-	//     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-	//     keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+	    Enums.keyCtrl = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+	    Enums.keyOne = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+	    Enums.keyTwo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+	    Enums.keyThree = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+	    Enums.keyFour = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
+	    Enums.keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+	    Enums.keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 	
-	//     var graphics = this.add.graphics();
-	//     path = this.add.path(200, 0);
-	//     path.lineTo(200, 600);
-	
-	
-	//     graphics.lineStyle(3, 0xffffff, 1);
-	//     path.draw(graphics);
-	
-	//     var graphics = this.add.graphics();
-	
-	//     path = this.add.path(800, 0);
-	//     path.lineTo(800, 600);
+		console.log (Enums.keyShift);
+	    var graphics = this.add.graphics();
+		var path;
+	    path = this.add.path(200, 0);
+	    path.lineTo(200, 600);
 	
 	
-	//     graphics.lineStyle(3, 0xffffff, 1);
-	//     path.draw(graphics);
+	    graphics.lineStyle(3, 0xffffff, 1);
+	    path.draw(graphics);
 	
-	//     enemies = this.physics.add.group({ classType: Enemy, runChildUpdate: true });
+	    graphics = this.add.graphics();
 	
-	//     turrets = this.add.group({ classType: Turret, runChildUpdate: true });
-	
-	//     bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
-	
-	//     bulletsTurret = this.physics.add.group({ classType: BulletTorret, runChildUpdate: true });
-	
-	//     bombs = this.physics.add.group({ classType: Bomb, runChildUpdate: true });
+	    path = this.add.path(800, 0);
+	    path.lineTo(800, 600);
 	
 	
-	//     var towers = this.physics.add.group({ classType: Tower, runChildUpdate: true });
-	//     tower = towers.get();
-	//     tower.place(50, 930);
+	    graphics.lineStyle(3, 0xffffff, 1);
+	    path.draw(graphics);
+
+		var plane = new Plane(this,300,300, Enums.ANGLE_90);
+		//plane.place(300,300,null,this,Enums.ANGLE_90);
 	
-	//     var fuels = this.physics.add.group({ classType: Fuel, runChildUpdate: true });
-	//     fuel = fuels.get();
-	//     fuel.place(250, 930);
+	    //  Collections.enemies = this.physics.add.group({ classType: Enemy, runChildUpdate: true });
 	
-	//     var hangars = this.physics.add.group({ classType: Hangar, runChildUpdate: true });
-	//     hangar = hangars.get();
-	//     hangar.place(450, 930);
+		//  Collections.turrets = this.add.group({ classType: Turret, runChildUpdate: true });
 	
-	//     planes = this.physics.add.group({ classType: Plane, runChildUpdate: true });
-	//     this.nextEnemy = 0;
+		//  Collections.bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 	
-	//     this.physics.add.overlap(enemies, bullets, damageEnemy);
+		//  Collections.bulletsTurret = this.physics.add.group({ classType: BulletTorret, runChildUpdate: true });
 	
-	//     this.physics.add.overlap(bombs, hangars, Bomb.explosionHangar());
-	//     this.physics.add.overlap(bombs, fuels, Bomb.explosionFuel());
-	//     this.physics.add.overlap(bombs, towers, Bomb.explosionTower());
+		//  Collections.bombs = this.physics.add.group({ classType: Bomb, runChildUpdate: true });
 	
-	//     cursors = this.input.keyboard.createCursorKeys();
-	//     placeTurret(75, 850);
-	//     placeTurret(300, 850);
-	//     placeTurret(450, 850);
 	
-	//     blacks = this.physics.add.group({ classType: Black, runChildUpdate: true });
-	//     //placeBlacks();
+	    // var towers = this.physics.add.group({ classType: Tower, runChildUpdate: true });
+	    // tower = towers.get();
+	    // tower.place(50, 930);
 	
-	//     placePlane(300, 50, 1, this, ANGLE_90);
-	//     placePlane(200, 50, 2, this, ANGLE_90);
-	//     placePlane(100, 50, 3, this, ANGLE_90);
-	//     placePlane(400, 50, 4, this, ANGLE_90);
+	    // var fuels = this.physics.add.group({ classType: Fuel, runChildUpdate: true });
+	    // fuel = fuels.get();
+	    // fuel.place(250, 930);
+	
+	    // var hangars = this.physics.add.group({ classType: Hangar, runChildUpdate: true });
+	    // hangar = hangars.get();
+	    // hangar.place(450, 930);
+	
+	    // Collections.planes = this.physics.add.group({ classType: Plane, runChildUpdate: true });
+	    // this.nextEnemy = 0;
+	
+	    // this.physics.add.overlap(enemies, bullets, damageEnemy);
+	
+	    // this.physics.add.overlap(bombs, hangars, Bomb.explosionHangar());
+	    // this.physics.add.overlap(bombs, fuels, Bomb.explosionFuel());
+	    // this.physics.add.overlap(bombs, towers, Bomb.explosionTower());
+	
+	    // cursors = this.input.keyboard.createCursorKeys();
+	    // placeTurret(75, 850);
+	    // placeTurret(300, 850);
+	    // placeTurret(450, 850);
+	
+	    // blacks = this.physics.add.group({ classType: Black, runChildUpdate: true });
+	    // //placeBlacks();
+	
+	    // placePlane(300, 50, 1, this, ANGLE_90);
+	    // placePlane(200, 50, 2, this, ANGLE_90);
+	    // placePlane(100, 50, 3, this, ANGLE_90);
+	    // placePlane(400, 50, 4, this, ANGLE_90);
 	
 	
 	}
