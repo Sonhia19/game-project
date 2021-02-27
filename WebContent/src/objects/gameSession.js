@@ -1,4 +1,4 @@
-export default class GameSession {
+export class GameSession {
 
     // constructor(id, name, gameId, teamSide, planes) {
     //     this.id = id;
