@@ -43,7 +43,6 @@ export class MenuScene extends Phaser.Scene {
             })
     
         }, this);
-
-        //this.scene.start("NEWGAME", "hello from MENU scene");
     }
+
 }

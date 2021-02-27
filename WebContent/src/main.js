@@ -11,10 +11,17 @@ import { GameSession } from '../src/objects/GameSession.js';
 var config = {
     scale: {
         //mode: Phaser.Scale.FIT,
-		//autoCenter: Phaser.Scale.CENTER_BOTH,
+        //autoCenter: Phaser.Scale.CENTER_BOTH,
         //scaleMode: Phaser.ScaleManager.SHOW_ALL,
-        width: 1500,
-        height: 600,
+
+    },
+    type: Phaser.AUTO,
+    width: 1350,
+    height: 600,
+    physics: {
+        default: "arcade",
+        arcade: {
+        }
     },
     scene: [
         LoadScene, MenuScene, NewGameScene, GameScene
@@ -48,22 +55,22 @@ var functions = {
                 
                 //este send message seria para obtener informacion luego de iniciada la partida
                 //context.functions.sendMessage(context.messagesFormat.newGame());
-                context.functions.changeScene('NEWGAME','GAME');
+                context.functions.changeScene('NEWGAME', 'GAME');
             }
 
             if (response.action.name == 'connectToGame') {
                 context.gameId = parseInt(response.responses[0].value);
-               //context.functions.sendMessage(context.messagesFormat.syncGame());
-                context.functions.changeScene('LOAD','GAME');
+                //context.functions.sendMessage(context.messagesFormat.syncGame());
+                context.functions.changeScene('LOAD', 'GAME');
             }
-            
+
             if (response.action.name == 'syncGame') {
                 context.gameSession = JSON.parse(response.responses[0].value);
             }
         }
     },
 
-    
+
 };
 
 var messagesFormat = {
@@ -77,7 +84,7 @@ var messagesFormat = {
             }
         })
     },
-    
+
     guardarPartida: () => {
         return JSON.stringify({
             action: {
@@ -108,7 +115,7 @@ var messagesFormat = {
             }
         })
     },
-    
+
     syncGame: () => {
         return JSON.stringify({
             action: {
