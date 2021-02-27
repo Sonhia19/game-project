@@ -4,6 +4,7 @@ import { GameScene } from '../src/scenes/GameScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { MenuScene } from '../src/scenes/MenuScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
+import { GameSession } from '../src/objects/GameSession.js';
 
 //import Phaser from '/phaser';
 
@@ -38,11 +39,13 @@ var functions = {
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
-            console.log("nuevo mensaje del servidor");
+            console.log("Respuesta del servidor");
             console.log(response);
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
+                context.gameSession = JSON.parse(response.responses[1].value);
+                
                 //este send message seria para obtener informacion luego de iniciada la partida
                 //context.functions.sendMessage(context.messagesFormat.newGame());
                 context.functions.changeScene('NEWGAME','GAME');
@@ -64,13 +67,12 @@ var functions = {
 };
 
 var messagesFormat = {
-    newGame: (cant) => {
+    newGame: (playerName) => {
         return JSON.stringify({
             action: {
                 name: 'newGame',
                 parameters: {
-                    cantidadPatrullas: cant,
-                    cantidadPesqueros: cant,
+                    playerName: playerName
                 }
             }
         })
@@ -124,7 +126,7 @@ export const context = {
     webSocket: new WebSocketClient(),
     functions: functions,
     messagesFormat: messagesFormat,
-    gameId: null,
-    gameSession: {},
+    //gameId: null,
+    gameSession: new GameSession(),
     currentScene: 'LOAD'
 };

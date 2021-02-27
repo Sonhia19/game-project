@@ -3,6 +3,7 @@ package logic.facade;
 import javax.websocket.Session;
 
 import logic.models.Game;
+import logic.models.Player;
 import server.ws.WsResponse;
 
 import java.util.HashMap;
@@ -33,16 +34,27 @@ public class Facade implements IFacade {
     }
 
 
-    public WsResponse newGame() {
+    public WsResponse newGame(final String playerName, final Session session) {
 
-    	final WsResponse response = new WsResponse();
-    	final Game game = new Game(1);
-
+    	WsResponse response = new WsResponse();
+    	
+    	//Se crea partida
+    	final int gameId = 1; //obtener prox id desde la bd
+    	final Game game = new Game(gameId);
         response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+
+    	//Se crea primer instancia de jugador, con nombre jugador, id partida y el bando
+        final Player player = new Player(playerName, gameId, 1);
+        response.generateResponse("gameSession", String.valueOf(player), "Player");
+        
+    	//Se agrega sesion a la partida
+        final HashMap<String, Session> gameSession = gameSessionsMap.get(gameId);
+        gameSession.put(playerName, session);
+        
 		return response;
 		
     }
-
+    
     public WsResponse connectGameSession(final int gameId, final Session session) {
 
     	final WsResponse response = new WsResponse();
@@ -95,5 +107,4 @@ public class Facade implements IFacade {
         }
         return 1;
     }
-
 }

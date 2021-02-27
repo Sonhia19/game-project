@@ -52,8 +52,8 @@ public class WsServer {
 		// Nueva partida
 			if (action.getString("name").equalsIgnoreCase("newGame")) {
 				System.out.println("New game " + session.getId());
-				response = facade.newGame();
-				facade.connectGameSession(1, session);
+				response = facade.newGame(parameters.get("playerName").toString(), session);
+				//facade.connectGameSession(1, session);
 				
 				// Seteamos la operación al resultado y enviamos el mensaje
 				// al cliente.

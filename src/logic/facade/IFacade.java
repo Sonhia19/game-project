@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public interface IFacade {
 
-	WsResponse newGame();
+	WsResponse newGame(final String playerName, final Session session);
 
 	WsResponse connectGameSession(final int gameId, final Session session);
 
