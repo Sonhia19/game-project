@@ -1,19 +1,20 @@
-export class Hangar extends Phaser.GameObjects.Image {
+export let Hangar = new Phaser.Class({
 
-    constructor(scene) 
-    {
-        Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesBase', 'hangar');
-    }
-    place(i, j) 
-    {            
-        this.y = i ;
-        this.x = j ;
+    Extends: Phaser.GameObjects.Image,
+
+    initialize:
+
+        function Hangar(scene) {
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'hangar');
+        },
+    place: function (i, j) {
+        this.y = i;
+        this.x = j;
         this.setActive(true);
-        this.setVisible(true);     
-        this.setScale(0.2);  
+        this.setVisible(true);
+        this.setScale(0.2);
+    },
+    update: function (time, delta) {
+
     }
-    update (time, delta)
-    {
-        
-    }
-}
+});

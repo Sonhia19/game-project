@@ -1,28 +1,35 @@
-export class Bullet extends Phaser.GameObjects.Image {
+import {MINUS_X, MINUS_Y, MORE_X, MORE_Y} from '../constants/GameConstants.js'
+import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90} from '../constants/GameConstants.js';
 
-    constructor(scene) {
+export let Bullet = new Phaser.Class({
+
+    Extends: Phaser.GameObjects.Image,
+
+    initialize:
+
+        function Bullet(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
             this.reach = 0;
             this.incX = 0;
             this.incY = 0;
             this.speed = Phaser.Math.GetSpeed(400, 1);
             this.bulletAngle = ANGLE_90;
-        }
+        },
 
-    fire (x, y, angle, reach) {
+    fire: function (x, y, angle, reach) {
         switch (angle) {
-            case ANGLE_90:
+            case 90:
                 this.setPosition(x + 20, y);
                 this.angle = angle;
                 break;
-            case ANGLE_270:
+            case 270:
                 this.setPosition(x - 20, y);
                 this.angle = angle;
                 break;
-            case ANGLE_180:
+            case 180:
                 this.setPosition(x, y + 20);
                 break;
-            case ANGLE_0:
+            case 0:
                 this.setPosition(x, y - 20);
                 break;
         }
@@ -30,32 +37,32 @@ export class Bullet extends Phaser.GameObjects.Image {
         this.reach = reach;
         this.setActive(true);
         this.setVisible(true);
-    }
+    },
 
-    update (time, delta) {
-        if (erraseBullets) {
-            this.destroy();
-        }
+    update: function (time, delta) {
+        // if (erraseBullets) {
+        //     this.destroy();
+        // }
         switch (this.bulletAngle) {
-            case ANGLE_90:
+            case 90:
                 this.x += this.speed * delta;
                 if (this.x > this.reach) {
                     this.destroy();
                 }
                 break;
-            case ANGLE_270:
+            case 270:
                 this.x -= this.speed * delta;
                 if (this.x < this.reach) {
                     this.destroy();
                 }
                 break;
-            case ANGLE_180:
+            case 180:
                 this.y += this.speed * delta;
                 if (this.y > this.reach) {
                     this.destroy();
                 }
                 break;
-            case ANGLE_0:
+            case 0:
                 this.y -= this.speed * delta;
                 if (this.y < this.reach) {
                     this.destroy();
@@ -64,20 +71,4 @@ export class Bullet extends Phaser.GameObjects.Image {
         }
     }
 
-    addBullet(x, y) {
-        var bullet = bullets.get();
-        if (bullet) {
-            bullet.fire(x, y);
-        }
-    }
-
-
-
-    torretPlane(plane, bullet) {
-
-        if (plane.active === true && bullet.active === true) {
-            bullet.destroy();
-            plane.receiveDamage(BULLET_DAMAGE);
-        }
-    }
-}
+});

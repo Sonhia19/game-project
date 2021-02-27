@@ -1,30 +1,29 @@
-import { Bullet } from '../objects/bullet.js';
+import { BLUE_SAFE_ZONE_X, MINUS_X, MINUS_Y, MORE_X, MORE_Y } from '../constants/GameConstants.js'
+import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
 
-export class Plane extends Phaser.GameObjects.Image {
+export let Plane = new Phaser.Class({
 
-    constructor(scene, x, y, angle) {
-        super(scene, x, y, 'plane');
-        scene.add.existing(this);
-        this.fuel = 100;
-        this.hp = 100;
-        this.withBomb = true;
-        this.black = null;
-        this.highFly = false;
-        this.flying = false;
-        this.planeAngle = angle;
-        this.speed = Phaser.Math.GetSpeed(100, 1);
-        this.cadency = 0;
-        let largo = 50;
-        let ancho = largo * this.height / this.width;
-        this.displayWidth = largo;
-        this.displayHeight = ancho;
-        
-       this.angle = angle;
-    }
+    Extends: Phaser.GameObjects.Image,
+
+    initialize:
+
+        function Plane(scene) {
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'plane');
+            this.fuel = 100;
+            this.hp = 100;
+            this.withBomb = true;
+            this.black = null;
+            this.highFly = false;
+            this.flying = false;
+            this.planeAngle = ANGLE_90;
+            this.speed = Phaser.Math.GetSpeed(100, 1);
+            this.cadency = 0;
+            
+        },
     emptyTank() {
         let i = 1;
         this.startCrash(i);
-    }
+    },
     startCrash(i) {
         setTimeout(function () {
             i++;
@@ -35,23 +34,22 @@ export class Plane extends Phaser.GameObjects.Image {
             }
             setTimeout("plane.crash();", 250)
         }, 2000)
-    }
-    fire(time, bullets) {
-        console.log(bullets);
+    },
+    fire: function (time, bullets) {
         let bullet = bullets.get();
         let reach;
         if (bullet) {
             switch (this.planeAngle) {
-                case 90:
+                case ANGLE_90:
                     reach = (this.x + this.height)
                     break;
-                case 270:
+                case ANGLE_270:
                     reach = (this.x - this.height)
                     break;
-                case 180:
+                case ANGLE_180:
                     reach = (this.y + this.height)
                     break;
-                case 0:
+                case ANGLE_0:
                     reach = (this.y - this.height)
                     break;
             }
@@ -59,84 +57,71 @@ export class Plane extends Phaser.GameObjects.Image {
 
             this.cadency = time + 150;
         }
-    }
-    receiveDamage(damage) {
+    },
+    receiveDamage: function (damage) {
         this.hp -= damage;
 
         if (this.hp <= 0) {
             this.crash();
         }
-    }
-    fireBomb() {
+    },
+    fireBomb: function (bombs) {
         let bomb = bombs.get();
         bomb.setScale(0.1);
         let reach;
         if (bomb) {
             switch (this.planeAngle) {
                 case ANGLE_90:
-                    reach = (plane.x + plane.height)
+                    reach = (this.x + this.height)
                     break;
                 case ANGLE_270:
-                    reach = (plane.x - plane.height)
+                    reach = (this.x - this.height)
                     break;
                 case ANGLE_180:
-                    reach = (plane.y + plane.height)
+                    reach = (this.y + this.height)
                     break;
                 case ANGLE_0:
-                    reach = (plane.y - plane.height)
+                    reach = (this.y - this.height)
                     break;
             }
-            bomb.fire(plane.x, plane.y, this.planeAngle, reach);
-            plane.withBomb = false;
+            bomb.fire(this.x, this.y, this.planeAngle, reach);
+            this.withBomb = false;
         }
-    }
-    place(i, j, item, scene, angle) {
-        let largo = 50;
-        let ancho = largo * this.height / this.width;
-        this.displayWidth = largo;
-        this.displayHeight = ancho;
+    },
+    place: function (i, j, world, angle) {
+        this.y = i;
+        this.x = j;
+        let height = 50;
+        let width = height * this.height / this.width;
+        this.displayWidth = height;
+        this.displayHeight = width;
         this.angle = angle;
-        switch (item) {
-            case 1:
-                planeOne = this;
-                break;
-            case 2:
-                planeTwo = this;
-                break;
-            case 3:
-                planeThree = this;
-                break;
-            case 4:
-                planeFour = this;
-                break;
-        }
+        this.body.collideWorldBounds = true;
+        // world.physics.add.overlap(bulletsTurret, this, torretPlane);
+        // world.physics.add.overlap(this, blacks, exploreMap);
+        return this;
+    },
+    update: function (time, delta) {
 
-        // this.setActive(true);
-        // this.setVisible(true);
-        //scene.physics.add.overlap(bulletsTurret, this, torretPlane);
-        //scene.physics.add.overlap(this, blacks, exploreMap);
-    }
-    update(time, delta) {
-
-    }
-    consumeFuel() {
+    },
+    consumeFuel: function () {
         if (this.fuel > 0) {
             //this.fuel -= this.highFly ? 0.2 : 0.1;
         }
         if (this.fuel < 0 && this.fuel > -1) {
             this.emptyTank();
         }
-    }
+    },
     crash() {
         this.black = false;
         plane.destroy();
-    }
+    },
     takeOff() {
         this.flying = true;
         this.setTexture('sprites', 'plane_flying');
-    }
-    land(safe_zone) {
-        if (this.x < safe_zone) {
+    },
+    land() {
+        if (this.x < BLUE_SAFE_ZONE_X) {
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
@@ -147,25 +132,33 @@ export class Plane extends Phaser.GameObjects.Image {
         }
 
 
-    }
+    },
+    highFlyPlane() {
+
+        this.highFly = !this.highFly;
+        //Tamaño
+        let height = 50;
+        this.displayWidth = this.highFly ? height * 1.2 : height;
+        this.displayHeight = this.displayWidth * (this.height / this.width);
+    
+        //Velocidad
+        this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
+    
+    },
     fly(move, angle, orientation, errase, delta) {
         if (this.flying) {
             if (move) {
                 switch (orientation) {
-                	//MINUS_X
-                    case 1:
+                    case MINUS_X:
                         this.x -= this.speed * delta;
                         break;
-                    //MINUS_Y
-                    case 0:
+                    case MINUS_Y:
                         this.y -= this.speed * delta;
                         break;
-                    //MORE_X
-                    case 3:
+                    case MORE_X:
                         this.x += this.speed * delta;
                         break;
-                    //MORE_Y
-                    case 2:
+                    case MORE_Y:
                         this.y += this.speed * delta;
                         break;
                 }
@@ -181,30 +174,30 @@ export class Plane extends Phaser.GameObjects.Image {
 
     }
 
-    // explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
-    collisionPlane() {
-        if (plane.active === true && plane2.active === true) {
-            plane.destroy();
-            plane2.destroy();
-            collision.setVisible(true);
-            setTimeout("collision.setVisible(false)", 150)
-            //collision.setVisible(false);
+});
 
-        }
-
-        //alert("Choque aviones");
-    }
-
-    highFlyPlane() {
-
-        this.highFly = !this.highFly;
-        //Tamaño
-        let height = 50;
-        this.displayWidth = this.highFly ? height * 1.2 : height;
-        this.displayHeight = this.displayWidth * (this.height / this.width);
-
-        //Velocidad
-        this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
+// explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
+function collisionPlane() {
+    if (plane.active === true && plane2.active === true) {
+        plane.destroy();
+        plane2.destroy();
+        collision.setVisible(true);
+        setTimeout("collision.setVisible(false)", 150)
+        //collision.setVisible(false);
 
     }
+
+    //alert("Choque aviones");
+}
+
+function highFlyPlane(plane) {
+
+    //Tamaño
+    let height = 50;
+    plane.displayWidth = plane.highFly ? height * 1.2 : height;
+    plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
+
+    //Velocidad
+    plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
+
 }
