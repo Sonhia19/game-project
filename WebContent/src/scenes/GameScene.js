@@ -73,14 +73,14 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("bomb", "./assets/bomb.png");
 		this.load.image("border", "./assets/border.png");
 
-		this.time.addEvent({
-			delay: 500,
-			callback: () => {
-				let message = context.messagesFormat.syncGame();
-				context.functions.sendMessage(message);
-			},
-			loop: false
-		})
+		// this.time.addEvent({
+		// 	delay: 500,
+		// 	callback: () => {
+		// 		let message = context.messagesFormat.syncGame();
+		// 		context.functions.sendMessage(message);
+		// 	},
+		// 	loop: false
+		// })
 
 
 	}
@@ -197,6 +197,7 @@ export class GameScene extends Phaser.Scene {
 			}
 		}
 	}
+
 	create() {
 
 		this.add.image(500, 300, 'field');
@@ -319,6 +320,7 @@ export class GameScene extends Phaser.Scene {
 
 		}
 	}
+
 	unselectPlane(p) {
 		p.setTexture('sprites', 'plane');
 		p.flying = false;

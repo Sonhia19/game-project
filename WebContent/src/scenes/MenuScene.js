@@ -30,6 +30,37 @@ export class MenuScene extends Phaser.Scene {
         var joinGameButton = this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.60, "joingame_font").setDepth(0);
         joinGameButton.setInteractive();
 
-        this.scene.start("GAME", "hello from MENU scene");
+        newGameButton.on('pointerdown', function () {
+
+            var message = context.messagesFormat.newGame("player");
+            context.functions.sendMessage(message);
+            this.time.addEvent({
+                delay: 500,
+                callback: ()=>{
+                    this.scene.start("GAME", "hello from LOAD scene");        
+                },
+                loop: false
+            })
+    
+        }, this);
+
+        joinGameButton.on('pointerdown', function () {
+
+            var gameId = 1; //este dato deberia venir de un input que ponga el usuario
+            context.gameId = gameId;
+            var message = context.messagesFormat.connectToGame("player", gameId);
+            context.functions.sendMessage(message);
+            console.log('join game ' + context.gameId);
+            
+            this.time.addEvent({
+                delay: 500,
+                callback: ()=>{
+                    this.scene.start("GAME", "hello from LOAD scene");        
+                },
+                loop: false
+            })
+    
+        }, this);
     }
+
 }

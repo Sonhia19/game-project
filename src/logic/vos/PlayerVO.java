@@ -1,6 +1,6 @@
-package valueObjects;
+package logic.vos;
 
-public class VOGame {
+public class PlayerVO {
 
 	private int id;
 	
