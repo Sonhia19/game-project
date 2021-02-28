@@ -4,7 +4,6 @@ import { GameScene } from '../src/scenes/GameScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { MenuScene } from '../src/scenes/MenuScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
-import { GameSession } from '../src/objects/GameSession.js';
 
 //import Phaser from '/phaser';
 
@@ -47,25 +46,36 @@ var functions = {
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
             console.log("Respuesta del servidor");
-            console.log(response);
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
-                context.gameSession = JSON.parse(response.responses[1].value);
-                
-                //este send message seria para obtener informacion luego de iniciada la partida
-                //context.functions.sendMessage(context.messagesFormat.newGame());
-                context.functions.changeScene('NEWGAME', 'GAME');
+                context.playerSession = JSON.parse(response.responses[1].value);
+                console.log('playerSession');
+                console.log(context.playerSession);
             }
 
             if (response.action.name == 'connectToGame') {
                 context.gameId = parseInt(response.responses[0].value);
-                //context.functions.sendMessage(context.messagesFormat.syncGame());
-                context.functions.changeScene('LOAD', 'GAME');
+                context.playerSession = JSON.parse(response.responses[1].value);
+                context.enemySession = JSON.parse(response.responses[2].value);
+
+                console.log('playerSession');
+                console.log(context.playerSession);
+                console.log('enemySession');
+                console.log(context.enemySession);
             }
 
             if (response.action.name == 'syncGame') {
-                context.gameSession = JSON.parse(response.responses[0].value);
+                context.gameId = JSON.parse(response.responses[0].value);
+            }
+
+            if (response.action.name == 'syncWithEnemy') {
+                context.enemySession = JSON.parse(response.responses[1].value);
+
+                console.log('playerSession');
+                console.log(context.playerSession);
+                console.log('enemySession');
+                console.log(context.enemySession);
             }
         }
     },
@@ -95,22 +105,24 @@ var messagesFormat = {
             }
         })
     },
-    // chat: (message) => {
-    //     return JSON.stringify({
-    //         action: {
-    //             name: 'chat',
-    //             parameters: {
-    //                 userMessage: message
-    //             }
-    //         }
-    //     })
-    // },
-    connectToGame: () => {
+    connectToGame: (playerName, gameId) => {
         return JSON.stringify({
             action: {
                 name: 'connectToGame',
                 parameters: {
-                    gameId: context.gameId
+                    gameId: gameId,
+                    playerName: playerName
+                }
+            }
+        })
+    },
+
+    syncWithEnemy: () => {
+        return JSON.stringify({
+            action: {
+                name: 'syncWithEnemy',
+                parameters: {
+                    gameId: context.gameId,
                 }
             }
         })
@@ -133,7 +145,8 @@ export const context = {
     webSocket: new WebSocketClient(),
     functions: functions,
     messagesFormat: messagesFormat,
-    //gameId: null,
-    gameSession: new GameSession(),
+    gameId: null,
+    playerSession: {},
+    enemySession: {},
     currentScene: 'LOAD'
 };

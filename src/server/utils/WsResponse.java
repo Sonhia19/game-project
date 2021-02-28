@@ -1,4 +1,4 @@
-package server.ws;
+package server.utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,7 +14,6 @@ public class WsResponse {
 	
 	public WsResponse() {
 		responses = new JSONArray();
-		//this.setResult(true, "");
 	}
 	
 	public void setAction(final JSONObject action) {
@@ -46,6 +45,7 @@ public class WsResponse {
 			}
 		}
 	}
+	
 	
 	public String toParsedString() {
 		JSONObject response = new JSONObject();

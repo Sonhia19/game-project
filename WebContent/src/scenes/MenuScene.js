@@ -43,6 +43,24 @@ export class MenuScene extends Phaser.Scene {
             })
     
         }, this);
+
+        joinGameButton.on('pointerdown', function () {
+
+            var gameId = 1; //este dato deberia venir de un input que ponga el usuario
+            context.gameId = gameId;
+            var message = context.messagesFormat.connectToGame("player", gameId);
+            context.functions.sendMessage(message);
+            console.log('join game ' + context.gameId);
+            
+            this.time.addEvent({
+                delay: 500,
+                callback: ()=>{
+                    this.scene.start("GAME", "hello from LOAD scene");        
+                },
+                loop: false
+            })
+    
+        }, this);
     }
 
 }

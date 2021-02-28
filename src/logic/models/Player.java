@@ -3,6 +3,8 @@ package logic.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.websocket.Session;
+
 //Esta clase refleja una sesion de jugador activo en una partida
 public class Player {
 
@@ -16,14 +18,17 @@ public class Player {
 	
 	private List<Plane> planes;
 	
+	private Session session;
+	
 	//torreActiva
 	//tanqueActivo
 	//hangarActivo
 	
-	public Player(final String name, final int gameId, final int teamSide) {
+	public Player(final String name, final int gameId, final int teamSide, final Session session) {
 		this.name = name;
 		this.gameId = gameId;
 		this.teamSide = teamSide;
+		this.session = session;
 		this.planes = preloadPlanes();
 		//Crear arreglo de 4 aviones con valores cargados por defecto, y asignarlos al array del jugador
 	}
@@ -44,6 +49,10 @@ public class Player {
 		return teamSide;
 	}
 	
+	public Session getSession() {
+		return session;
+	}
+	
 	private List preloadPlanes () {
 		
 		List<Plane> planes = new ArrayList();
@@ -54,6 +63,11 @@ public class Player {
 		planes.add(new Plane(4, 400, 50));
 		
 		return planes;
+	}
+	
+	public Player preparePlayerToSend() {
+		
+		return new Player(this.name, this.gameId, this.teamSide, null);
 	}
 
 }
