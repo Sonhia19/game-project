@@ -18,7 +18,7 @@ export let Plane = new Phaser.Class({
             this.planeAngle = ANGLE_90;
             this.speed = Phaser.Math.GetSpeed(100, 1);
             this.cadency = 0;
-            
+
         },
     emptyTank() {
         let i = 1;
@@ -88,7 +88,7 @@ export let Plane = new Phaser.Class({
             this.withBomb = false;
         }
     },
-    place: function (i, j, world, angle) {
+    place: function (i, j, scene, angle) {
         this.y = i;
         this.x = j;
         let height = 50;
@@ -97,6 +97,7 @@ export let Plane = new Phaser.Class({
         this.displayHeight = width;
         this.angle = angle;
         this.body.collideWorldBounds = true;
+
         // world.physics.add.overlap(bulletsTurret, this, torretPlane);
         // world.physics.add.overlap(this, blacks, exploreMap);
         return this;
@@ -140,12 +141,12 @@ export let Plane = new Phaser.Class({
         let height = 50;
         this.displayWidth = this.highFly ? height * 1.2 : height;
         this.displayHeight = this.displayWidth * (this.height / this.width);
-    
+
         //Velocidad
         this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
-    
+
     },
-    fly(move, angle, orientation, errase, delta) {
+    fly(move, angle, orientation, delta) {
         if (this.flying) {
             if (move) {
                 switch (orientation) {
@@ -166,7 +167,6 @@ export let Plane = new Phaser.Class({
             this.angle = angle;
             this.planeAngle = angle;
             this.consumeFuel();
-            //erraseBullets = errase;
         }
         else {
             console.log("tiene que despegar");
@@ -176,28 +176,28 @@ export let Plane = new Phaser.Class({
 
 });
 
-// explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
-function collisionPlane() {
-    if (plane.active === true && plane2.active === true) {
-        plane.destroy();
-        plane2.destroy();
-        collision.setVisible(true);
-        setTimeout("collision.setVisible(false)", 150)
-        //collision.setVisible(false);
+// // explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
+// function collisionPlane() {
+//     if (plane.active === true && plane2.active === true) {
+//         plane.destroy();
+//         plane2.destroy();
+//         collision.setVisible(true);
+//         setTimeout("collision.setVisible(false)", 150)
+//         //collision.setVisible(false);
 
-    }
+//     }
 
-    //alert("Choque aviones");
-}
+//     //alert("Choque aviones");
+// }
 
-function highFlyPlane(plane) {
+// function highFlyPlane(plane) {
 
-    //Tamaño
-    let height = 50;
-    plane.displayWidth = plane.highFly ? height * 1.2 : height;
-    plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
+//     //Tamaño
+//     let height = 50;
+//     plane.displayWidth = plane.highFly ? height * 1.2 : height;
+//     plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
 
-    //Velocidad
-    plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
+//     //Velocidad
+//     plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
 
-}
+// }

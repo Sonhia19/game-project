@@ -38,22 +38,6 @@ var BulletArtillery = new Phaser.Class({
 
 });
 
-function addBullet(x, y) {
-	var bullet = bullets.get();
-	if (bullet) {
-		bullet.fire(x, y);
-	}
-}
-
-function addBulletArtillery(x, y, angle) {
-
-	var bullet = bulletsArtillery.get();
-
-	if (bullet) {
-		bullet.fireArtillery(x, y, angle);
-	}
-}
-
 function ArtilleryPlane(plane, bullet) {
 
 	if (plane.active === true && bullet.active === true) {

@@ -71,23 +71,23 @@ export let Bomb = new Phaser.Class({
 
 });
 
-function explosionHangar(hangar, bomb) {
-    if (hangar.active === true && bomb.active === true) {
-        hangar.destroy();
-        bomb.destroy();
-    }
-}
+// function explosionHangar(hangar, bomb) {
+//     if (hangar.active === true && bomb.active === true) {
+//         hangar.destroy();
+//         bomb.destroy();
+//     }
+// }
 
-function explosionFuel(fuel, bomb) {
-    if (fuel.active === true && bomb.active === true) {
-        fuel.destroy();
-        bomb.destroy();
-    }
-}
+// function explosionFuel(fuel, bomb) {
+//     if (fuel.active === true && bomb.active === true) {
+//         fuel.destroy();
+//         bomb.destroy();
+//     }
+// }
 
-function explosionTower(tower, bomb) {
-    if (tower.active === true && bomb.active === true) {
-        tower.destroy();
-        bomb.destroy();
-    }
-}
+// function explosionTower(tower, bomb) {
+//     if (tower.active === true && bomb.active === true) {
+//         tower.destroy();
+//         bomb.destroy();
+//     }
+// }

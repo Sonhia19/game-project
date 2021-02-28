@@ -4,6 +4,7 @@ import { Bullet } from '../objects/bullet.js';
 import { Enemy } from '../objects/enemy.js';
 import { Tower } from '../objects/tower.js';
 import { Fuel } from '../objects/fuel.js';
+import { Border } from '../objects/border.js';
 import { Hangar } from '../objects/hangar.js';
 import { Bomb } from '../objects/bomb.js';
 import { Black } from '../objects/black.js';
@@ -32,6 +33,7 @@ let myTowers;
 let myHangars;
 let myBombs;
 let myArtilleries;
+let borders;
 
 //Elementos del propio bando
 let myFuel;
@@ -69,7 +71,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("artillery", "./assets/artillery.png");
 		this.load.image("bulletTorret", "./assets/bullet.png");
 		this.load.image("bomb", "./assets/bomb.png");
-		this.load.image("explosionPlane", "./assets/explosion2.png");
+		this.load.image("border", "./assets/border.png");
 
 		this.time.addEvent({
 			delay: 500,
@@ -133,28 +135,28 @@ export class GameScene extends Phaser.Scene {
 
 				//Movimiento de avión
 				if (cursors.left.isDown) {
-					myPlaneSelected.fly(true, ANGLE_270, MINUS_X, false, delta);
+					myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
 				}
 				else if (cursors.right.isDown) {
-					myPlaneSelected.fly(true, ANGLE_90, MORE_X, false, delta);
+					myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
 				}
 				if (cursors.up.isDown) {
-					myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, false, delta);
+					myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
 				}
 				else if (cursors.down.isDown) {
-					myPlaneSelected.fly(true, ANGLE_180, MORE_Y, false, delta);
+					myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
 				}
 				if (cursors.left.isDown && cursors.up.isDown) {
-					myPlaneSelected.fly(false, ANGLE_315, null, true, null);
+					myPlaneSelected.fly(false, ANGLE_315, null, null);
 				}
 				if (cursors.left.isDown && cursors.down.isDown) {
-					myPlaneSelected.fly(false, ANGLE_225, null, true, null);
+					myPlaneSelected.fly(false, ANGLE_225, null, null);
 				}
 				if (cursors.right.isDown && cursors.down.isDown) {
-					myPlaneSelected.fly(false, ANGLE_135, null, true, null);
+					myPlaneSelected.fly(false, ANGLE_135, null, null);
 				}
 				if (cursors.right.isDown && cursors.up.isDown) {
-					myPlaneSelected.fly(false, ANGLE_45, null, true, null);
+					myPlaneSelected.fly(false, ANGLE_45, null, null);
 				}
 
 				//Disparo de avión
@@ -222,6 +224,12 @@ export class GameScene extends Phaser.Scene {
 		graphics.lineStyle(3, 0xffffff, 1);
 		path.draw(graphics);
 
+		graphics = this.add.graphics();
+		path = this.add.path(1000, 300);
+		path.lineTo(1400, 300);
+		graphics.lineStyle(3, 0xffffff, 1);
+		path.draw(graphics);
+
 
 		myBullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 		myBombs = this.physics.add.group({ classType: Bomb, runChildUpdate: true });
@@ -229,7 +237,11 @@ export class GameScene extends Phaser.Scene {
 		myFuels = this.physics.add.group({ classType: Fuel, runChildUpdate: true });
 		myHangars = this.physics.add.group({ classType: Hangar, runChildUpdate: true });
 		myTowers = this.physics.add.group({ classType: Tower, runChildUpdate: true });
-		myArtilleries = this.add.group({ classType: Artillery, runChildUpdate: true });
+		myArtilleries = this.physics.add.group({ classType: Artillery, runChildUpdate: true });
+		borders = this.physics.add.group({ classType: Border, runChildUpdate: true });
+
+		let border = borders.get();
+		border.place(50, 1000, true);
 
 		myFuel = myFuels.get();
 		myFuel.place(150, isBlue ? BLUE_BASE_X : 0);
@@ -252,6 +264,8 @@ export class GameScene extends Phaser.Scene {
 		myPlaneThree = this.placeMyPlane(400, isBlue ? BLUE_PLANE_X : 0, this, ANGLE_90);
 		myPlaneFour = this.placeMyPlane(500, isBlue ? BLUE_PLANE_X : 0, this, ANGLE_90);
 
+		this.physics.add.overlap(myPlanes, borders, this.borderPlane);
+		//this.physics.add.overlap(myBombs, myHangars, this.borderPlane);
 		//  Collections.bulletsTurret = this.physics.add.group({ classType: BulletTorret, runChildUpdate: true });
 
 		//  Collections.
@@ -270,10 +284,10 @@ export class GameScene extends Phaser.Scene {
 
 	}
 
-	placeMyPlane(i, j, item, world, angle) {
+	placeMyPlane(i, j, world, angle) {
 		let plane = myPlanes.get();
 		if (plane) {
-			return plane.place(i, j, item, world, angle);
+			return plane.place(i, j, world, angle);
 		}
 	}
 
@@ -325,5 +339,11 @@ export class GameScene extends Phaser.Scene {
 			fourFlying = myPlaneFour.flying;
 		}
 		return oneFlying || twoFlying || threeFlying || fourFlying;
+	}
+
+	borderPlane(plane, borders) {
+		if (plane.active === true && borders.active === true) {
+			plane.x = 965;
+		}
 	}
 }

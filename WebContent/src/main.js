@@ -14,6 +14,7 @@ var config = {
         //scaleMode: Phaser.ScaleManager.SHOW_ALL,
 
     },
+    parent: 'content',
     type: Phaser.AUTO,
     width: 1350,
     height: 600,

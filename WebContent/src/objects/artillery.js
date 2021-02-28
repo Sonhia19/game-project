@@ -21,6 +21,11 @@ export let Artillery = new Phaser.Class({
         //         let angle = Phaser.Math.Angle.Between(this.x, this.y, plane.x, plane.y);
         //         if (Phaser.Math.Distance.Between(this.x, this.y, plane.x, plane.y) < 200) {
         //             //addBulletTorret(this.x, this.y, angle);
+    //     var bullet = bulletsArtillery.get();
+
+	// if (bullet) {
+	// 	bullet.fireArtillery(x, y, angle);
+	//}
         //         }
 
         //         this.angle = (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
@@ -34,8 +39,3 @@ export let Artillery = new Phaser.Class({
         }
     }
 });
-
-function canPlaceartillery(i, j) {
-    //return map[i][j] === 0;
-    return true;
-}
