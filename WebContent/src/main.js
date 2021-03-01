@@ -1,7 +1,7 @@
 
 import { LoadScene } from '../src/scenes/LoadScene.js';
 import { GameScene } from '../src/scenes/GameScene.js';
-import { NewGameScene } from '../src/scenes/NewGameScene.js';
+import { WaitingGameScene } from '../src/scenes/WaitingGameScene.js';
 import { MenuScene } from '../src/scenes/MenuScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 
@@ -24,7 +24,7 @@ var config = {
         }
     },
     scene: [
-        LoadScene, MenuScene, NewGameScene, GameScene
+        LoadScene, MenuScene, WaitingGameScene, GameScene
     ]
 };
 
