@@ -27,8 +27,8 @@ public class Plane {
 	public Plane(int id, double positionX, double positionY, int angle) {
 	
 		this.id = id;
-		this.fuel = 10.5;
-		this.armor = 10.5;
+		this.fuel = 100;
+		this.armor = 100;
 		this.hasBomb = true;
 		this.highFly = false;
 		this.positionX = positionX;

@@ -26,15 +26,16 @@ export let Plane = new Phaser.Class({
         this.startCrash(i);
     },
     startCrash(i) {
-        setTimeout(function () {
+        //setTimeout(function () {
             i++;
             if (i < 25) {
-                plane.displayWidth = plane.displayWidth * 0.95;
-                plane.displayHeight = plane.displayHeight * 0.95;
-                plane.startCrash(i);
+                this.displayWidth = this.displayWidth * 0.95;
+                this.displayHeight = this.displayHeight * 0.95;
+                this.startCrash(i);
             }
-            setTimeout("plane.crash();", 250)
-        }, 2000)
+            //setTimeout("this.crash();", 2500)
+            this.crash();
+        //}, 2000)
     },
     fire: function (time, bullets) {
         let bullet = bullets.get();
@@ -113,7 +114,7 @@ export let Plane = new Phaser.Class({
     },
     consumeFuel: function () {
         if (this.fuel > 0) {
-            //this.fuel -= this.highFly ? 0.2 : 0.1;
+            this.fuel -= this.highFly ? 0.2 : 0.1;
         }
         if (this.fuel < 0 && this.fuel > -1) {
             this.emptyTank();
@@ -121,7 +122,7 @@ export let Plane = new Phaser.Class({
     },
     crash() {
         this.black = false;
-        plane.destroy();
+        this.destroy();
     },
     takeOff() {
         this.flying = true;
