@@ -17,12 +17,14 @@ public class Plane {
 	
 	private double positionY;
 	
+	private int angle;
+	
 
 	//private int planeConfig;
 	
 	
 	//Por ahora se precargan los aviones con este constructor
-	public Plane(int id, double positionX, double positionY) {
+	public Plane(int id, double positionX, double positionY, int angle) {
 	
 		this.id = id;
 		this.fuel = 10.5;
@@ -31,6 +33,7 @@ public class Plane {
 		this.highFly = false;
 		this.positionX = positionX;
 		this.positionY = positionY;
+		this.angle = angle;
 		
 	}
 
@@ -58,7 +61,24 @@ public class Plane {
 		return positionX;
 	}
 	
+	public int getAngle() {
+		return angle;
+	}
+	
+	public void setAngle(int a)
+	{
+		angle = a;
+	}
+	
 	public double getPositionY() {
 		return positionY;
+	}
+	
+	public void setPositionX(double x) {
+		positionX = x;
+	}
+	
+	public void setPositionY(double y) {
+		positionY = y;
 	}
 }

@@ -59,11 +59,6 @@ var functions = {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.enemySession = JSON.parse(response.responses[2].value);
-
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
             }
 
             if (response.action.name == 'syncGame') {
@@ -73,10 +68,6 @@ var functions = {
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
 
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
             }
         }
     },

@@ -73,8 +73,9 @@ public class WsServer {
 				//envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 				
+				 response = facade.getJsonGameSession(parameters.getInt("gameId"), playerName);
 				//sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName);
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName,response);
 			}
 			
 			if (action.getString("name").equalsIgnoreCase("syncGame")) {
@@ -83,9 +84,16 @@ public class WsServer {
 				response = facade.getJsonGameSession(parameters.getInt("gameId"), session.getId());
 				response.setAction(action);
 				session.getBasicRemote().sendText(response.toParsedString());
-				
+				response = facade.getJsonGameSession(parameters.getInt("gameId"), "player".concat(session.getId()));
 				//sincroniza todas las sesiones conectadas 
-				WsSynchronization.syncGame(facade, parameters.getInt("gameId"), "player".concat(session.getId()));
+				WsSynchronization.syncGame(facade, parameters.getInt("gameId"), "player".concat(session.getId()),response);
+			}
+			if (action.getString("name").equalsIgnoreCase("syncMove")) {
+				
+				System.out.println("Sync move");
+				response = facade.getJsonMoveEnemy(parameters.getInt("gameId"), "player".concat(session.getId()), parameters);
+				//sincroniza todas las sesiones conectadas 
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),response);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
