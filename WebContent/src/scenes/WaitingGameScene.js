@@ -1,19 +1,19 @@
 import { context } from '../../src/main.js';
 
-export class NewGameScene extends Phaser.Scene {
+export class WaitingGameScene extends Phaser.Scene {
 	
 	/**
 	 * Constructor.
 	 */
 	constructor() {
-		super('NEWGAME');
+		super('WAITINGGAME');
 	}
 	
 	/**
 	 * Pre-carga de recursos.
 	 */
 	preload() {
-        console.log('FROM NEW GAME');
+        console.log('FROM WAITING GAME');
 		//this.load.html('newGameForm', '../../src/forms/newGameForm.html');
 	}
 	
@@ -21,7 +21,7 @@ export class NewGameScene extends Phaser.Scene {
 	 * Creación de la escena.
 	 */
 	create() {
-		context.currentScene = 'NEWGAME';
+		context.currentScene = 'WAITINGGAME';
 		
 		
 		// Volver.
