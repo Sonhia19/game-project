@@ -9,14 +9,15 @@ export let Plane = new Phaser.Class({
 
         function Plane(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'plane');
-            this.fuel = 100;
-            this.hp = 100;
-            this.withBomb = true;
-            this.black = null;
+            this.fuel = 0;
+            this.firePower = 0;
+            this.armor = 0;
+            this.withBomb = false;
+            this.gray = null;
             this.highFly = false;
             this.flying = false;
             this.planeAngle = ANGLE_90;
-            this.speed = Phaser.Math.GetSpeed(100, 1);
+            this.speed = 0;//Phaser.Math.GetSpeed(100, 1);
             this.cadency = 0;
 
         },
@@ -59,9 +60,9 @@ export let Plane = new Phaser.Class({
         }
     },
     receiveDamage: function (damage) {
-        this.hp -= damage;
+        this.armor -= damage;
 
-        if (this.hp <= 0) {
+        if (this.armor <= 0) {
             this.crash();
         }
     },
@@ -88,7 +89,12 @@ export let Plane = new Phaser.Class({
             this.withBomb = false;
         }
     },
-    place: function (i, j, scene, angle) {
+    place: function (i, j, angle, fuel, armor, speed, bomb, firePower) {
+        this.armor = armor;
+        this.fuel = fuel;
+        this.withBomb = bomb;
+        this.speed = Phaser.Math.GetSpeed(speed, 1);
+        this.firePower = firePower;
         this.y = i;
         this.x = j;
         let height = 50;
@@ -99,7 +105,7 @@ export let Plane = new Phaser.Class({
         this.body.collideWorldBounds = true;
 
         // world.physics.add.overlap(bulletsTurret, this, torretPlane);
-        // world.physics.add.overlap(this, blacks, exploreMap);
+
         return this;
     },
     update: function (time, delta) {
