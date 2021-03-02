@@ -166,11 +166,13 @@ export class GameScene extends Phaser.Scene {
 	update(time, delta) {
 
 		if (this.existsEnemySession()) {
+			
 			if (!enemyDraw) {
 				enemyDraw = true;
 				this.placeEnemyElements();
 			}
 
+			this.moveEnemyPlanes();
 			if (context.enemySession.isShooting) {
 				context.enemySession.isShooting = false;
 				let p = this.checkEnemyPlaneShooting(context.enemySession.planeShooting);
@@ -178,17 +180,7 @@ export class GameScene extends Phaser.Scene {
 					p.fire(time, enemyBullets);
 				}
 			}
-
 		}
-
-		if (context.enemySession.id != undefined) {
-
-		}
-
-		if (context.enemySession.id != undefined) {
-			this.moveEnemyPlanes()
-		}
-
 
 		//Selección de avión
 		if (Phaser.Input.Keyboard.JustDown(keyOne)) {
