@@ -1,5 +1,6 @@
-import { BLUE_SAFE_ZONE_X, MINUS_X, MINUS_Y, MORE_X, MORE_Y } from '../constants/GameConstants.js'
+import { BLUE_SAFE_ZONE_X, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_SAFE_ZONE_X } from '../constants/GameConstants.js'
 import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
+import { context } from '../../src/main.js';
 
 export let Plane = new Phaser.Class({
 
@@ -21,6 +22,8 @@ export let Plane = new Phaser.Class({
             this.cadency = 0;
 
         },
+       
+
     emptyTank() {
         let i = 1;
         this.startCrash(i);
@@ -62,7 +65,6 @@ export let Plane = new Phaser.Class({
     },
     receiveDamage: function (damage) {
         this.armor -= damage;
-
         if (this.armor <= 0) {
             this.crash();
         }
@@ -129,17 +131,28 @@ export let Plane = new Phaser.Class({
         this.setTexture('sprites', 'plane_flying');
     },
     land() {
-        if (this.x < BLUE_SAFE_ZONE_X) {
+        var isBlue = context.playerSession.teamSide == 1;
+        var landed = false;
+        if (isBlue)
+        {
+            if (this.x < BLUE_SAFE_ZONE_X ) {
+                landed = true;                
+            }
+        }else
+        {
+            if (this.x > RED_SAFE_ZONE_X ) {
+                landed = true;
+            }
+        }
+        if(landed)
+        {
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
             this.setTexture('sprites', 'plane_landed');
-        }
-        else {
+        }else{
             console.log("vuelva a la base para aterrizar");
         }
-
-
     },
     highFlyPlane() {
 

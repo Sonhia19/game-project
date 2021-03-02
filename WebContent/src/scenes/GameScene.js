@@ -45,6 +45,10 @@ let bombText;
 let infoGameText;
 let myPlaneSelectedText;
 let highFlyPlaneText;
+let plane1HealthText;
+let plane2HealthText;
+let plane3HealthText;
+let plane4HealthText;
 
 //Colecciones de elementos del bando enemigo
 let enemyPlanes;
@@ -173,8 +177,10 @@ export class GameScene extends Phaser.Scene {
 			}
 		}
 
-	
-
+		plane1HealthText.setText(myPlaneOne.armor);
+		plane2HealthText.setText(myPlaneTwo.armor);
+		plane3HealthText.setText(myPlaneThree.armor);
+		plane4HealthText.setText(myPlaneFour.armor);
 
 		if (myPlaneSelected != null) {
 			if (myPlaneSelected.scene) {
@@ -182,30 +188,30 @@ export class GameScene extends Phaser.Scene {
 				if (Phaser.Input.Keyboard.JustDown(keyF)) {
 					if (myPlaneSelected.flying) {
 						myPlaneSelected.land(isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X);
-						if (myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
-							highFlyPlaneText.setText('');
+						if(isBlue){
+							if(myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
+								this.fuelControl();
+								highFlyPlaneText.setText('');
+								infoGameText.setText("Presione (F) para despegar avion");
+							}else{
+								infoGameText.setText("Vuelva a la base para aterrizar");
+							}		
 						}else{
-							infoGameText.setText("Vuelva a la base para aterrizar");
-						}
-					}
-					else {
+							if(myPlaneSelected.x > RED_SAFE_ZONE_X) {
+								this.fuelControl();
+								highFlyPlaneText.setText('');
+								infoGameText.setText("Presione (F) para despegar avion");
+							}else{
+								infoGameText.setText("Vuelva a la base para aterrizar");
+							}
+						}	
+					}else{
 						myPlaneSelected.takeOff();
 						infoGameText.setText('');
 						highFlyPlaneText.setText('Vuelo Bajo. Presione (shift) \npara cambiar modo de vuelo');
-					}
+					}				
 				}
 				
-				lifeText.setText('Blindaje: ' + myPlaneSelected.armor);
-				fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
-				if(myPlaneSelected.withBomb){
-					bombText.setText('Bomba: SI' );
-				}
-				else{
-					bombText.setText('Bomba: NO');
-				}
-
-
-
 				// Vuelto alto / vuelo bajo
 				if (Phaser.Input.Keyboard.JustDown(keyShift)) {
 					myPlaneSelected.highFlyPlane();
@@ -215,54 +221,57 @@ export class GameScene extends Phaser.Scene {
 						highFlyPlaneText.setText('Vuelo Bajo. Presione (shift) \npara cambiar modo de vuelo');
 					}
 				}
+
 				//Si el avion se encuentra dentro de su zona, limpia todo el mapa
 				if (myPlaneSelected.x < isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X) {
 					myPlaneSelected.gray = null;
-				}
-				
-				if (myPlaneSelected.flying){
-					if(myPlaneSelected.fuel < 30){
-						infoGameText.setText('Se está agotando el combustible. \nRetorne a la base');
+				}					
+					//Movimiento de avión
+					if (cursors.left.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
+						this.syncMove();						
+					}else if (cursors.right.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
+						this.syncMove();						
+					}
+					if (cursors.up.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
+						this.syncMove();
+						
+					}else if (cursors.down.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
+						this.syncMove();
+						
+					}
+					if (cursors.left.isDown && cursors.up.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_315, null, null);
+						this.syncMove();
+						
+					}	
+					if (cursors.left.isDown && cursors.down.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_225, null, null);
+						this.syncMove();
+						
+					}
+					if (cursors.right.isDown && cursors.down.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_135, null, null);
+						this.syncMove();
+					}
+					if (cursors.right.isDown && cursors.up.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_45, null, null);
+						this.syncMove();
 					}
 				
-				//Movimiento de avión
-				if (cursors.left.isDown) {
-					myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
-					this.syncMove();
-				}
-				else if (cursors.right.isDown) {
-					myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
-					this.syncMove();
-				}
-				if (cursors.up.isDown) {
-					myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
-					this.syncMove();
-				}
-				else if (cursors.down.isDown) {
-					myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
-					this.syncMove();
-				}
-				if (cursors.left.isDown && cursors.up.isDown) {
-					myPlaneSelected.fly(false, ANGLE_315, null, null);
-					this.syncMove();
-				}
-				if (cursors.left.isDown && cursors.down.isDown) {
-					myPlaneSelected.fly(false, ANGLE_225, null, null);
-					this.syncMove();
-				}
-				if (cursors.right.isDown && cursors.down.isDown) {
-					myPlaneSelected.fly(false, ANGLE_135, null, null);
-					this.syncMove();
-				}
-				if (cursors.right.isDown && cursors.up.isDown) {
-					myPlaneSelected.fly(false, ANGLE_45, null, null);
-					this.syncMove();
-				}
-				}else{
-					infoGameText.setText("Presione (F) para despegar avion");
-				}
-			}
-
+			
+		
 				//Disparo de avión
 				if (cursors.space.isDown && time > myPlaneSelected.cadency && myPlaneSelected.scene) {
 					if (myPlaneSelected.flying) {
@@ -278,10 +287,7 @@ export class GameScene extends Phaser.Scene {
 					else {
 						console.log("tiene que despegar");
 						infoGameText.setText("Avion en tierra. No puede disparar");
-
 					}
-
-
 				}
 
 				//Disparo de bomba
@@ -302,13 +308,35 @@ export class GameScene extends Phaser.Scene {
 					}
 				}
 			}
-		
+		}
 	}
 
 	create() {
 
 		console.log(context.playerSession);
 		this.add.image(500, 300, 'field');
+
+		//Aviones Consola
+		//var plane1NumberText = this.add.text(1015, 470, 'Avion 1', { fontSize: '13px', fill: '#FFFFFF'});
+		var consolePlane1 = this.add.image(1040, 500, 'plane');
+		consolePlane1.setScale(0.3);
+		plane1HealthText = this.add.text(1025, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+
+		//var plane2NumberText = this.add.text(1095, 470, 'Avion 2', { fontSize: '13px', fill: '#FFFFFF'});
+		var consolePlane2 = this.add.image(1120, 500, 'plane');
+		consolePlane2.setScale(0.3);
+		plane2HealthText = this.add.text(1105, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+
+		//var plane3NumberText = this.add.text(1175, 470, 'Avion 3', { fontSize: '13px', fill: '#FFFFFF'});
+		var consolePlane3 = this.add.image(1200, 500, 'plane');
+		consolePlane3.setScale(0.3);
+		plane3HealthText = this.add.text(1185, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+
+		//var plane4NumberText = this.add.text(1255, 470, 'Avion 4', { fontSize: '13px', fill: '#FFFFFF'});
+		var consolePlane4 = this.add.image(1280, 500, 'plane');
+		consolePlane4.setScale(0.3);
+		plane4HealthText = this.add.text(1265, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+
 
 		isBlue = context.playerSession.teamSide == 1
 
@@ -445,7 +473,7 @@ export class GameScene extends Phaser.Scene {
 		myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, 100, planesServer[0].hasBomb, 100);
 		myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, 100, planesServer[1].hasBomb, 100);
 		myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, 100, planesServer[2].hasBomb, 100);
-		myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270), planesServer[3].fuel, planesServer[3].armor, 100, planesServer[3].hasBomb, 100;
+		myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, 100, planesServer[3].hasBomb, 100);
 	}
 
 	placeMyPlane(i, j, angle, fuel, armor, speed, bomb, firePower) {
@@ -497,12 +525,29 @@ export class GameScene extends Phaser.Scene {
 				myPlaneSelected.planeAngle = angle;
 				myPlaneSelected.flying = false;
 				myPlaneSelected.setTexture('sprites', 'plane_landed');
-
+				//Info en Consola
+				infoGameText.setText("Presione (F) para despegar avion");
+				lifeText.setText('Blindaje: ' + myPlaneSelected.armor);
+				fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
+				if(myPlaneSelected.withBomb){
+					bombText.setText('Bomba: SI' );
+				}
+				else{
+					bombText.setText('Bomba: NO');
+				}
 			}
 			else {
 				console.log("No puede volar");
 			}
 
+		}
+	}
+
+	fuelControl()
+	{
+		fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
+		if(myPlaneSelected.fuel < 30){
+			infoGameText.setText('Se está agotando el combustible. \nRetorne a la base');
 		}
 	}
 

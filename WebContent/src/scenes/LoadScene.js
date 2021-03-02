@@ -46,6 +46,8 @@ export class LoadScene extends Phaser.Scene {
         // logo.setBounce(1, 1);
         // logo.setCollideWorldBounds(true);
 
+        
+
         this.time.addEvent({
             delay: 2000,
             callback: ()=>{
