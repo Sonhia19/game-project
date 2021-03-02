@@ -375,7 +375,7 @@ export class GameScene extends Phaser.Scene {
 					}
 					else {
 						console.log("tiene que despegar");
-						infoGameText.setText("Avión en tierra. \nNo puede disparar bomba");
+						infoGameText.setText("Avión en tierra. No puede disparar bomba");
 					}
 				}
 			}
@@ -499,7 +499,7 @@ export class GameScene extends Phaser.Scene {
 		fuelText = this.add.text(1010, 316, '', { fontSize: '11px', fill: '#FFFFFF' });
 		bombText = this.add.text(1010, 331, '', { fontSize: '11px', fill: '#FFFFFF' });
 		highFlyPlaneText = this.add.text(1010, 346, '', { fontSize: '11px', fill: '#FFFF00' });
-		infoGameText = this.add.text(1010, 361, 'Presione teclas (1) (2) (3) (4) para \nseleccionar un avión', { fontSize: '11px', fill: '#FF0000' });
+		infoGameText = this.add.text(1010, 361, 'Presione (1) (2) (3) (4) para seleccionar avión', { fontSize: '11px', fill: '#FF0000' });
 		
 		myBaseText = this.add.text(1010, 400, 'Mi Base', { fontSize: '13px', fill: '#009025' }); 
 		artilleryText = this.add.text(1010, 415, '', { fontSize: '11px', fill: '#FFFFFF' }); 
