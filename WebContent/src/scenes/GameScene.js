@@ -56,6 +56,7 @@ let enemyFuels;
 let enemyHangars;
 let enemyTowers;
 let enemyArtilleries;
+let enemyBullets;
 
 //Elementos del propio bando
 let myFuel;
@@ -137,12 +138,51 @@ export class GameScene extends Phaser.Scene {
 		enemyPlaneFour.angle = planeEnemyServer[3].angle;
 	}
 
+	existsEnemySession() {
+		return context.enemySession.id != undefined;
+	}
+
+	checkEnemyPlaneShooting(index) {
+		let p = null;
+		switch (parseInt(index)) {
+			case 1:
+				p = enemyPlaneOne;
+				break;
+			case 2:
+				p = enemyPlaneTwo;
+				break;
+			case 3:
+				p = enemyPlaneThree;
+				break;
+			case 4:
+				p = enemyPlaneFour;
+				break;
+
+		}
+		return p;
+	}
+
 
 	update(time, delta) {
 
-		if (context.enemySession.id != undefined && !enemyDraw) {
-			enemyDraw = true;
-			this.placeEnemyElements();
+		if (this.existsEnemySession()) {
+			if (!enemyDraw) {
+				enemyDraw = true;
+				this.placeEnemyElements();
+			}
+
+			if (context.enemySession.isShooting) {
+				context.enemySession.isShooting = false;
+				let p = this.checkEnemyPlaneShooting(context.enemySession.planeShooting);
+				if (p != null) {
+					p.fire(time, enemyBullets);
+				}
+			}
+
+		}
+
+		if (context.enemySession.id != undefined) {
+
 		}
 
 		if (context.enemySession.id != undefined) {
@@ -188,36 +228,36 @@ export class GameScene extends Phaser.Scene {
 				if (Phaser.Input.Keyboard.JustDown(keyF)) {
 					if (myPlaneSelected.flying) {
 						myPlaneSelected.land(isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X);
-						if(isBlue){
-							if(myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
+						if (isBlue) {
+							if (myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
 								this.fuelControl();
 								highFlyPlaneText.setText('');
 								infoGameText.setText("Presione (F) para despegar avion");
-							}else{
-								infoGameText.setText("Vuelva a la base para aterrizar");
-							}		
-						}else{
-							if(myPlaneSelected.x > RED_SAFE_ZONE_X) {
-								this.fuelControl();
-								highFlyPlaneText.setText('');
-								infoGameText.setText("Presione (F) para despegar avion");
-							}else{
+							} else {
 								infoGameText.setText("Vuelva a la base para aterrizar");
 							}
-						}	
-					}else{
+						} else {
+							if (myPlaneSelected.x > RED_SAFE_ZONE_X) {
+								this.fuelControl();
+								highFlyPlaneText.setText('');
+								infoGameText.setText("Presione (F) para despegar avion");
+							} else {
+								infoGameText.setText("Vuelva a la base para aterrizar");
+							}
+						}
+					} else {
 						myPlaneSelected.takeOff();
 						infoGameText.setText('');
 						highFlyPlaneText.setText('Vuelo Bajo. Presione (shift) \npara cambiar modo de vuelo');
-					}				
+					}
 				}
-				
+
 				// Vuelto alto / vuelo bajo
 				if (Phaser.Input.Keyboard.JustDown(keyShift)) {
 					myPlaneSelected.highFlyPlane();
-					if(myPlaneSelected.highFly){
+					if (myPlaneSelected.highFly) {
 						highFlyPlaneText.setText('Vuelo Alto. Presione (shift) \npara cambiar modo de vuelo');
-					}else{
+					} else {
 						highFlyPlaneText.setText('Vuelo Bajo. Presione (shift) \npara cambiar modo de vuelo');
 					}
 				}
@@ -225,53 +265,53 @@ export class GameScene extends Phaser.Scene {
 				//Si el avion se encuentra dentro de su zona, limpia todo el mapa
 				if (myPlaneSelected.x < isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X) {
 					myPlaneSelected.gray = null;
-				}					
-					//Movimiento de avión
-					if (cursors.left.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
-						this.syncMove();						
-					}else if (cursors.right.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
-						this.syncMove();						
-					}
-					if (cursors.up.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
-						this.syncMove();
-						
-					}else if (cursors.down.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
-						this.syncMove();
-						
-					}
-					if (cursors.left.isDown && cursors.up.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_315, null, null);
-						this.syncMove();
-						
-					}	
-					if (cursors.left.isDown && cursors.down.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_225, null, null);
-						this.syncMove();
-						
-					}
-					if (cursors.right.isDown && cursors.down.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_135, null, null);
-						this.syncMove();
-					}
-					if (cursors.right.isDown && cursors.up.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_45, null, null);
-						this.syncMove();
-					}
-				
-			
-		
+				}
+				//Movimiento de avión
+				if (cursors.left.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
+					this.syncMove();
+				} else if (cursors.right.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
+					this.syncMove();
+				}
+				if (cursors.up.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
+					this.syncMove();
+
+				} else if (cursors.down.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
+					this.syncMove();
+
+				}
+				if (cursors.left.isDown && cursors.up.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(false, ANGLE_315, null, null);
+					this.syncMove();
+
+				}
+				if (cursors.left.isDown && cursors.down.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(false, ANGLE_225, null, null);
+					this.syncMove();
+
+				}
+				if (cursors.right.isDown && cursors.down.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(false, ANGLE_135, null, null);
+					this.syncMove();
+				}
+				if (cursors.right.isDown && cursors.up.isDown) {
+					this.fuelControl();
+					myPlaneSelected.fly(false, ANGLE_45, null, null);
+					this.syncMove();
+				}
+
+
+
 				//Disparo de avión
 				if (cursors.space.isDown && time > myPlaneSelected.cadency && myPlaneSelected.scene) {
 					if (myPlaneSelected.flying) {
@@ -281,6 +321,7 @@ export class GameScene extends Phaser.Scene {
 							case ANGLE_180:
 							case ANGLE_270:
 								myPlaneSelected.fire(time, myBullets);
+								this.syncShoot();
 								break;
 						}
 					}
@@ -320,22 +361,22 @@ export class GameScene extends Phaser.Scene {
 		//var plane1NumberText = this.add.text(1015, 470, 'Avion 1', { fontSize: '13px', fill: '#FFFFFF'});
 		var consolePlane1 = this.add.image(1040, 500, 'plane');
 		consolePlane1.setScale(0.3);
-		plane1HealthText = this.add.text(1025, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+		plane1HealthText = this.add.text(1025, 515, '', { fontSize: '15px', fill: '#FFFFFF' });
 
 		//var plane2NumberText = this.add.text(1095, 470, 'Avion 2', { fontSize: '13px', fill: '#FFFFFF'});
 		var consolePlane2 = this.add.image(1120, 500, 'plane');
 		consolePlane2.setScale(0.3);
-		plane2HealthText = this.add.text(1105, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+		plane2HealthText = this.add.text(1105, 515, '', { fontSize: '15px', fill: '#FFFFFF' });
 
 		//var plane3NumberText = this.add.text(1175, 470, 'Avion 3', { fontSize: '13px', fill: '#FFFFFF'});
 		var consolePlane3 = this.add.image(1200, 500, 'plane');
 		consolePlane3.setScale(0.3);
-		plane3HealthText = this.add.text(1185, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+		plane3HealthText = this.add.text(1185, 515, '', { fontSize: '15px', fill: '#FFFFFF' });
 
 		//var plane4NumberText = this.add.text(1255, 470, 'Avion 4', { fontSize: '13px', fill: '#FFFFFF'});
 		var consolePlane4 = this.add.image(1280, 500, 'plane');
 		consolePlane4.setScale(0.3);
-		plane4HealthText = this.add.text(1265, 515, '', { fontSize: '15px', fill: '#FFFFFF'});
+		plane4HealthText = this.add.text(1265, 515, '', { fontSize: '15px', fill: '#FFFFFF' });
 
 
 		isBlue = context.playerSession.teamSide == 1
@@ -365,6 +406,7 @@ export class GameScene extends Phaser.Scene {
 		grays = this.physics.add.group({ classType: Gray, runChildUpdate: true });
 
 		//Creación de elementos enemigos
+		enemyBullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
 		enemyPlanes = this.physics.add.group({ classType: Plane, runChildUpdate: true });
 		enemyFuels = this.physics.add.group({ classType: Fuel, runChildUpdate: true });
 		enemyHangars = this.physics.add.group({ classType: Hangar, runChildUpdate: true });
@@ -420,11 +462,11 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.overlap(myPlanes, blacks, this.exploreBlackMap);
 
 		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '15px', fill: '#FFFFFF', });
-		lifeText = this.add.text(1010, 316, '', { fontSize: '15px', fill: '#FFFFFF'});
-		fuelText = this.add.text(1010, 331, '', { fontSize: '15px', fill: '#FFFFFF'});
-		bombText = this.add.text(1010, 346, '', { fontSize: '15px', fill: '#FFFFFF'});
-		highFlyPlaneText = this.add.text(1010, 361, '', { fontSize: '15px', fill: '#FFFF00'});
-		infoGameText = this.add.text(1010, 400, 'Presione teclas (1) (2) (3) (4) para \nseleccionar un avion', { fontSize: '15px', fill: '#FF0000'});
+		lifeText = this.add.text(1010, 316, '', { fontSize: '15px', fill: '#FFFFFF' });
+		fuelText = this.add.text(1010, 331, '', { fontSize: '15px', fill: '#FFFFFF' });
+		bombText = this.add.text(1010, 346, '', { fontSize: '15px', fill: '#FFFFFF' });
+		highFlyPlaneText = this.add.text(1010, 361, '', { fontSize: '15px', fill: '#FFFF00' });
+		infoGameText = this.add.text(1010, 400, 'Presione teclas (1) (2) (3) (4) para \nseleccionar un avion', { fontSize: '15px', fill: '#FF0000' });
 
 
 		//this.physics.add.overlap(myPlanes, grays, this.exploreGrayMap);
@@ -470,25 +512,25 @@ export class GameScene extends Phaser.Scene {
 	placeMyPlanes() {
 
 		let planesServer = context.playerSession.planes;
-		myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, 100, planesServer[0].hasBomb, 100);
-		myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, 100, planesServer[1].hasBomb, 100);
-		myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, 100, planesServer[2].hasBomb, 100);
-		myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, 100, planesServer[3].hasBomb, 100);
+		myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, 100, planesServer[0].hasBomb, 100, 1);
+		myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, 100, planesServer[1].hasBomb, 100, 2);
+		myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, 100, planesServer[2].hasBomb, 100, 3);
+		myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, 100, planesServer[3].hasBomb, 100, 4);
 	}
 
-	placeMyPlane(i, j, angle, fuel, armor, speed, bomb, firePower) {
+	placeMyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
 		let plane = myPlanes.get();
 		if (plane) {
-			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower);
+			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex);
 		}
 	}
 
 	placeEnemyPlanes() {
 		let planeEnemyServer = context.enemySession.planes;
-		enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, 100, planeEnemyServer[0].hasBomb, 100);
-		enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, 100, planeEnemyServer[1].hasBomb, 100);
-		enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, 100, planeEnemyServer[2].hasBomb, 100);
-		enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, 100, planeEnemyServer[3].hasBomb, 100);
+		enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, 100, planeEnemyServer[0].hasBomb, 100, 1);
+		enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, 100, planeEnemyServer[1].hasBomb, 100, 2);
+		enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, 100, planeEnemyServer[2].hasBomb, 100, 3);
+		enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, 100, planeEnemyServer[3].hasBomb, 100, 4);
 	}
 
 	placeEnemyPlane(i, j, angle, fuel, armor, speed, bomb, firePower) {
@@ -529,10 +571,10 @@ export class GameScene extends Phaser.Scene {
 				infoGameText.setText("Presione (F) para despegar avion");
 				lifeText.setText('Blindaje: ' + myPlaneSelected.armor);
 				fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
-				if(myPlaneSelected.withBomb){
-					bombText.setText('Bomba: SI' );
+				if (myPlaneSelected.withBomb) {
+					bombText.setText('Bomba: SI');
 				}
-				else{
+				else {
 					bombText.setText('Bomba: NO');
 				}
 			}
@@ -543,10 +585,9 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	fuelControl()
-	{
+	fuelControl() {
 		fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
-		if(myPlaneSelected.fuel < 30){
+		if (myPlaneSelected.fuel < 30) {
 			infoGameText.setText('Se está agotando el combustible. \nRetorne a la base');
 		}
 	}
@@ -658,6 +699,19 @@ export class GameScene extends Phaser.Scene {
 					planeTwo: [Math.round(myPlaneTwo.x), Math.round(myPlaneTwo.y), myPlaneTwo.planeAngle],
 					planeThree: [Math.round(myPlaneThree.x), Math.round(myPlaneThree.y), myPlaneThree.planeAngle],
 					planeFour: [Math.round(myPlaneFour.x), Math.round(myPlaneFour.y), myPlaneFour.planeAngle]
+				}
+			}
+		})
+		context.functions.sendMessage(json);
+	}
+
+	syncShoot() {
+		let json = JSON.stringify({
+			action: {
+				name: 'syncShoot',
+				parameters: {
+					gameId: context.gameId,
+					shootingPlane: myPlaneSelected.planeIndex
 				}
 			}
 		})

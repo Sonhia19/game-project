@@ -34,9 +34,9 @@ public class WsSynchronization {
 
 
 	//Sincroniza unicamente las sesiones enemigas
-	public static void syncWithEnemy(final Facade facadeInstance, final int gameId, final String playerName, WsResponse response) throws IOException {
+	public static void syncWithEnemy(final Facade facadeInstance, final int gameId, final String playerName, WsResponse response, String action) throws IOException {
 		
-		response.setAction((new JSONObject()).put("name", "syncWithEnemy"));
+		response.setAction((new JSONObject()).put("name", action));
 		final HashMap<String, Player> gamePlayers = facadeInstance.getGamePlayers(gameId);
 		
 		if (gamePlayers != null) {

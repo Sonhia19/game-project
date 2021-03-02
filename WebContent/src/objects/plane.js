@@ -10,6 +10,7 @@ export let Plane = new Phaser.Class({
 
         function Plane(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'plane');
+            this.planeIndex = 0;
             this.fuel = 0;
             this.firePower = 0;
             this.armor = 0;
@@ -22,23 +23,20 @@ export let Plane = new Phaser.Class({
             this.cadency = 0;
 
         },
-       
+
 
     emptyTank() {
-        let i = 1;
-        this.startCrash(i);
+        
+        console.log("test");
+        setTimeout(this.startCrash(), 2000);
+        setTimeout(this.startCrash(), 2000);
+        setTimeout(this.startCrash(), 2000);
+        setTimeout(this.startCrash(), 2000);
+        console.log("test2");
     },
-    startCrash(i) {
-        //setTimeout(function () {
-            i++;
-            if (i < 25) {
-                this.displayWidth = this.displayWidth * 0.95;
-                this.displayHeight = this.displayHeight * 0.95;
-                this.startCrash(i);
-            }
-            //setTimeout("this.crash();", 2500)
-            this.crash();
-        //}, 2000)
+    startCrash() {
+            this.displayWidth = this.displayWidth * 0.95;
+            this.displayHeight = this.displayHeight * 0.95;
     },
     fire: function (time, bullets) {
         let bullet = bullets.get();
@@ -92,7 +90,8 @@ export let Plane = new Phaser.Class({
             this.withBomb = false;
         }
     },
-    place: function (i, j, angle, fuel, armor, speed, bomb, firePower) {
+    place: function (i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
+        this.planeIndex = planeIndex;
         this.armor = armor;
         this.fuel = fuel;
         this.withBomb = bomb;
@@ -106,6 +105,7 @@ export let Plane = new Phaser.Class({
         this.displayHeight = width;
         this.angle = angle;
         this.body.collideWorldBounds = true;
+        this.planeAngle = angle;
 
         // world.physics.add.overlap(bulletsTurret, this, torretPlane);
 
@@ -116,7 +116,7 @@ export let Plane = new Phaser.Class({
     },
     consumeFuel: function () {
         if (this.fuel > 0) {
-            this.fuel -= this.highFly ? 0.2 : 0.1;
+            //this.fuel -= this.highFly ? 0.2 : 0.1;
         }
         if (this.fuel < 0 && this.fuel > -1) {
             this.emptyTank();
@@ -133,24 +133,21 @@ export let Plane = new Phaser.Class({
     land() {
         var isBlue = context.playerSession.teamSide == 1;
         var landed = false;
-        if (isBlue)
-        {
-            if (this.x < BLUE_SAFE_ZONE_X ) {
-                landed = true;                
+        if (isBlue) {
+            if (this.x < BLUE_SAFE_ZONE_X) {
+                landed = true;
             }
-        }else
-        {
-            if (this.x > RED_SAFE_ZONE_X ) {
+        } else {
+            if (this.x > RED_SAFE_ZONE_X) {
                 landed = true;
             }
         }
-        if(landed)
-        {
+        if (landed) {
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
             this.setTexture('sprites', 'plane_landed');
-        }else{
+        } else {
             console.log("vuelva a la base para aterrizar");
         }
     },

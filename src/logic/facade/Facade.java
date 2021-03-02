@@ -115,6 +115,23 @@ public class Facade implements IFacade {
 		return response;
 	}
 	
+public WsResponse getJsonShootEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+		
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
+		
+		final int[][] coordinates = new int [4][3];
+		int indexPlane =(int)parameters.get("shootingPlane");
+		final Gson gson = new Gson();
+        
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("enemyShoot",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+	
 public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 		
 		final WsResponse response = new WsResponse();

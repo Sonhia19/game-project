@@ -69,6 +69,10 @@ var functions = {
                 context.enemySession = JSON.parse(response.responses[1].value);
 
             }
+            if (response.action.name == "syncShootEnemy") {
+                context.enemySession.isShooting = true;
+                context.enemySession.planeShooting = JSON.parse(response.responses[1].value);
+            }
         }
     },
 
