@@ -57,6 +57,7 @@ let enemyHangars;
 let enemyTowers;
 let enemyArtilleries;
 let enemyBullets;
+let enemyBombs;
 
 //Elementos del propio bando
 let myFuel;
@@ -142,7 +143,7 @@ export class GameScene extends Phaser.Scene {
 		return context.enemySession.id != undefined;
 	}
 
-	checkEnemyPlaneShooting(index) {
+	checkEnemyPlaneAction(index) {
 		let p = null;
 		switch (parseInt(index)) {
 			case 1:
@@ -174,10 +175,20 @@ export class GameScene extends Phaser.Scene {
 
 			this.moveEnemyPlanes();
 			if (context.enemySession.isShooting) {
+				let p = this.checkEnemyPlaneAction(context.enemySession.planeShooting);
 				context.enemySession.isShooting = false;
-				let p = this.checkEnemyPlaneShooting(context.enemySession.planeShooting);
+				context.enemySession.planeShooting = -1;
 				if (p != null) {
 					p.fire(time, enemyBullets);
+				}
+			}
+
+			if (context.enemySession.isBombing) {
+				let p = this.checkEnemyPlaneAction(context.enemySession.planeBombing);
+				context.enemySession.isBombing = false;
+				context.enemySession.planeBombing = -1;
+				if (p != null) {
+					p.fireBomb(enemyBombs);
 				}
 			}
 		}
@@ -328,6 +339,7 @@ export class GameScene extends Phaser.Scene {
 					if (myPlaneSelected.flying) {
 						if (myPlaneSelected.withBomb) {
 							myPlaneSelected.fireBomb(myBombs);
+							this.syncBomb();
 						}
 						else {
 							console.log("no tiene bomba");
@@ -399,6 +411,7 @@ export class GameScene extends Phaser.Scene {
 
 		//Creación de elementos enemigos
 		enemyBullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
+		enemyBombs = this.physics.add.group({ classType: Bomb, runChildUpdate: true });
 		enemyPlanes = this.physics.add.group({ classType: Plane, runChildUpdate: true });
 		enemyFuels = this.physics.add.group({ classType: Fuel, runChildUpdate: true });
 		enemyHangars = this.physics.add.group({ classType: Hangar, runChildUpdate: true });
@@ -686,7 +699,6 @@ export class GameScene extends Phaser.Scene {
 				name: 'syncMove',
 				parameters: {
 					gameId: context.gameId,
-					//playerId: context.playerSession.
 					planeOne: [Math.round(myPlaneOne.x), Math.round(myPlaneOne.y), myPlaneOne.planeAngle],
 					planeTwo: [Math.round(myPlaneTwo.x), Math.round(myPlaneTwo.y), myPlaneTwo.planeAngle],
 					planeThree: [Math.round(myPlaneThree.x), Math.round(myPlaneThree.y), myPlaneThree.planeAngle],
@@ -704,6 +716,19 @@ export class GameScene extends Phaser.Scene {
 				parameters: {
 					gameId: context.gameId,
 					shootingPlane: myPlaneSelected.planeIndex
+				}
+			}
+		})
+		context.functions.sendMessage(json);
+	}
+
+	syncBomb() {
+		let json = JSON.stringify({
+			action: {
+				name: 'syncBomb',
+				parameters: {
+					gameId: context.gameId,
+					bombingPlane: myPlaneSelected.planeIndex
 				}
 			}
 		})
