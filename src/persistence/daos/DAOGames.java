@@ -85,14 +85,11 @@ public class DAOGames implements IDAOGames {
 		Connection con = icon.getConnection();
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("Consultas.obtenerPartida()");
+			PreparedStatement pstmt = con.prepareStatement("select id from partidas where id = ?");
 			pstmt.setInt(1, idPartida);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				/*partida = new Game(rs.getInt("id"), rs.getDouble("stock_combustible_patrullas"),
-						rs.getDouble("stock_combustible_pesqueros"), rs.getDouble("stock_peces"),
-						rs.getInt("estado"), rs.getInt("cantidad_patrullas"), rs.getInt("cantidad_pesqueros"),
-						rs.getInt("cantidad_pesqueros_eliminados"), rs.getString("equipo_ganador"));*/
+				game = new Game(rs.getInt("id"),"pepe el pollo");
 			}
 			rs.close();
 			pstmt.close();
