@@ -14,14 +14,18 @@ var config = {
         //scaleMode: Phaser.ScaleManager.SHOW_ALL,
 
     },
-    parent: 'content',
+    parent: 'main',
     type: Phaser.AUTO,
     width: 1350,
     height: 600,
     physics: {
         default: "arcade",
         arcade: {
+            debug: false
         }
+    },
+    dom: {
+        createContainer: true
     },
     scene: [
         LoadScene, MenuScene, WaitingGameScene, GameScene
