@@ -9,8 +9,8 @@ import { WebSocketClient } from '../src/client/WebSocketClient.js';
 
 var config = {
     scale: {
-        //mode: Phaser.Scale.FIT,
-        //autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
         //scaleMode: Phaser.ScaleManager.SHOW_ALL,
 
     },
