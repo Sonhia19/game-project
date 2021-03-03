@@ -1,5 +1,5 @@
-import {MINUS_X, MINUS_Y, MORE_X, MORE_Y} from '../constants/GameConstants.js'
-import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90} from '../constants/GameConstants.js';
+import { MINUS_X, MINUS_Y, MORE_X, MORE_Y } from '../constants/GameConstants.js'
+import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
 
 export let Bullet = new Phaser.Class({
 
@@ -14,9 +14,10 @@ export let Bullet = new Phaser.Class({
             this.incY = 0;
             this.speed = Phaser.Math.GetSpeed(400, 1);
             this.bulletAngle = ANGLE_90;
+            this.damage = 0;
         },
 
-    fire: function (x, y, angle, reach) {
+    fire: function (x, y, angle, reach, damage) {
         switch (angle) {
             case 90:
                 this.setPosition(x + 20, y);
@@ -33,6 +34,8 @@ export let Bullet = new Phaser.Class({
                 this.setPosition(x, y - 20);
                 break;
         }
+
+        this.damage = damage;
         this.bulletAngle = angle;
         this.reach = reach;
         this.setActive(true);

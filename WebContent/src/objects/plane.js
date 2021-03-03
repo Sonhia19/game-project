@@ -1,5 +1,6 @@
-import { BLUE_SAFE_ZONE_X, MINUS_X, MINUS_Y, MORE_X, MORE_Y } from '../constants/GameConstants.js'
+import { BLUE_SAFE_ZONE_X, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_SAFE_ZONE_X } from '../constants/GameConstants.js'
 import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
+import { context } from '../../src/main.js';
 
 export let Plane = new Phaser.Class({
 
@@ -9,31 +10,33 @@ export let Plane = new Phaser.Class({
 
         function Plane(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'plane');
-            this.fuel = 100;
-            this.hp = 100;
-            this.withBomb = true;
-            this.black = null;
+            this.planeIndex = 0;
+            this.fuel = 0;
+            this.firePower = 0;
+            this.armor = 0;
+            this.withBomb = false;
+            this.gray = null;
             this.highFly = false;
             this.flying = false;
             this.planeAngle = ANGLE_90;
-            this.speed = Phaser.Math.GetSpeed(100, 1);
+            this.speed = 0;//Phaser.Math.GetSpeed(100, 1);
             this.cadency = 0;
 
         },
+
+
     emptyTank() {
-        let i = 1;
-        this.startCrash(i);
+        
+        console.log("test");
+        setTimeout(this.startCrash(), 2000);
+        setTimeout(this.startCrash(), 2000);
+        setTimeout(this.startCrash(), 2000);
+        setTimeout(this.startCrash(), 2000);
+        console.log("test2");
     },
-    startCrash(i) {
-        setTimeout(function () {
-            i++;
-            if (i < 25) {
-                plane.displayWidth = plane.displayWidth * 0.95;
-                plane.displayHeight = plane.displayHeight * 0.95;
-                plane.startCrash(i);
-            }
-            setTimeout("plane.crash();", 250)
-        }, 2000)
+    startCrash() {
+            this.displayWidth = this.displayWidth * 0.95;
+            this.displayHeight = this.displayHeight * 0.95;
     },
     fire: function (time, bullets) {
         let bullet = bullets.get();
@@ -53,17 +56,22 @@ export let Plane = new Phaser.Class({
                     reach = (this.y - this.height)
                     break;
             }
-            bullet.fire(this.x, this.y, this.planeAngle, reach);
+            bullet.fire(this.x, this.y, this.planeAngle, reach, this.firePower);
 
             this.cadency = time + 150;
         }
     },
     receiveDamage: function (damage) {
-        this.hp -= damage;
-
-        if (this.hp <= 0) {
-            this.crash();
+        let destroy = false;
+        this.armor -= damage;
+        console.log(this.armor);
+        if (this.armor <= 0) {   
+            this.flying = false;    
+            //this.setTexture('explosion');     
+            this.destroy();
+            destroy = true;
         }
+        return destroy;
     },
     fireBomb: function (bombs) {
         let bomb = bombs.get();
@@ -88,7 +96,13 @@ export let Plane = new Phaser.Class({
             this.withBomb = false;
         }
     },
-    place: function (i, j, scene, angle) {
+    place: function (i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
+        this.planeIndex = planeIndex;
+        this.armor = armor;
+        this.fuel = fuel;
+        this.withBomb = bomb;
+        this.speed = Phaser.Math.GetSpeed(speed, 1);
+        this.firePower = firePower;
         this.y = i;
         this.x = j;
         let height = 50;
@@ -97,9 +111,10 @@ export let Plane = new Phaser.Class({
         this.displayHeight = width;
         this.angle = angle;
         this.body.collideWorldBounds = true;
+        this.planeAngle = angle;
 
         // world.physics.add.overlap(bulletsTurret, this, torretPlane);
-        // world.physics.add.overlap(this, blacks, exploreMap);
+
         return this;
     },
     update: function (time, delta) {
@@ -115,24 +130,32 @@ export let Plane = new Phaser.Class({
     },
     crash() {
         this.black = false;
-        plane.destroy();
+        this.destroy();
     },
     takeOff() {
         this.flying = true;
         this.setTexture('sprites', 'plane_flying');
     },
     land() {
-        if (this.x < BLUE_SAFE_ZONE_X) {
+        var isBlue = context.playerSession.teamSide == 1;
+        var landed = false;
+        if (isBlue) {
+            if (this.x < BLUE_SAFE_ZONE_X) {
+                landed = true;
+            }
+        } else {
+            if (this.x > RED_SAFE_ZONE_X) {
+                landed = true;
+            }
+        }
+        if (landed) {
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
             this.setTexture('sprites', 'plane_landed');
-        }
-        else {
+        } else {
             console.log("vuelva a la base para aterrizar");
         }
-
-
     },
     highFlyPlane() {
 

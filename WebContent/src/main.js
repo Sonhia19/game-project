@@ -3,41 +3,33 @@ import { LoadScene } from '../src/scenes/LoadScene.js';
 import { GameScene } from '../src/scenes/GameScene.js';
 import { LobbyGameScene } from '../src/scenes/LobbyGameScene.js';
 import { MenuScene } from '../src/scenes/MenuScene.js';
+import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
-// import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 
 //import Phaser from '/phaser';
 
 var config = {
-    parent: 'main',
-    dom: {
-        createContainer: true
-    },
     scale: {
         //mode: Phaser.Scale.FIT,
         //autoCenter: Phaser.Scale.CENTER_BOTH,
         //scaleMode: Phaser.ScaleManager.SHOW_ALL,
 
     },
-    // plugins: {
-	// 	scene: [
-	// 		{
-	// 			key: 'rexUI',
-	// 			plugin: RexUIPlugin,
-	// 			mapping: 'rexUI'
-	// 		}
-	// 	]
-    // },
+    parent: 'main',
     type: Phaser.AUTO,
     width: 1350,
     height: 600,
     physics: {
         default: "arcade",
         arcade: {
+            debug: false
         }
     },
+    dom: {
+        createContainer: true
+    },
     scene: [
-        LoadScene, MenuScene, LobbyGameScene, GameScene
+        LoadScene, MenuScene, NewGameScene, LobbyGameScene, GameScene
     ]
 };
 
@@ -86,10 +78,15 @@ var functions = {
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
 
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
+            }
+            if (response.action.name == "syncShootEnemy") {
+                context.enemySession.isShooting = true;
+                context.enemySession.planeShooting = JSON.parse(response.responses[1].value);
+            }
+
+            if (response.action.name == "syncBombEnemy") {
+                context.enemySession.isBombing = true;
+                context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
         }
     },
