@@ -7,35 +7,30 @@ export let Artillery = new Phaser.Class({
         function Artillery(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'artillery');
             this.nextTic = 0;
+            this.cadency = 0;
+            this.reach = 0;
+            this.armor = 0;
+            this.firePower = 0;
         },
-    place: function (i, j) {
+    place: function (i, j, cadency, reach, armor, firePower) {
         this.y = i;
         this.x = j;
+        this.cadency = cadency;
+        this.reach = reach;
+        this.armor = armor;
+        this.firePower = firePower;
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.5);
+
+        return this;
     },
-    fire: function () {
-        // if (plane != null) {
-        //     if (plane.scene) {
-        //         let angle = Phaser.Math.Angle.Between(this.x, this.y, plane.x, plane.y);
-        //         if (Phaser.Math.Distance.Between(this.x, this.y, plane.x, plane.y) < 200) {
-        //             //addBulletTorret(this.x, this.y, angle);
-    //     var bullet = bulletsArtillery.get();
-
-	// if (bullet) {
-	// 	bullet.fireArtillery(x, y, angle);
-	//}
-        //         }
-
-        //         this.angle = (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
-        //     }
-        // }
+    fire: function (time, angle, bullets) {
+        var bullet = bullets.get();
+        this.angle = (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
+        bullet.fire(this.x, this.y, angle, this.firePower, this.reach);
+        this.nextTic = time + this.cadency;
     },
     update: function (time, delta) {
-        if (time > this.nextTic) {
-            this.fire();
-            this.nextTic = time + 1500;
-        }
     }
 });

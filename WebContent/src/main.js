@@ -39,20 +39,20 @@ var functions = {
     },
 
     broadcastWebSocket: (webSocket) => {
-        console.log('On broadcast');
+        //console.log('On broadcast');
         webSocket.onopen = (event) => {
-            console.log("conexion establecida");
-            console.log(event);
+            //console.log("conexion establecida");
+            //console.log(event);
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
-            console.log("Respuesta del servidor");
+            //console.log("Respuesta del servidor");
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
-                console.log('playerSession');
-                console.log(context.playerSession);
+                //console.log('playerSession');
+                //console.log(context.playerSession);
             }
 
             if (response.action.name == 'connectToGame') {

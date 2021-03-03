@@ -56,16 +56,22 @@ export let Plane = new Phaser.Class({
                     reach = (this.y - this.height)
                     break;
             }
-            bullet.fire(this.x, this.y, this.planeAngle, reach);
+            bullet.fire(this.x, this.y, this.planeAngle, reach, this.firePower);
 
             this.cadency = time + 150;
         }
     },
     receiveDamage: function (damage) {
+        let destroy = false;
         this.armor -= damage;
-        if (this.armor <= 0) {
-            this.crash();
+        console.log(this.armor);
+        if (this.armor <= 0) {   
+            this.flying = false;    
+            //this.setTexture('explosion');     
+            this.destroy();
+            destroy = true;
         }
+        return destroy;
     },
     fireBomb: function (bombs) {
         let bomb = bombs.get();
