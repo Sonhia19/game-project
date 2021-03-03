@@ -18,7 +18,15 @@ public class Player {
 	
 	private List<Plane> planes;
 	
+	private List<Artillery> artilleries;
+	
 	private Session session;
+	
+	private boolean activeTower;
+	
+	private boolean activeHangar;
+	
+	private boolean activeFuel;
 	
 	//torreActiva
 	//tanqueActivo
@@ -30,6 +38,10 @@ public class Player {
 		this.teamSide = teamSide;
 		this.session = session;
 		this.planes = preloadPlanes();
+		this.artilleries = preloadArtilleries();
+		this.activeFuel = true;
+		this.activeHangar = true;
+		this.activeTower = true;
 		//Crear arreglo de 4 aviones con valores cargados por defecto, y asignarlos al array del jugador
 	}
 
@@ -53,7 +65,20 @@ public class Player {
 		return session;
 	}
 	
-	private List preloadPlanes () {
+	public boolean getActiveTower() {
+		return activeTower;
+	}
+	
+	public boolean getActiveHangar() {
+		return activeHangar;
+	}
+	
+	public boolean getActiveFuel() {
+		return activeFuel;
+	}
+	
+	
+	private List<Plane> preloadPlanes () {
 		
 		List<Plane> planes = new ArrayList();
 		
@@ -63,6 +88,16 @@ public class Player {
 		planes.add(new Plane(4, this.teamSide == 1? 150 : 850, 500, this.teamSide == 1? 90:270));
 		
 		return planes;
+	}
+	
+	private List<Artillery> preloadArtilleries()
+	{
+		List<Artillery> artilleries = new ArrayList();
+		artilleries.add(new Artillery(1, this.teamSide == 1? 175 : 825, 75, 0));
+		artilleries.add(new Artillery(2, this.teamSide == 1? 175 : 825, 250, 0));
+		artilleries.add(new Artillery(3, this.teamSide == 1? 175 : 825, 350, 0));
+		artilleries.add(new Artillery(4, this.teamSide == 1? 175 : 825, 550, 0));
+		return artilleries;
 	}
 	
 	public Player preparePlayerToSend() {

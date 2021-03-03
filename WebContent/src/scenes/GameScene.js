@@ -159,6 +159,10 @@ export class GameScene extends Phaser.Scene {
 		return context.enemySession.id != undefined;
 	}
 
+	existsPlayerSession() {
+		return context.playerSession.id != undefined;
+	}
+
 	checkEnemyPlaneAction(index) {
 		let p = null;
 		switch (parseInt(index)) {
@@ -446,18 +450,7 @@ export class GameScene extends Phaser.Scene {
 		border = borders.get();
 		border.place(50, 200, true);
 
-		myFuel = myFuels.get();
-		myFuel.place(150, isBlue ? BLUE_BASE_X : RED_BASE_X);
 
-		myHangar = myHangars.get();
-		myHangar.place(500, isBlue ? BLUE_BASE_X : RED_BASE_X);
-
-		myTower = myTowers.get();
-		myTower.place(325, isBlue ? BLUE_BASE_X : RED_BASE_X);
-
-		this.physics.add.overlap(enemyBombs, myHangars, this.damageMyStructure);
-		this.physics.add.overlap(enemyBombs, myTowers, this.damageMyStructure);
-		this.physics.add.overlap(enemyBombs, myFuels, this.damageMyStructure);
 
 		cursors = this.input.keyboard.createCursorKeys();
 
@@ -478,9 +471,7 @@ export class GameScene extends Phaser.Scene {
 		border = borders.get();
 		border.place(50, 1005, false);
 
-		this.placeMyPlanes();
-		this.placeMyArtilleries();
-
+		if (this.existsPlayerSession()) { this.placeMyElements(); }
 		//this.placeEnemyElements();
 
 		//Colisión propia
@@ -536,20 +527,23 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	placeEnemyElements() {
-		enemyFuel = enemyFuels.get();
-		enemyFuel.place(150, isBlue ? RED_BASE_X : BLUE_BASE_X);
+		if (context.enemySession.activeFuel) {
+			enemyFuel = enemyFuels.get();
+			enemyFuel.place(150, isBlue ? RED_BASE_X : BLUE_BASE_X);
+		}
 
-		enemyHangar = enemyHangars.get();
-		enemyHangar.place(500, isBlue ? RED_BASE_X : BLUE_BASE_X);
+		if (context.enemySession.activeHangar) {
+			enemyHangar = enemyHangars.get();
+			enemyHangar.place(500, isBlue ? RED_BASE_X : BLUE_BASE_X);
+		}
 
-		enemyTower = enemyTowers.get();
-		enemyTower.place(325, isBlue ? RED_BASE_X : BLUE_BASE_X);
+		if (context.enemySession.activeTower) {
+			enemyTower = enemyTowers.get();
+			enemyTower.place(325, isBlue ? RED_BASE_X : BLUE_BASE_X);
+		}
 
-		enemyArtilleriesPlaced[0] = this.placeEnemyArtillery(75, isBlue ? RED_ARTILLERY_X : BLUE_ARTILLERY_X, 1500, 200, 100, 15);
-		enemyArtilleriesPlaced[1] = this.placeEnemyArtillery(250, isBlue ? RED_ARTILLERY_X : BLUE_ARTILLERY_X, 1500, 200, 100, 15);
-		enemyArtilleriesPlaced[2] = this.placeEnemyArtillery(350, isBlue ? RED_ARTILLERY_X : BLUE_ARTILLERY_X, 1500, 200, 100, 15);
-		enemyArtilleriesPlaced[3] = this.placeEnemyArtillery(550, isBlue ? RED_ARTILLERY_X : BLUE_ARTILLERY_X, 1500, 200, 100, 15);
 
+		this.placeEnemyArtilleries();
 		this.placeEnemyPlanes();
 
 		this.physics.add.overlap(myBombs, enemyHangars, this.damageEnemyStructure);
@@ -557,13 +551,46 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.overlap(myBombs, enemyFuels, this.damageEnemyStructure);
 		this.physics.add.overlap(myBulletsArtillery, enemyPlanes, this.damageEnemyPlane);
 	}
+
+	placeEnemyArtilleries() {
+		let artilleryServer = context.enemySession.artilleries;
+		artilleryCount = 0;
+		if (artilleryServer[0].armor > 0) { enemyArtilleriesPlaced[0] = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower); }
+		if (artilleryServer[1].armor > 0) { enemyArtilleriesPlaced[1] = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower); }
+		if (artilleryServer[2].armor > 0) { enemyArtilleriesPlaced[2] = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower); }
+		if (artilleryServer[3].armor > 0) { enemyArtilleriesPlaced[3] = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower); }
+	}
+
+	placeMyElements() {
+		if (context.playerSession.activeFuel) {
+			myFuel = myFuels.get();
+			myFuel.place(150, isBlue ? BLUE_BASE_X : RED_BASE_X);
+		}
+
+		if (context.playerSession.activeHangar) {
+			myHangar = myHangars.get();
+			myHangar.place(500, isBlue ? BLUE_BASE_X : RED_BASE_X);
+		}
+
+		if (context.playerSession.activeTower) {
+			myTower = myTowers.get();
+			myTower.place(325, isBlue ? BLUE_BASE_X : RED_BASE_X);
+		}
+
+		this.placeMyPlanes();
+		this.placeMyArtilleries();
+
+		this.physics.add.overlap(enemyBombs, myHangars, this.damageMyStructure);
+		this.physics.add.overlap(enemyBombs, myTowers, this.damageMyStructure);
+		this.physics.add.overlap(enemyBombs, myFuels, this.damageMyStructure);
+	}
 	placeMyPlanes() {
 
 		let planesServer = context.playerSession.planes;
-		myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, 100, planesServer[0].hasBomb, 10, 1);
-		myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, 100, planesServer[1].hasBomb, 10, 2);
-		myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, 100, planesServer[2].hasBomb, 10, 3);
-		myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, 100, planesServer[3].hasBomb, 10, 4);
+		if (planesServer[0].armor > 0) { myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, planesServer[0].speed, planesServer[0].hasBomb, planesServer[0].firePower, 1); }
+		if (planesServer[1].armor > 0) { myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2); }
+		if (planesServer[2].armor > 0) { myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, planesServer[2].speed, planesServer[2].hasBomb, planesServer[2].firePower, 3); }
+		if (planesServer[3].armor > 0) { myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4); }
 
 		this.physics.add.overlap(enemyBullets, myPlanes, this.damageMyPlane);
 	}
@@ -577,10 +604,10 @@ export class GameScene extends Phaser.Scene {
 
 	placeEnemyPlanes() {
 		let planeEnemyServer = context.enemySession.planes;
-		enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, 100, planeEnemyServer[0].hasBomb, 10, 1);
-		enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, 100, planeEnemyServer[1].hasBomb, 10, 2);
-		enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, 100, planeEnemyServer[2].hasBomb, 10, 3);
-		enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, 100, planeEnemyServer[3].hasBomb, 10, 4);
+		if (planeEnemyServer[0].armor > 0) { enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, planeEnemyServer[0].speed, planeEnemyServer[0].hasBomb, planeEnemyServer[0].firePower, 1); }
+		if (planeEnemyServer[1].armor > 0) { enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, planeEnemyServer[1].speed, planeEnemyServer[1].hasBomb, planeEnemyServer[1].firePower, 2); }
+		if (planeEnemyServer[2].armor > 0) { enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, planeEnemyServer[2].speed, planeEnemyServer[2].hasBomb, planeEnemyServer[2].firePower, 3); }
+		if (planeEnemyServer[3].armor > 0) { enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, planeEnemyServer[3].speed, planeEnemyServer[3].hasBomb, planeEnemyServer[3].firePower, 4); }
 
 		this.physics.add.overlap(myBullets, enemyPlanes, this.damageEnemyPlane);
 	}
@@ -592,12 +619,12 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 	placeMyArtilleries() {
-		//let artilleryServer = context.playerSession.artillery;
+		let artilleryServer = context.playerSession.artilleries;
 		artilleryCount = 0;
-		myArtilleriesPlaced[0] = this.placeMyArtillery(75, isBlue ? BLUE_ARTILLERY_X : RED_ARTILLERY_X, 1500, 200, 100, 15);
-		myArtilleriesPlaced[1] = this.placeMyArtillery(250, isBlue ? BLUE_ARTILLERY_X : RED_ARTILLERY_X, 1500, 200, 100, 15);
-		myArtilleriesPlaced[2] = this.placeMyArtillery(350, isBlue ? BLUE_ARTILLERY_X : RED_ARTILLERY_X), 1500, 200, 100, 15;
-		myArtilleriesPlaced[3] = this.placeMyArtillery(550, isBlue ? BLUE_ARTILLERY_X : RED_ARTILLERY_X, 1500, 200, 100, 15);
+		if (artilleryServer[0].armor > 0) { myArtilleriesPlaced[0] = this.placeMyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower); }
+		if (artilleryServer[1].armor > 0) { myArtilleriesPlaced[1] = this.placeMyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[0].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower); }
+		if (artilleryServer[2].armor > 0) { myArtilleriesPlaced[2] = this.placeMyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX), artilleryServer[0].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower; }
+		if (artilleryServer[3].armor > 0) { myArtilleriesPlaced[3] = this.placeMyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[0].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower); }
 
 		this.physics.add.overlap(enemyBulletsArtillery, myPlanes, this.damageMyPlane);
 	}
