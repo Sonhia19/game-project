@@ -27,7 +27,7 @@ public class DAOGames implements IDAOGames {
 	 * @return boolean
 	 */
 	@Override
-	public boolean existe(int idPartida, IConexion icon) throws PersistenceException {
+	public boolean existe(int idPartida, IDBConnection icon) throws PersistenceException {
 		boolean existe = false;
 		Connection con = icon.getConnection();
 		
@@ -52,7 +52,7 @@ public class DAOGames implements IDAOGames {
 	 * @param icon
 	 */
 	@Override
-	public void insertar(Game partida, IConexion icon) throws PersistenceException {
+	public void insertar(Game partida, IDBConnection icon) throws PersistenceException {
 		Connection con = icon.getConnection();
 		/*
 		try {
@@ -80,7 +80,7 @@ public class DAOGames implements IDAOGames {
 	 * @param icon
 	 */
 	@Override
-	public Game buscar(int idPartida, IConexion icon) throws PersistenceException {
+	public Game buscar(int idPartida, IDBConnection icon) throws PersistenceException {
 		Game game = null;
 		Connection con = icon.getConnection();
 		
@@ -104,7 +104,7 @@ public class DAOGames implements IDAOGames {
 	 * Elimina una partida.
 	 */
 	@Override
-	public void eliminar(int idPartida, IConexion icon) throws PersistenceException {
+	public void eliminar(int idPartida, IDBConnection icon) throws PersistenceException {
 		Connection con = icon.getConnection();
 		
 		try {
@@ -123,7 +123,7 @@ public class DAOGames implements IDAOGames {
 	 * @return int
 	 */
 	@Override
-	public int maximoId(IConexion icon) throws PersistenceException {
+	public int maximoId(IDBConnection icon) throws PersistenceException {
 		Connection con = icon.getConnection();
 		int max = 0;
 		

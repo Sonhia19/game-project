@@ -6,13 +6,13 @@ import logic.models.*;
 
 public interface IDAOGames {
 	
-	boolean existe(int idGame, IConexion icon) throws PersistenceException;
+	boolean existe(int idGame, IDBConnection icon) throws PersistenceException;
 	
-	void insertar(Game game, IConexion icon) throws PersistenceException;
+	void insertar(Game game, IDBConnection icon) throws PersistenceException;
 	
-	Game buscar(int idGame, IConexion icon) throws PersistenceException;
+	Game buscar(int idGame, IDBConnection icon) throws PersistenceException;
 	
-	void eliminar(int idGame, IConexion icon) throws PersistenceException;
+	void eliminar(int idGame, IDBConnection icon) throws PersistenceException;
 	
-	int maximoId(IConexion icon) throws PersistenceException;
+	int maximoId(IDBConnection icon) throws PersistenceException;
 }

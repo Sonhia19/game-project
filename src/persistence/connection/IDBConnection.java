@@ -2,11 +2,11 @@ package persistence.connection;
 
 import java.sql.Connection;
 
-public interface IConexion {
+public interface IDBConnection {
 
 	Connection getConnection();
 	
-	boolean estaAsignada();
+	boolean asignada();
 	
 	void asignar();
 	

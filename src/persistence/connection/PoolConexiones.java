@@ -1,6 +1,7 @@
 package persistence.connection;
 
 import exceptions.LogicException;
+import exceptions.PersistenceException;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -8,75 +9,55 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 
+
 public class PoolConexiones implements IPoolConexiones {
 
+
+	private String driver;
+	private String url;
+	private String usuario;
+	private String contrasenia;
+	private ArrayList<IDBConnection> connections;
+	
 	/**
-	 * Instancia de la clase.
+	 * Instancia.
 	 */
 	private static PoolConexiones instancia;
 	
-//	/**
-//	 * La lista de conexiones.
-//	 */
-//	private ArrayList<Conexion> conexiones = new ArrayList<Conexion>();
-//
-//	/**
-//	 * Url de conexi�n.
-//	 */
-//	private String url;
-//
-//	/**
-//	 * Usuario.
-//	 */
-//	private String usuario;
-//
-//	/**
-//	 * Contrase�a.
-//	 */
-//	private String contrasenia;
-//
-//	/**
-//	 * Constructor de la clase.
-//	 *
-//	 * @throws ClassNotFoundException
-//	 */
-//	private PoolConexiones() throws LogicException {
-//		// Obtenemos los par�metros desde el archivo de configuraci�n.
-//		Properties parametros = new Properties();
-//
-//		/*
-//		 * TODO: Implementar.
-//		try {
-//			parametros.load(new FileInputStream("sql.properties"));
-//		} catch (IOException e) {
-//			throw new PersistenciaException("Error al crear el pool de conexiones: " + e.getMessage());
-//		}
-//		*/
-//
-//		this.url = "jdbc:mysql://localhost:3307/fishing_conflicts?serverTimezone=America/Montevideo"; // parametros.getProperty("url") + '/' + parametros.getProperty("baseDeDatos");
-//		this.usuario = "root"; // parametros.getProperty("usuario");
-//		this.contrasenia = "root"; // parametros.getProperty("contrase�a");
-//
-//		try {
-//			Class.forName("com.mysql.cj.jdbc.Driver");
-//		} catch (ClassNotFoundException e) {
-//			throw new LogicException("Error al crear el pool de conexiones: " + e.getMessage());
-//		}
-//
-//		this.conexiones = new ArrayList<Conexion>();
-//	}
-//
+	private PoolConexiones() throws PersistenceException {
+		Properties p = new Properties();
+		
+		try {
+			p.load(this.getClass().getResourceAsStream("../config/sql.properties"));
+		} catch(Exception e) {
+			throw new PersistenceException("Error: " + e.getMessage());
+		}
+
+		driver = p.getProperty("driver");
+		url = p.getProperty("url");
+		usuario = p.getProperty("usuario");
+		contrasenia = p.getProperty("contrasenia");
+		connections = new ArrayList<IDBConnection>();
+
+		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+
+			throw new PersistenceException("Error: " + e.getMessage());
+		}
+	}
+
 //	/**
 //	 * Devuelve la instancia del pool.
 //	 *
 //	 * @return PoolConexiones
 //	 */
-//	public static PoolConexiones getInstancia() throws LogicException {
-//		if (!(instancia instanceof PoolConexiones))
-//			instancia = new PoolConexiones();
-//
-//		return instancia;
-//	}
+	public static PoolConexiones getInstancia() throws PersistenceException {
+		if (!(instancia instanceof PoolConexiones))
+		instancia = new PoolConexiones();
+
+	return instancia;
+	}
 //
 //	/**
 //	 * Obtiene una nueva conexi�n del pool. En caso de que no exista ninguna,
@@ -85,58 +66,44 @@ public class PoolConexiones implements IPoolConexiones {
 //	 * @param modifica
 //	 * @return IConexion
 //	 */
-//	@Override
-//	public IConexion obtenerConexion() throws fishingconflicts.excepciones.LogicException {
-//		Conexion conexion = null;
-//
-//		// Recorremos las conexiones y verificamos si hay alguna libre para asignar.
-//		for(Conexion c : conexiones) {
-//			if (!c.estaAsignada()) {
-//				conexion = c;
-//			}
-//		}
-//
-//		// En caso de no haber ninguna, creamos una nueva y la insertamos en el pool.
-//		if (conexion == null) {
-//			try {
-//				conexion = new Conexion(DriverManager.getConnection(this.url, this.usuario, this.contrasenia));
-//			} catch (SQLException e) {
-//				throw new fishingconflicts.excepciones.LogicException("Error al crear una conexi�n: " + e.getMessage());
-//			}
-//			conexiones.add(conexion);
-//		}
-//
-//		conexion.asignar();
-//
-//		try {
-//			conexion.getConnection().setAutoCommit(false);
-//			conexion.getConnection().setTransactionIsolation(8);
-//		} catch (SQLException e) {
-//			throw new fishingconflicts.excepciones.LogicException("Error al obtener una conexi�n: " + e.getMessage());
-//		}
-//
-//		return conexion;
-//	}
-//
-//	/**
-//	 * Devuelve una conexi�n al pool.
-//	 *
-//	 * @param conexion
-//	 * @param ok
-//	 * @return void
-//	 */
-//	@Override
-//	public void liberarConexion(IConexion conexion, boolean ok) throws fishingconflicts.excepciones.LogicException {
-//		try {
-//			if (ok)
-//				conexion.getConnection().commit();
-//			else
-//				conexion.getConnection().rollback();
-//		} catch (SQLException e) {
-//			throw new fishingconflicts.excepciones.LogicException("Error al liberar una conexi�n: " + e.getMessage());
-//		}
-//
-//		conexion.desasignar();
-//	}
+	@Override
+	public synchronized IDBConnection obtenerConexion() throws PersistenceException {
+		for(IDBConnection c : connections) {
+			if (!c.asignada()) {
+				c.asignar();
+				return c;
+			}
+		}
+		
+		IDBConnection c = null;
+		try {
+			c = new DBconnection(DriverManager.getConnection(url, usuario, contrasenia));
+			c.getConnection().setAutoCommit(false);
+		} catch (SQLException e) {
+			throw new PersistenceException("Error: " + e.getMessage());
+		}
+		
+		connections.add(c);		
+		return c;	
+		}
+
+	/**
+	 * Devuelve una conexi�n al pool.
+	 *
+	 * @param conexion
+	 * @param ok
+	 * @return void
+	 */
+	@Override
+	public synchronized void liberarConexion(IDBConnection conexion, boolean ok) throws PersistenceException {
+		try {
+			if (ok)
+				conexion.getConnection().commit();
+			else
+				conexion.getConnection().rollback();
+		} catch (Exception e) {
+			throw new PersistenceException("Error: " + e.getMessage());
+		}
+	}
 
 }

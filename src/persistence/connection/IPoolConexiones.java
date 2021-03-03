@@ -1,8 +1,10 @@
 package persistence.connection;
 
+import exceptions.PersistenceException;
+
 public interface IPoolConexiones {
 
-//	IConexion obtenerConexion() throws fishingconflicts.excepciones.LogicException;
+	IDBConnection obtenerConexion() throws PersistenceException;
 //
-//	void liberarConexion(IConexion conexion, boolean ok) throws fishingconflicts.excepciones.LogicException;
+	void liberarConexion(IDBConnection conexion, boolean ok) throws PersistenceException;
 }

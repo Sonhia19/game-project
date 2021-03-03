@@ -14,31 +14,31 @@ import persistence.daos.interfaces.*;
 public class DAOPlanes implements IDAOPlanes {
 
 	@Override
-	public boolean existe(int idBarco, IConexion icon) throws PersistenceException {
+	public boolean existe(int idBarco, IDBConnection icon) throws PersistenceException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void insertar(int idPartida, Plane barco, IConexion icon) throws PersistenceException {
+	public void insertar(int idPartida, Plane barco, IDBConnection icon) throws PersistenceException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Plane buscar(int idBarco, IConexion icon) throws PersistenceException {
+	public Plane buscar(int idBarco, IDBConnection icon) throws PersistenceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Plane> listarAvionesPorPartida(int idPartida, IConexion icon) throws PersistenceException {
+	public ArrayList<Plane> listarAvionesPorPartida(int idPartida, IDBConnection icon) throws PersistenceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void eliminar(int idBarco, IConexion icon) throws PersistenceException {
+	public void eliminar(int idBarco, IDBConnection icon) throws PersistenceException {
 		// TODO Auto-generated method stub
 		
 	}
