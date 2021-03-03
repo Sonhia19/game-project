@@ -23,7 +23,7 @@ public class Artillery {
 
 		this.id = id;
 		this.armor = 100;
-		this.cadency = 100;
+		this.cadency = 1500;
 		this.reach = 200;
 		this.artilleryType = 1;
 		this.firePower = 10;
