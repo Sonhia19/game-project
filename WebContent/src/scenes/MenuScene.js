@@ -37,7 +37,7 @@ export class MenuScene extends Phaser.Scene {
             this.time.addEvent({
                 delay: 500,
                 callback: ()=>{
-                    this.scene.start("WAITINGGAME", "hello from LOAD scene");        
+                    this.scene.start("LOBBYGAME", "hello from MENU scene");        
                 },
                 loop: false
             })
@@ -55,7 +55,7 @@ export class MenuScene extends Phaser.Scene {
             this.time.addEvent({
                 delay: 500,
                 callback: ()=>{
-                    this.scene.start("GAME", "hello from LOAD scene");        
+                    this.scene.start("GAME", "hello from MENU scene");        
                 },
                 loop: false
             })
