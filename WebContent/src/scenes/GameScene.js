@@ -58,17 +58,30 @@ let consolePlane1;
 let consolePlane2;
 let consolePlane3;
 let consolePlane4;
-let artilleryCount;
+let artilleryCount = 0;
 let artilleryEnemyCount = 0;
 let artilleryText;
 let artilleryEnemyText;
 let towerEnemyText;
 let hangarEnemyText;
 let fuelsEnemyText;
-let ledBomb;
+let ledRedBomb;
 let myBaseText;
 let enemyBaseText;
 let ledGreenBomb;
+let ledRedHangar;
+let ledGreenHangar;
+let ledGreenFuel;
+let ledRedFuel;
+let ledGreenTower;
+let ledRedTower;
+let ledGreenBombEnemy;
+let ledRedHangarEnemy;
+let ledGreenHangarEnemy;
+let ledGreenFuelEnemy;
+let ledRedFuelEnemy;
+let ledGreenTowerEnemy;
+let ledRedTowerEnemy;
 
 
 
@@ -127,7 +140,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("bulletTorret", "./assets/bullet.png");
 		this.load.image("bomb", "./assets/bomb.png");
 		this.load.image("border", "./assets/border.png");
-		this.load.image("led", "./assets/led.png");
+		this.load.image("ledRed", "./assets/led.png");
 		this.load.image("ledGreen", "./assets/led_green.png");
 		this.load.image("explosion", "./assets/explosion.gif");
 	}
@@ -382,12 +395,64 @@ export class GameScene extends Phaser.Scene {
 
 	create() {
 		this.add.image(500, 300, 'field');
-		ledBomb = this.add.image(1062, 338, 'led');
-		ledBomb.setScale(0.05);
-		ledBomb.setVisible(false);
+
+		//Led indicadores Bomba
+		ledRedBomb = this.add.image(1062, 338, 'ledRed');
+		ledRedBomb.setScale(0.05);
+		ledRedBomb.setVisible(false);
 		ledGreenBomb = this.add.image(1062, 338, 'ledGreen');
 		ledGreenBomb.setScale(0.025);
 		ledGreenBomb.setVisible(false);
+
+		//Led indicador Hangar
+		ledRedHangar = this.add.image(1062, 452, 'ledRed');
+		ledRedHangar.setScale(0.05);
+		ledRedHangar.setVisible(true);
+		ledGreenHangar = this.add.image(1062, 452, 'ledGreen');
+		ledGreenHangar.setScale(0.025);
+		ledGreenHangar.setVisible(false);
+
+
+		//Led indicador Tanque Combustible
+		ledRedFuel = this.add.image(1062, 467, 'ledRed');
+		ledRedFuel.setScale(0.05);
+		ledRedFuel.setVisible(true);
+		ledGreenFuel = this.add.image(1062, 467, 'ledGreen');
+		ledGreenFuel.setScale(0.025);
+		ledGreenFuel.setVisible(false);
+
+		//Led indicador Torre
+		ledRedTower = this.add.image(1062, 437, 'ledRed');
+		ledRedTower.setScale(0.05);
+		ledRedTower.setVisible(true);
+		ledGreenTower = this.add.image(1062, 437, 'ledGreen');
+		ledGreenTower.setScale(0.025);
+		ledGreenTower.setVisible(false);
+
+		//Led indicador Hangar Enemigo
+		ledRedHangarEnemy = this.add.image(1242, 452, 'ledRed');
+		ledRedHangarEnemy.setScale(0.05);
+		ledRedHangarEnemy.setVisible(true);
+		ledGreenHangarEnemy = this.add.image(1242, 452, 'ledGreen');
+		ledGreenHangarEnemy.setScale(0.025);
+		ledGreenHangarEnemy.setVisible(false);
+
+
+		//Led indicador Tanque Combustible Enemigo
+		ledRedFuelEnemy = this.add.image(1242, 467, 'ledRed');
+		ledRedFuelEnemy.setScale(0.05);
+		ledRedFuelEnemy.setVisible(true);
+		ledGreenFuelEnemy = this.add.image(1242, 467, 'ledGreen');
+		ledGreenFuelEnemy.setScale(0.025);
+		ledGreenFuelEnemy.setVisible(false);
+
+		//Led indicador Torre Enemigo
+		ledRedTowerEnemy = this.add.image(1242, 437, 'ledRed');
+		ledRedTowerEnemy.setScale(0.05);
+		ledRedTowerEnemy.setVisible(true);
+		ledGreenTowerEnemy = this.add.image(1242, 437, 'ledGreen');
+		ledGreenTowerEnemy.setScale(0.025);
+		ledGreenTowerEnemy.setVisible(false);
 
 
 		//Aviones Consola
@@ -488,15 +553,15 @@ export class GameScene extends Phaser.Scene {
 
 		myBaseText = this.add.text(1010, 400, 'Mi Base', { fontSize: '13px', fill: '#009025' });
 		artilleryText = this.add.text(1010, 415, '', { fontSize: '11px', fill: '#FFFFFF' });
-		towerText = this.add.text(1010, 430, '', { fontSize: '11px', fill: '#FFFFFF' });
-		hangarText = this.add.text(1010, 445, '', { fontSize: '11px', fill: '#FFFFFF' });
-		fuelsText = this.add.text(1010, 460, '', { fontSize: '11px', fill: '#FFFFFF' });
+		towerText = this.add.text(1010, 430, 'Torre', { fontSize: '11px', fill: '#FFFFFF' });
+		hangarText = this.add.text(1010, 445, 'Hangar', { fontSize: '11px', fill: '#FFFFFF' });
+		fuelsText = this.add.text(1010, 460, 'Tanque', { fontSize: '11px', fill: '#FFFFFF' });
 
 		enemyBaseText = this.add.text(1190, 400, 'Base Enemiga', { fontSize: '13px', fill: '#009025' });
 		artilleryEnemyText = this.add.text(1190, 415, '', { fontSize: '11px', fill: '#FFFFFF' });
-		towerEnemyText = this.add.text(1190, 430, '', { fontSize: '11px', fill: '#FFFFFF' });
-		hangarEnemyText = this.add.text(1190, 445, '', { fontSize: '11px', fill: '#FFFFFF' });
-		fuelsEnemyText = this.add.text(1190, 460, '', { fontSize: '11px', fill: '#FFFFFF' });
+		towerEnemyText = this.add.text(1190, 430, 'Torre', { fontSize: '11px', fill: '#FFFFFF' });
+		hangarEnemyText = this.add.text(1190, 445, 'Hangar', { fontSize: '11px', fill: '#FFFFFF' });
+		fuelsEnemyText = this.add.text(1190, 460, 'Tanque', { fontSize: '11px', fill: '#FFFFFF' });
 
 		this.checkFuels();
 		this.checkHangar();
@@ -554,7 +619,6 @@ export class GameScene extends Phaser.Scene {
 
 	placeEnemyArtilleries() {
 		let artilleryServer = context.enemySession.artilleries;
-		artilleryCount = 0;
 		if (artilleryServer[0].armor > 0) { enemyArtilleriesPlaced[0] = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower); }
 		if (artilleryServer[1].armor > 0) { enemyArtilleriesPlaced[1] = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower); }
 		if (artilleryServer[2].armor > 0) { enemyArtilleriesPlaced[2] = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower); }
@@ -620,7 +684,6 @@ export class GameScene extends Phaser.Scene {
 	}
 	placeMyArtilleries() {
 		let artilleryServer = context.playerSession.artilleries;
-		artilleryCount = 0;
 		if (artilleryServer[0].armor > 0) { myArtilleriesPlaced[0] = this.placeMyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower); }
 		if (artilleryServer[1].armor > 0) { myArtilleriesPlaced[1] = this.placeMyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[0].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower); }
 		if (artilleryServer[2].armor > 0) { myArtilleriesPlaced[2] = this.placeMyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX), artilleryServer[0].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower; }
@@ -810,14 +873,14 @@ export class GameScene extends Phaser.Scene {
 
 	checkBomb() {
 		if (myPlaneSelected.withBomb) {
-			bombText.setText('Bomba: ');
-			ledBomb.setVisible(false);
+			bombText.setText('Bomba ');
+			ledRedBomb.setVisible(false);
 			ledGreenBomb.setVisible(true);
 
 		}
 		else {
-			bombText.setText('Bomba: ');
-			ledBomb.setVisible(true);
+			bombText.setText('Bomba ');
+			ledRedBomb.setVisible(true);
 			ledGreenBomb.setVisible(false);
 
 		}
@@ -825,40 +888,51 @@ export class GameScene extends Phaser.Scene {
 
 	checkTower() {
 		if (myTower == null) {
-			towerText.setText("Torre Inactiva");
+			ledRedTower.setVisible(true);
+			ledGreenTower.setVisible(false);
 		} else {
-			towerText.setText("Torre Activa");
+			ledRedTower.setVisible(false);
+			ledGreenTower.setVisible(true);
 		}
 		if (enemyTower == null) {
-			towerEnemyText.setText("Torre Inactiva");
+			ledRedTowerEnemy.setVisible(true);
+			ledGreenTowerEnemy.setVisible(false);
 		} else {
-			towerEnemyText.setText("Torre Activa");
+			ledRedTowerEnemy.setVisible(false);
+			ledGreenTowerEnemy.setVisible(true);
 		}
 	}
 	checkHangar() {
 		if (myHangar == null) {
-			hangarText.setText("Hangar Inactivo");
+			ledRedHangar.setVisible(true);
+			ledGreenHangar.setVisible(false);
 		} else {
-			hangarText.setText("Hangar Activo");
+			ledRedHangar.setVisible(false);
+			ledGreenHangar.setVisible(true);
 		}
 		if (enemyHangar == null) {
-			hangarEnemyText.setText("Hangar Inactivo");
+			ledRedHangarEnemy.setVisible(true);
+			ledGreenHangarEnemy.setVisible(false);
 		} else {
-			hangarEnemyText.setText("Hangar Activo");
-
+			ledRedHangarEnemy.setVisible(false);
+			ledGreenHangarEnemy.setVisible(true);
 		}
 	}
 
 	checkFuels() {
 		if (myFuel == null) {
-			fuelsText.setText("Tanque Inactivo");
+			ledRedFuel.setVisible(true);
+			ledGreenFuel.setVisible(false);
 		} else {
-			fuelsText.setText("Tanque Activo");
+			ledRedFuel.setVisible(false);
+			ledGreenFuel.setVisible(true);
 		}
 		if (enemyFuel == null) {
-			fuelsEnemyText.setText("Tanque Inactivo");
+			ledRedFuelEnemy.setVisible(true);
+			ledGreenFuelEnemy.setVisible(false);
 		} else {
-			fuelsEnemyText.setText("Tanque Activo");
+			ledRedFuelEnemy.setVisible(false);
+			ledGreenFuelEnemy.setVisible(true);
 		}
 	}
 	checkArtillery() {
@@ -877,19 +951,19 @@ export class GameScene extends Phaser.Scene {
 			consolePlane2.setVisible(false);
 			plane2ArmorText.setText('');
 		} else {
-			plane2ArmorText.setText(myPlaneOne.armor);
+			plane2ArmorText.setText(myPlaneTwo.armor);
 		}
 		if (myPlaneThree.armor <= 0) {
 			consolePlane3.setVisible(false);
 			plane3ArmorText.setText('');
 		} else {
-			plane3ArmorText.setText(myPlaneOne.armor);
+			plane3ArmorText.setText(myPlaneThree.armor);
 		}
 		if (myPlaneFour.armor <= 0) {
 			consolePlane4.setVisible(false);
 			plane4ArmorText.setText('');
 		} else {
-			plane4ArmorText.setText(myPlaneOne.armor);
+			plane4ArmorText.setText(myPlaneFour.armor);
 		}
 
 	}
@@ -938,6 +1012,18 @@ export class GameScene extends Phaser.Scene {
 
 	damageMyStructure(bomb, structure) {
 		if (structure.active === true && bomb.active === true) {
+			if (structure.active === true && bomb.active === true) {
+				if(structure.frame.name == 'tower'){
+					ledGreenTower.setVisible(false);
+					ledRedTower.setVisible(true);
+				}else if(structure.frame.texture.key == 'fuel')	{
+					ledGreenFuel.setVisible(false);
+					ledRedFuel.setVisible(true);
+				}else if(structure.frame.texture.key == 'hangar'){
+					ledGreenHangar.setVisible(false);
+					ledRedHangar.setVisible(true);
+				}
+			}
 			bomb.destroy();
 			structure.destroy();
 			structure = false;
@@ -945,10 +1031,19 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	damageEnemyStructure(bomb, structure) {
-		if (structure.active === true && bomb.active === true) {
+			if (structure.active === true && bomb.active === true) {
+			if(structure.frame.name == 'tower'){
+				ledGreenTowerEnemy.setVisible(false);
+				ledRedTowerEnemy.setVisible(true);
+			}else if(structure.frame.texture.key == 'fuel')	{
+				ledGreenFuelEnemy.setVisible(false);
+				ledRedFuelEnemy.setVisible(true);
+			}else if(structure.frame.texture.key == 'hangar'){
+				ledGreenHangarEnemy.setVisible(false);
+				ledRedHangarEnemy.setVisible(true);			}
 			bomb.destroy();
 			structure.destroy();
-			structure = false;
+			structure = false;								
 		}
 	}
 
