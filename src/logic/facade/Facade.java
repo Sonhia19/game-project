@@ -171,7 +171,16 @@ public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, fi
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
 		
-		final int[][] coordinates = new int [4][3];
+		int indexPlane = (int) parameters.get("planeId");
+		JSONArray planeObject =(JSONArray)parameters.get("planePosition");
+		final Gson gson = new Gson();
+	    
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("planeId",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("planePosition",planeObject.toString(), "JSONArray");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		/*final int[][] coordinates = new int [4][3];
 		JSONArray planeObject =(JSONArray)parameters.get("planeOne");
 		int x = (int)planeObject.get(0);
 		int y = (int)planeObject.get(1);
@@ -209,11 +218,13 @@ public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, fi
 		final Gson gson = new Gson();
 		
 		
-		final String resultEnemy = gson.toJson(player.preparePlayerToSendMove(player, coordinates));
+		final String resultEnemy = gson.toJson(player.preparePlayerToSendMove(player, coordinates));*/
+		
+		
         
-		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		/*response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("enemySession", resultEnemy, "String");
-		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");*/
 		
 		return response;
 	}

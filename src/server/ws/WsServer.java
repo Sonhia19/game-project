@@ -96,7 +96,7 @@ public class WsServer {
 						parameters);
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
-						response, "syncWithEnemy");
+						response, "syncMoveEnemy");
 			}
 			if (action.getString("name").equalsIgnoreCase("syncShoot")) {
 

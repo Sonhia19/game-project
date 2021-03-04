@@ -15,8 +15,8 @@ export class WebSocketClient {
 	}
 	
 	sendMessage(message) {
-		console.log('ws sending');
-		console.log(this.webSocket.readyState);
+		// console.log('ws sending');
+		// console.log(this.webSocket.readyState);
 		if (this.webSocket.readyState == WebSocket.OPEN) {
 			this.webSocket.send(message);
 		}
