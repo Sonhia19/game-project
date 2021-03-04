@@ -28,7 +28,7 @@ public class PoolConexiones implements IPoolConexiones {
 		Properties p = new Properties();
 		
 		try {
-			p.load(this.getClass().getResourceAsStream("../config/sql.properties"));
+			p.load(this.getClass().getResourceAsStream("sql.properties"));
 		} catch(Exception e) {
 			throw new PersistenceException("Error: " + e.getMessage());
 		}
@@ -39,12 +39,14 @@ public class PoolConexiones implements IPoolConexiones {
 		contrasenia = p.getProperty("contrasenia");
 		connections = new ArrayList<IDBConnection>();
 
-		try {
+		/*try {
+		 * 
+		 
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 
 			throw new PersistenceException("Error: " + e.getMessage());
-		}
+		}*/
 	}
 
 //	/**
