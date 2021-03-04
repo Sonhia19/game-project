@@ -207,10 +207,7 @@ export class GameScene extends Phaser.Scene {
 		this.checkStructures();
 		this.checkArtillery();
 		this.checkPlanesArmor();
-<<<<<<< HEAD
-=======
 
->>>>>>> 4b09675a41c588d567e5c5c7c7e9cd04821944f0
 	}
 	update(time, delta) {
 
