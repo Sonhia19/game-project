@@ -240,6 +240,7 @@ export class GameScene extends Phaser.Scene {
 				let p = this.checkMyPlaneAction(context.enemySession.planeDamaging);
 				if (p != null) {
 					p.receiveDamage(context.enemySession.damage);
+					this.checkPlanesArmor();
 				}
 				context.enemySession.isDamaging = false;
 				context.enemySession.planeDamaging = -1;
@@ -252,30 +253,23 @@ export class GameScene extends Phaser.Scene {
 		if (Phaser.Input.Keyboard.JustDown(keyOne)) {
 			if (myPlaneOne.scene) {
 				this.selectPlane(myPlaneOne);
-				myPlaneSelectedText.setText('Avión 1');
 			}
-
 		}
 		else if (Phaser.Input.Keyboard.JustDown(keyTwo)) {
 			if (myPlaneTwo.scene) {
 				this.selectPlane(myPlaneTwo);
-				myPlaneSelectedText.setText('Avión 2');
 			}
 		}
 		else if (Phaser.Input.Keyboard.JustDown(keyThree)) {
 			if (myPlaneThree.scene) {
 				this.selectPlane(myPlaneThree);
-				myPlaneSelectedText.setText('Avión 3');
 			}
 		}
 		else if (Phaser.Input.Keyboard.JustDown(keyFour)) {
 			if (myPlaneFour.scene) {
 				this.selectPlane(myPlaneFour);
-				myPlaneSelectedText.setText('Avión 4');
 			}
 		}
-
-		this.checkPlanesArmor();
 
 		if (myPlaneSelected != null) {
 			if (myPlaneSelected.scene) {
@@ -507,18 +501,9 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	checkBomb() {
-		if (myPlaneSelected.withBomb) {
-			bombText.setText('Bomba ');
-			ledRedBomb.setVisible(false);
-			ledGreenBomb.setVisible(true);
-
-		}
-		else {
-			bombText.setText('Bomba ');
-			ledRedBomb.setVisible(true);
-			ledGreenBomb.setVisible(false);
-
-		}
+		bombText.setText('Bomba ');
+		ledRedBomb.setVisible(!myPlaneSelected.withBomb);
+		ledGreenBomb.setVisible(myPlaneSelected.withBomb);
 	}
 
 	checkStructures() {
@@ -707,6 +692,7 @@ export class GameScene extends Phaser.Scene {
 					myPlaneSelected.planeAngle = angle;
 					myPlaneSelected.flying = false;
 					myPlaneSelected.setTexture('plane_landed');
+					myPlaneSelectedText.setText('Avión #' + p.planeIndex);
 					//Info en Consola
 					this.loadConsole();
 				}
@@ -757,7 +743,7 @@ export class GameScene extends Phaser.Scene {
 
 	checkArtilleryFire(time, artillery, plane, bullets) {
 		let angle;
-		if (time > artillery.nextTic) {
+		if (time > artillery.nextTic && artillery.armor > 0) {
 			if (Phaser.Math.Distance.Between(artillery.x, artillery.y, plane.x, plane.y) < artillery.reach) {
 				angle = Phaser.Math.Angle.Between(artillery.x, artillery.y, plane.x, plane.y);
 				artillery.fire(time, angle, bullets);
@@ -868,6 +854,27 @@ export class GameScene extends Phaser.Scene {
 			bomb.destroy();
 		}
 	}
+
+	damageArtillery(bullet, artillery) {
+		if (artillery.active === true && bullet.active === true) {
+			if (artillery.receiveDamage(bullet.damage)) {
+
+				
+				if (!artillery.isEnemy) {
+					console.log(artilleryEnemyCount);
+					artilleryEnemyCount = artilleryEnemyCount - 1;
+					artilleryText.setText('Artillería: ' + artilleryEnemyCount + '/4');
+				}
+				else {
+					console.log(artilleryCount);
+					artilleryCount = artilleryCount - 1;
+					artilleryEnemyText.setText('Artillería : ' + artilleryCount + '/4')
+				}
+			}
+			bullet.destroy();
+		}
+	}
+
 	//#endregion
 
 	//#region Representar elementos
@@ -895,6 +902,7 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.overlap(myBombs, enemyTowers, this.damageEnemyStructure);
 		this.physics.add.overlap(myBombs, enemyFuels, this.damageEnemyStructure);
 		this.physics.add.overlap(myBulletsArtillery, enemyPlanes, this.damageEnemyPlane);
+		this.physics.add.overlap(myBullets, enemyArtilleries, this.damageArtillery);
 	}
 
 	placeEnemyArtilleries() {
@@ -972,13 +980,14 @@ export class GameScene extends Phaser.Scene {
 		if (artilleryServer[3].armor > 0) { myArtilleriesPlaced[3] = this.placeMyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[0].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower); }
 
 		this.physics.add.overlap(enemyBulletsArtillery, myPlanes, this.damageMyPlane);
+		this.physics.add.overlap(enemyBullets, myArtilleries, this.damageArtillery);
 	}
 
 	placeMyArtillery(i, j, cadency, reach, armor, firePower) {
 		let artillery = myArtilleries.get();
 		if (artillery) {
 			artilleryCount++;
-			return artillery.place(i, j, cadency, reach, armor, firePower);
+			return artillery.place(i, j, cadency, reach, armor, firePower, false);
 		}
 	}
 
@@ -986,7 +995,7 @@ export class GameScene extends Phaser.Scene {
 		let artillery = enemyArtilleries.get();
 		if (artillery) {
 			artilleryEnemyCount++;
-			return artillery.place(i, j, cadency, reach, armor, firePower);
+			return artillery.place(i, j, cadency, reach, armor, firePower, true);
 		}
 	}
 

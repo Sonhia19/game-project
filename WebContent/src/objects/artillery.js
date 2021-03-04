@@ -11,14 +11,16 @@ export let Artillery = new Phaser.Class({
             this.reach = 0;
             this.armor = 0;
             this.firePower = 0;
+            this.isEnemy = false;
         },
-    place: function (i, j, cadency, reach, armor, firePower) {
+    place: function (i, j, cadency, reach, armor, firePower, isEnemy) {
         this.y = i;
         this.x = j;
         this.cadency = cadency;
         this.reach = reach;
         this.armor = armor;
         this.firePower = firePower;
+        this.isEnemy = isEnemy;
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.5);
@@ -30,6 +32,16 @@ export let Artillery = new Phaser.Class({
         this.angle = (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
         bullet.fire(this.x, this.y, angle, this.firePower, this.reach);
         this.nextTic = time + this.cadency;
+    },
+    receiveDamage: function (damage) {
+        let destroy = false;
+        this.armor -= damage;
+        if (this.armor <= 0) {    
+            //this.setTexture('explosion');     
+            this.destroy();
+            destroy = true;
+        }
+        return destroy;
     },
     update: function (time, delta) {
     }

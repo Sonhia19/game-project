@@ -64,7 +64,6 @@ export let Plane = new Phaser.Class({
     receiveDamage: function (damage) {
         let destroy = false;
         this.armor -= damage;
-        console.log(this.armor);
         if (this.armor <= 0) {   
             this.flying = false;    
             //this.setTexture('explosion');     
