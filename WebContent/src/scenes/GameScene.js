@@ -828,49 +828,25 @@ export class GameScene extends Phaser.Scene {
 			plane.setVisible(false);
 		}
 	}
-	syncMove() {
 
-		let json = JSON.stringify({
-			action: {
-				name: 'syncMove',
-				parameters: {
-					gameId: context.gameId,
-					playerName: context.playerSession.name,
-					planeOne: [Math.round(myPlaneOne.x), Math.round(myPlaneOne.y), myPlaneOne.planeAngle],
-					planeTwo: [Math.round(myPlaneTwo.x), Math.round(myPlaneTwo.y), myPlaneTwo.planeAngle],
-					planeThree: [Math.round(myPlaneThree.x), Math.round(myPlaneThree.y), myPlaneThree.planeAngle],
-					planeFour: [Math.round(myPlaneFour.x), Math.round(myPlaneFour.y), myPlaneFour.planeAngle]
-				}
-			}
-		})
-		console.log(json);
-		context.functions.sendMessage(json);
+	syncMove() {
+		var planeOne = [Math.round(myPlaneOne.x), Math.round(myPlaneOne.y), myPlaneOne.planeAngle];
+		var planeTwo = [Math.round(myPlaneTwo.x), Math.round(myPlaneTwo.y), myPlaneTwo.planeAngle];
+		var planeThree = [Math.round(myPlaneThree.x), Math.round(myPlaneThree.y), myPlaneThree.planeAngle];
+		var planeFour = [Math.round(myPlaneFour.x), Math.round(myPlaneFour.y), myPlaneFour.planeAngle];
+		
+		var message = context.messagesFormat.syncMove(planeOne, planeTwo, planeThree, planeFour);
+		context.functions.sendMessage(message);
 	}
 
 	syncShoot() {
-		let json = JSON.stringify({
-			action: {
-				name: 'syncShoot',
-				parameters: {
-					gameId: context.gameId,
-					shootingPlane: myPlaneSelected.planeIndex
-				}
-			}
-		})
-		context.functions.sendMessage(json);
+		var message = context.messagesFormat.syncShoot(myPlaneSelected.planeIndex);
+		context.functions.sendMessage(message);
 	}
 
 	syncBomb() {
-		let json = JSON.stringify({
-			action: {
-				name: 'syncBomb',
-				parameters: {
-					gameId: context.gameId,
-					bombingPlane: myPlaneSelected.planeIndex
-				}
-			}
-		})
-		context.functions.sendMessage(json);
+		var message = context.messagesFormat.syncBomb(myPlaneSelected.planeIndex);
+		context.functions.sendMessage(message);
 	}
 
 	checkBomb() {

@@ -156,6 +156,48 @@ var messagesFormat = {
             }
         })
     },
+
+    syncMove(planeOne, planeTwo, planeThree, planeFour) {
+		return JSON.stringify({
+			action: {
+				name: 'syncMove',
+				parameters: {
+					gameId: context.gameId,
+					playerName: context.playerSession.name,
+					planeOne: planeOne,
+					planeTwo: planeTwo,
+					planeThree: planeThree,
+					planeFour: planeFour
+				}
+			}
+		})
+	},
+
+	syncShoot(selectedPlaneIndex) {
+		return JSON.stringify({
+			action: {
+				name: 'syncShoot',
+				parameters: {
+					gameId: context.gameId,
+                    playerName: context.playerSession.name,
+					shootingPlane: selectedPlaneIndex
+				}
+			}
+		})
+	},
+
+	syncBomb(selectedPlaneIndex) {
+		return JSON.stringify({
+			action: {
+				name: 'syncBomb',
+				parameters: {
+					gameId: context.gameId,
+                    playerName: context.playerSession.name,
+					bombingPlane: selectedPlaneIndex
+				}
+			}
+		})
+	}
 };
 
 export const context = {
