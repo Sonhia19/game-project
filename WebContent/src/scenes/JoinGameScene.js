@@ -37,6 +37,7 @@ export class JoinGameScene extends Phaser.Scene {
                 
                 //envio msj al servidor con nombre de usuario
                 var message = context.messagesFormat.connectToGame(inputUsername.value, gameToken.value);
+                console.log(message);
                 context.functions.sendMessage(message);
                 this.destroy();
 

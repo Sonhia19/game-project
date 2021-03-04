@@ -74,6 +74,10 @@ var functions = {
 
             if (response.action.name == 'syncGame') {
                 context.gameId = JSON.parse(response.responses[0].value);
+                console.log('playerSession');
+                console.log(context.playerSession);
+                console.log('enemySession');
+                console.log(context.enemySession);
             }
 
             if (response.action.name == 'syncWithEnemy') {
