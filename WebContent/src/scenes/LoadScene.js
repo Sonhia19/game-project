@@ -38,7 +38,7 @@ export class LoadScene extends Phaser.Scene {
         this.sound.play("landing_sound", {
             loop: true
         });
-        this.add.image(0, 0, 'logo').setOrigin(0);
+        this.add.image(context.game.renderer.width * 0.15, 0, 'logo').setOrigin(0);
         
         // var logo = this.physics.add.image(400, 100, "logo");
 

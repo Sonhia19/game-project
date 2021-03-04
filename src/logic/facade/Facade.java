@@ -32,7 +32,6 @@ public class Facade implements IFacade {
             instance = new Facade();
             gamePlayersMap.put(1, new HashMap());
         }
-        	
 
         return instance;
     }

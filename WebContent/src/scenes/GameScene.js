@@ -835,6 +835,7 @@ export class GameScene extends Phaser.Scene {
 				name: 'syncMove',
 				parameters: {
 					gameId: context.gameId,
+					playerName: context.playerSession.name,
 					planeOne: [Math.round(myPlaneOne.x), Math.round(myPlaneOne.y), myPlaneOne.planeAngle],
 					planeTwo: [Math.round(myPlaneTwo.x), Math.round(myPlaneTwo.y), myPlaneTwo.planeAngle],
 					planeThree: [Math.round(myPlaneThree.x), Math.round(myPlaneThree.y), myPlaneThree.planeAngle],
@@ -842,6 +843,7 @@ export class GameScene extends Phaser.Scene {
 				}
 			}
 		})
+		console.log(json);
 		context.functions.sendMessage(json);
 	}
 

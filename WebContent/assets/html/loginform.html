@@ -1,110 +1,19 @@
-<!-- <style>
-.login {
-  background: #eceeee;
-  border: 1px solid #42464b;
-  border-radius: 6px;
-  height: 257px;
-  margin: 20px auto 0;
-  width: 298px;
-}
-.login h1 {
-  background-image: linear-gradient(top, #f1f3f3, #d4dae0);
-  border-bottom: 1px solid #a6abaf;
-  border-radius: 6px 6px 0 0;
-  box-sizing: border-box;
-  color: #727678;
-  display: block;
-  height: 43px;
-  font: 600 14px/1 'Open Sans', sans-serif;
-  padding-top: 14px;
-  margin: 0;
-  text-align: center;
-  text-shadow: 0 -1px 0 rgba(0,0,0,0.2), 0 1px 0 #fff;
-}
-
-
-input[type="checkbox"] {
-  cursor: pointer;
-  height: 16px;
-  opacity: 0;
-  position: relative;
-  width: 64px;
-}
-input[type="checkbox"]:checked {
-  left: 29px;
-  width: 58px;
-}
-.toggle {
-  display: block;
-  height: 16px;
-  margin-top: -20px;
-  width: 87px;
-  z-index: -1;
-}
-
-
-.shadow {
-  background: #000;
-  border-radius: 12px 12px 4px 4px;
-  box-shadow: 0 0 20px 10px #000;
-  height: 12px;
-  margin: 30px auto;
-  opacity: 0.2;
-  width: 270px;
-}
-
-input[type="submit"]:active {
-  top:3px;
-  box-shadow: inset 0px 1px 0px #2ab7ec, 0px 2px 0px 0px #31524d, 0px 5px 3px #999;
-}    
-</style>
-
-<div class="login">
-    <input type="text" placeholder="Username" id="username" name="username">
-    <input type="submit" value="Sign In" name="loginButton">
-</div>
-<div class="shadow"></div>
- -->
-
 
 <style>
   body
   {
     margin:0;
     padding:0;
-    /* background:url("background.jpg"); */
     background-size:cover;
     font-family: sans-serif; 
-  }
-
-  .loginBox
-  {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    width:350px;
-    height:420px;
-    padding:80px 40px;
-    background:rgba(0,0,0,0.5) ;
-    
   }
 
   h2
   {
     margin:0;
     padding:0 0 20px;
-    color:#3e4e5f;
+    color:#1d2a38;
     text-align:center;
-  } 
-
-  .loginBox p
-  {
-    padding:0;
-    margin:0;
-    font-weight:bold;
-    color:#fff;
-    
   } 
 
   .loginBox input
@@ -124,7 +33,7 @@ input[type="submit"]:active {
     font-size: 16px;
   }
 
-  .loginBox input[type="submit"]
+  .loginBox input[type="button"]
   {
     border:none;
     outline:none;
@@ -136,9 +45,9 @@ input[type="submit"]:active {
     border-radius:20px;
   }
 
-  .loginBox input[type="submit"]:hover
+  .loginBox input[type="button"]:hover
   {
-    background: #efed40;
+    background: #a5a32a;
     color: #262626;
   }
 
@@ -157,14 +66,12 @@ input[type="submit"]:active {
     left:calc(50% - 50px);
     border-radius:50%;
   }
+
+
 </style>
 
-<div class="loginBox">
-		
-		<h2>New Game</h2>
-		<form>
-			<input type="text" id="username" name="username" placeholder="Enter username">
-			<input type="submit" name = "loginButton" value="Join Game">
-      <input type="image" src="/play-font.png" alt="Submit Form" />
-		</form>
+  <div class="loginBox">
+		<h2>NEW GAME</h2>
+    <input type="text" id="username" name="username" placeholder="Enter username">
+    <input type="button" name = "loginButton" value="JOIN GAME">
 	</div>

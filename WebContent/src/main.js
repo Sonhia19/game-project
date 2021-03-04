@@ -4,6 +4,7 @@ import { GameScene } from '../src/scenes/GameScene.js';
 import { LobbyGameScene } from '../src/scenes/LobbyGameScene.js';
 import { MenuScene } from '../src/scenes/MenuScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
+import { JoinGameScene } from '../src/scenes/JoinGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 
 //import Phaser from '/phaser';
@@ -18,7 +19,7 @@ var config = {
     parent: 'main',
     type: Phaser.AUTO,
     width: 1350,
-    height: 600,
+    height: 650,
     physics: {
         default: "arcade",
         arcade: {
@@ -29,7 +30,7 @@ var config = {
         createContainer: true
     },
     scene: [
-        LoadScene, MenuScene, NewGameScene, LobbyGameScene, GameScene
+        LoadScene, MenuScene, NewGameScene, JoinGameScene, LobbyGameScene, GameScene
     ]
 };
 
@@ -77,6 +78,10 @@ var functions = {
 
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
+                console.log('playerSession');
+                console.log(context.playerSession);
+                console.log('enemySession');
+                console.log(context.enemySession);
 
             }
             if (response.action.name == "syncShootEnemy") {
@@ -134,6 +139,7 @@ var messagesFormat = {
                 name: 'syncWithEnemy',
                 parameters: {
                     gameId: context.gameId,
+                    playerName: context.name
                 }
             }
         })
@@ -145,6 +151,7 @@ var messagesFormat = {
                 name: 'syncGame',
                 parameters: {
                     gameId: context.gameId,
+                    playerName: context.name
                 }
             }
         })
