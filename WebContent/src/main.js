@@ -93,6 +93,11 @@ var functions = {
                 context.enemySession.isBombing = true;
                 context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncDamagePlaneEnemy") {
+                context.enemySession.isDamaging = true;
+                context.enemySession.planeDamaging = JSON.parse(response.responses[1].value);
+                context.enemySession.damage = JSON.parse(response.responses[2].value);
+            }
         }
     },
 
@@ -139,7 +144,7 @@ var messagesFormat = {
                 name: 'syncWithEnemy',
                 parameters: {
                     gameId: context.gameId,
-                    playerName: context.name
+                    playerName: context.playerSession.name
                 }
             }
         })
@@ -151,7 +156,7 @@ var messagesFormat = {
                 name: 'syncGame',
                 parameters: {
                     gameId: context.gameId,
-                    playerName: context.name
+                    playerName: context.playerSession.name
                 }
             }
         })

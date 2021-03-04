@@ -114,6 +114,14 @@ public class WsServer {
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncBombEnemy");
 			}
+			if (action.getString("name").equalsIgnoreCase("syncPlaneDamage")) {
+
+				response = facade.getJsonDamagePlane(parameters.getInt("gameId"), parameters.getString("playerName"),
+						parameters);
+				// sincroniza todas las sesiones conectadas
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
+						response, "syncDamagePlaneEnemy");
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
