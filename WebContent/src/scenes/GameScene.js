@@ -206,6 +206,7 @@ export class GameScene extends Phaser.Scene {
 		this.createText();
 		this.checkStructures();
 		this.checkArtillery();
+		this.checkPlanesArmor();
 	}
 	update(time, delta) {
 
@@ -228,6 +229,7 @@ export class GameScene extends Phaser.Scene {
 				context.enemySession.planeShooting = -1;
 				if (p != null) {
 					p.fire(time, enemyBullets);
+					this.checkPlanesArmor();
 				}
 			}
 
@@ -735,8 +737,6 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	checkAllArtilleryFire(time) {
-
-
 		if (myPlaneSelected != null && myPlaneSelected.armor > 0) {
 			this.checkArtilleryFire(time, enemyArtilleryOne, myPlaneSelected, enemyBulletsArtillery);
 			this.checkArtilleryFire(time, enemyArtilleryTwo, myPlaneSelected, enemyBulletsArtillery);
@@ -751,6 +751,7 @@ export class GameScene extends Phaser.Scene {
 			this.checkArtilleryFire(time, myArtilleryThree, enemyPlaneSelected, myBulletsArtillery);
 			this.checkArtilleryFire(time, myArtilleryFour, enemyPlaneSelected, myBulletsArtillery);
 		}
+		this.checkPlanesArmor();
 	}
 
 	checkArtilleryFire(time, artillery, plane, bullets) {
@@ -759,6 +760,7 @@ export class GameScene extends Phaser.Scene {
 			if (Phaser.Math.Distance.Between(artillery.x, artillery.y, plane.x, plane.y) < artillery.reach) {
 				angle = Phaser.Math.Angle.Between(artillery.x, artillery.y, plane.x, plane.y);
 				artillery.fire(time, angle, bullets);
+				this.checkPlanesArmor();
 			}
 		}
 	}
@@ -870,8 +872,6 @@ export class GameScene extends Phaser.Scene {
 	damageArtillery(bullet, artillery) {
 		if (artillery.active === true && bullet.active === true) {
 			if (artillery.receiveDamage(bullet.damage)) {
-
-
 				if (artillery.isEnemy) {
 					console.log(artilleryEnemyCount);
 					artilleryEnemyCount = artilleryEnemyCount - 1;
