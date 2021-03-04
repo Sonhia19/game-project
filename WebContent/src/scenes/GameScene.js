@@ -206,6 +206,8 @@ export class GameScene extends Phaser.Scene {
 		this.createText();
 		this.checkStructures();
 		this.checkArtillery();
+		this.checkPlanesArmor();
+
 	}
 	update(time, delta) {
 
