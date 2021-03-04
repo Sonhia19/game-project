@@ -25,7 +25,8 @@ public class main {
 		icon = persistence.connection.PoolConexiones.getInstancia().obtenerConexion();
 		suca = daogames.buscar(1, icon);
 		persistence.connection.PoolConexiones.getInstancia().liberarConexion(icon, true);
-		System.out.print(String.valueOf(suca.getId()) + suca.getUserId());
+		System.out.print("\n");
+		System.out.print(String.valueOf(suca.getId()) +""+ suca.getUserId()+suca.getFecha());
 		}
 		catch (PersistenceException ex)
 		{

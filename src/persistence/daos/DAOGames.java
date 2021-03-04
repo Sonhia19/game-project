@@ -85,11 +85,11 @@ public class DAOGames implements IDAOGames {
 		Connection con = icon.getConnection();
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("select id from partidas where id = ?");
+			PreparedStatement pstmt = con.prepareStatement("select id,fecha from partidas where id = ?");
 			pstmt.setInt(1, idPartida);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				game = new Game(rs.getInt("id"),"pepe el pollo");
+				game = new Game(rs.getInt("id"),"pepe el pollo ",rs.getDate("fecha"));
 			}
 			rs.close();
 			pstmt.close();
