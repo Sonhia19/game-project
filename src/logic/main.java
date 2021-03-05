@@ -27,7 +27,7 @@ public class main {
 		persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 		System.out.print("\n");
 		System.out.print(String.valueOf(suca.getId()) +""+ suca.getUserId()+suca.getFecha());
-		Facade = new logic.facade.Facade();
+		
 		}
 		catch (PersistenceException ex)
 		{
