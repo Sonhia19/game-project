@@ -2,7 +2,7 @@ package persistence.connection;
 
 import exceptions.PersistenceException;
 
-public interface IPoolConexiones {
+public interface IConnectionsPool {
 
 	IDBConnection obtenerConexion() throws PersistenceException;
 //

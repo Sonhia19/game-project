@@ -52,25 +52,23 @@ public class DAOGames implements IDAOGames {
 	 * @param icon
 	 */
 	@Override
-	public void insertar(Game partida, IDBConnection icon) throws PersistenceException {
+	public int getNewGameId( IDBConnection icon) throws PersistenceException {
 		Connection con = icon.getConnection();
-		/*
+		int nuevoId = -1;
+		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("Consultas.insertarPartida()");
-			pstmt.setInt(1, partida.getId());
-			pstmt.setDouble(2, partida.getStockCombustiblePatrullas());
-			pstmt.setDouble(3, partida.getStockCombustiblePesqueros());
-			pstmt.setDouble(4, partida.getStockPeces());
-			pstmt.setInt(5, partida.getEstado());
-			pstmt.setInt(6, partida.getCantidadPatrullas());
-			pstmt.setInt(7, partida.getCantidadPesqueros());
-			pstmt.setInt(8, partida.getCantidadPesquerosEliminados());
-			pstmt.setString(9, partida.getEquipoGanador());
+			PreparedStatement pstmt = con.prepareStatement("insert into partidas values(0,0,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
 			pstmt.executeUpdate();
+			ResultSet rs = pstmt.getGeneratedKeys();
+		    rs.next();
+		    nuevoId = rs.getInt(1);
+				
 			pstmt.close();
+			
 		} catch (SQLException e) {
 			throw new PersistenceException("Error SQL: " + e.getMessage());
-		}*/
+		}
+		return nuevoId;
 	}
 
 	/**

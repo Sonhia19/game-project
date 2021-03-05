@@ -2,6 +2,7 @@ package logic.facade;
 
 import javax.websocket.Session;
 
+import exceptions.LogicException;
 import logic.models.Player;
 import server.utils.WsResponse;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
 
 public interface IFacade {
 
-	WsResponse newGame(final String playerName, final Session session);
+	WsResponse newGame(final String playerName, final Session session) throws LogicException;
 	
 	WsResponse joinGame(final int gameId, final String playerName, final Session session);
 

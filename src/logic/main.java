@@ -7,7 +7,7 @@ import logic.models.Game;
 import persistence.connection.IDBConnection;
 import persistence.daos.DAOGames;
 import persistence.daos.interfaces.IDAOGames;
-
+import logic.facade.IFacade;
 public class main {
 
 	public static void main(String[] args) {
@@ -22,11 +22,12 @@ public class main {
 		try
 		{
 		// Obtenemos una nueva conexión del pool.
-		icon = persistence.connection.PoolConexiones.getInstancia().obtenerConexion();
+		icon = persistence.connection.ConnectionsPool.getInstancia().obtenerConexion();
 		suca = daogames.buscar(1, icon);
-		persistence.connection.PoolConexiones.getInstancia().liberarConexion(icon, true);
+		persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 		System.out.print("\n");
 		System.out.print(String.valueOf(suca.getId()) +""+ suca.getUserId()+suca.getFecha());
+		
 		}
 		catch (PersistenceException ex)
 		{

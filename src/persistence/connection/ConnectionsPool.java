@@ -10,7 +10,7 @@ import java.util.Properties;
 
 
 
-public class PoolConexiones implements IPoolConexiones {
+public class ConnectionsPool implements IConnectionsPool {
 
 
 	private String driver;
@@ -22,9 +22,9 @@ public class PoolConexiones implements IPoolConexiones {
 	/**
 	 * Instancia.
 	 */
-	private static PoolConexiones instancia;
+	private static ConnectionsPool instancia;
 	
-	private PoolConexiones() throws PersistenceException {
+	private ConnectionsPool() throws PersistenceException {
 		Properties p = new Properties();
 		
 		try {
@@ -54,9 +54,9 @@ public class PoolConexiones implements IPoolConexiones {
 //	 *
 //	 * @return PoolConexiones
 //	 */
-	public static PoolConexiones getInstancia() throws PersistenceException {
-		if (!(instancia instanceof PoolConexiones))
-		instancia = new PoolConexiones();
+	public static ConnectionsPool getInstancia() throws PersistenceException {
+		if (!(instancia instanceof ConnectionsPool))
+		instancia = new ConnectionsPool();
 
 	return instancia;
 	}
