@@ -12,6 +12,7 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.json.JSONObject;
 
+import exceptions.LogicException;
 import logic.facade.Facade;
 import logic.models.Player;
 import server.utils.WsResponse;
@@ -23,7 +24,7 @@ public class WsServer {
 	private Facade facade;
 
 	@OnOpen
-	public void onOpen() {
+	public void onOpen() throws LogicException {
 		System.out.println("Open Connection ...");
 		facade = Facade.getInstance();
 	}
@@ -34,7 +35,7 @@ public class WsServer {
 	}
 
 	@OnMessage
-	public void onMessage(String message, Session session) {
+	public void onMessage(String message, Session session) {//throws LogicException {
 		System.out.println(message);
 
 		final JSONObject action = (new JSONObject(message)).getJSONObject("action");
@@ -47,7 +48,7 @@ public class WsServer {
 		e.printStackTrace();
 	}
 
-	private void runAction(final JSONObject action, final JSONObject parameters, final Session session) {
+	private void runAction(final JSONObject action, final JSONObject parameters, final Session session) {//throws LogicException {
 
 		WsResponse response = null;
 
@@ -56,7 +57,12 @@ public class WsServer {
 
 				System.out.println("New game ");
 				final String playerName = parameters.getString("playerName");
-				response = facade.newGame(playerName, session);
+				try {
+					response = facade.newGame(playerName, session);
+				} catch (LogicException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				response.setAction(action);
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());

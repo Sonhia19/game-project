@@ -7,8 +7,14 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import exceptions.LogicException;
+import exceptions.PersistenceException;
 import logic.models.Game;
 import logic.models.Player;
+import persistence.connection.ConnectionsPool;
+import persistence.connection.IDBConnection;
+import persistence.daos.DAOGames;
+import persistence.daos.interfaces.IDAOGames;
 import server.utils.WsResponse;
 
 import java.util.ArrayList;
@@ -24,8 +30,9 @@ public class Facade implements IFacade {
     private static int TEAM_SIDE_BLUE = 1;
     
     private static Facade instance;
+    private IDAOGames daoGames;
 
-    public static Facade getInstance() {
+    public static Facade getInstance()throws LogicException {
 
         if (!(instance instanceof Facade)) {
         	System.out.println("New facade");
@@ -36,15 +43,38 @@ public class Facade implements IFacade {
         return instance;
     }
 
-    private Facade() {
+    private Facade()throws LogicException {
     	gamePlayersMap = new HashMap<Integer, HashMap<String, Player>>();
+    	daoGames = new DAOGames();
+    	try {
+    	//IDBConnection icon 	= null;
+		//icon = ConnectionsPool.getInstancia().obtenerConexion();
+		
+		//partidas = new Partidas(daoPartidas.maximoId(icon));
+		//ConnectionsPool.getInstancia().liberarConexion(icon, true);
+    	}
+    	catch (Exception ex)
+    	{
+    		throw new LogicException(ex.getMessage());
+    	}
     }
 
 
-    public WsResponse newGame(final String playerName, final Session session) {
-
+    public WsResponse newGame(final String playerName, final Session session)throws LogicException {
+    	
     	final WsResponse response = new WsResponse();
-    	final int gameId = 1; //obtener prox id desde la bd
+    	int gameId = -1; //obtener prox id desde la bd
+    	try {
+    	IDBConnection icon 	= null;
+    	icon = ConnectionsPool.getInstancia().obtenerConexion();
+    	gameId = daoGames.getNewGameId(icon);
+    	
+    	}
+    	catch (PersistenceException ex)
+    	{
+    		throw new LogicException(ex.getMessage());
+    	}
+    	
     	final Game game = new Game(gameId);
         response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 
