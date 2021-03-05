@@ -28,7 +28,7 @@ public class PoolConexiones implements IPoolConexiones {
 		Properties p = new Properties();
 		
 		try {
-			p.load(this.getClass().getResourceAsStream("sql.properties"));
+			p.load(this.getClass().getResourceAsStream("./config/sql.properties"));
 		} catch(Exception e) {
 			throw new PersistenceException("Error: " + e.getMessage());
 		}

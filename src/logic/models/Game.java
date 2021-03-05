@@ -1,11 +1,14 @@
 package logic.models;
 
+import java.sql.Date;
+
 import org.json.JSONObject;
 
 public class Game {
 
 	private int id;
 	private String userId;
+	private Date fecha;
 //
 //	/**
 //	 * Cantidad de combustible disponible de las patrullas.
@@ -49,7 +52,12 @@ public class Game {
 		this.id = gameId;
 		this.userId = userId;
 	}
-
+	public Game(final int gameId, final String userId,final Date fecha) {
+		
+		this.id = gameId;
+		this.userId = userId;
+		this.fecha = fecha;
+	}
 	public Game(final int gameId) {
 		
 		this.id = gameId;
@@ -66,6 +74,9 @@ public class Game {
 	
 	public int getUsersCount() {
 		return usersCount;
+	}
+	public Date getFecha() {
+		return this.fecha;
 	}
 	
 	public JSONObject toJson() {
