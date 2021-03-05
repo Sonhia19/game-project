@@ -1,6 +1,8 @@
 package server.ws;
 
+import java.awt.List;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.websocket.OnClose;
@@ -10,6 +12,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import exceptions.LogicException;
@@ -67,14 +70,39 @@ public class WsServer {
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 			}
+			if (action.getString("name").equalsIgnoreCase("joinGame")) {
+
+				System.out.println("Join game ");
+				final int gameId = parameters.getInt("gameId");
+				final String playerName = parameters.getString("playerName");
+				response = facade.joinGame(gameId, playerName, session);
+				response.setAction(action);
+				// envia msj al servidor que lo invoco
+				session.getBasicRemote().sendText(response.toParsedString());
+				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
+						"syncWithEnemy");
+			}
 			// Conectar jugador a una partida existente.
 			if (action.getString("name").equalsIgnoreCase("connectToGame")) {
 
 				System.out.println("Connect to game");
 				final String playerName = parameters.getString("playerName");
-				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, session);
+				final int teamSide = parameters.getInt("teamSide");
+				final JSONArray jsonArray = parameters.getJSONArray("planesType");
+				final ArrayList<Integer> planesType = new ArrayList<Integer>();
+				
+				if (jsonArray != null) { 
+				   int size = jsonArray.length();
+				   for (int i = 0; i < size; i++){ 
+					   planesType.add(Integer.valueOf(jsonArray.get(i).toString()));
+				   }
+				}
+				
+				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, teamSide, planesType, session);
 				response.setAction(action);
 
+				System.out.println(response);
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 
@@ -83,7 +111,6 @@ public class WsServer {
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
 						"syncWithEnemy");
 			}
-
 			if (action.getString("name").equalsIgnoreCase("syncGame")) {
 
 				System.out.println("Sync game");

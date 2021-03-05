@@ -36,14 +36,13 @@ export class JoinGameScene extends Phaser.Scene {
                 var gameToken = this.getChildByName('gametoken');
                 
                 //envio msj al servidor con nombre de usuario
-                var message = context.messagesFormat.connectToGame(inputUsername.value, gameToken.value);
-                console.log(message);
+                var message = context.messagesFormat.joinGame(inputUsername.value, gameToken.value);
                 context.functions.sendMessage(message);
                 this.destroy();
 
                 var delayInMilliseconds = 1000; //1 second
                 setTimeout(function() {
-                    context.game.scene.start("GAME", "hello from NEWGAME scene");
+                    context.game.scene.start("LOBBYGAME", "hello from JOINGAME scene");
                 }, delayInMilliseconds);
             }
             

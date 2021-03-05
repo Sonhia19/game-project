@@ -7,7 +7,7 @@ export class WebSocketClient {
 
 	connect() {
 		try {
-			this.webSocket = new WebSocket("ws://localhost:8080/game-project/websocketendpoint");
+			this.webSocket = new WebSocket("ws://192.168.0.133:8080/game-project/websocketendpoint");
 			context.functions.broadcastWebSocket(this.webSocket);
 		} catch (excepcion) {			
 			console.log(excepcion);
@@ -15,8 +15,6 @@ export class WebSocketClient {
 	}
 	
 	sendMessage(message) {
-		console.log('ws sending');
-		console.log(this.webSocket.readyState);
 		if (this.webSocket.readyState == WebSocket.OPEN) {
 			this.webSocket.send(message);
 		}

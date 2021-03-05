@@ -35,14 +35,13 @@ export class NewGameScene extends Phaser.Scene {
                 var inputUsername = this.getChildByName('username');
                 //envio msj al servidor con nombre de usuario
                 var message = context.messagesFormat.newGame(inputUsername.value);
-                console.log(message);
                 context.functions.sendMessage(message);
                 
                 this.destroy();
                 
                 var delayInMilliseconds = 1000; //1 second
                 setTimeout(function() {
-                        context.game.scene.start("GAME", "hello from NEWGAME scene");
+                        context.game.scene.start("LOBBYGAME", "hello from NEWGAME scene");
                 }, delayInMilliseconds);
                 
             }

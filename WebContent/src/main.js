@@ -6,6 +6,7 @@ import { MenuScene } from '../src/scenes/MenuScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { JoinGameScene } from '../src/scenes/JoinGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
+import { MESSAGES_FORMAT } from '../src/constants/MessagesFormatConstants.js';
 
 //import Phaser from '/phaser';
 
@@ -61,11 +62,22 @@ var functions = {
                 console.log(context.playerSession);
             }
 
+            if (response.action.name == 'joinGame') {
+                context.gameId = parseInt(response.responses[0].value);
+                context.playerSession = JSON.parse(response.responses[1].value);
+                context.playersConnected = parseInt(response.responses[2].value);
+
+                console.log('playerSession');
+                console.log(context.playerSession);
+                console.log('playersConnected');
+                console.log(context.playersConnected);
+            }
+
             if (response.action.name == 'connectToGame') {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.enemySession = JSON.parse(response.responses[2].value);
-
+                
                 console.log('playerSession');
                 console.log(context.playerSession);
                 console.log('enemySession');
@@ -74,19 +86,19 @@ var functions = {
 
             if (response.action.name == 'syncGame') {
                 context.gameId = JSON.parse(response.responses[0].value);
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
             }
 
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
-
+                console.log('SYNC WITH ENEMY');
+                console.log(response.responses);
+                if (response.responses[2] != undefined) {
+                    var key = response.responses[2].name;
+                    if (key == 'playersConnected') {
+                        context.playersConnected = parseInt(response.responses[2].value);
+                    }
+                }
+                
             }
             if (response.action.name == "syncShootEnemy") {
                 context.enemySession.isShooting = true;
@@ -99,122 +111,29 @@ var functions = {
             }
             if (response.action.name == "syncDamagePlaneEnemy") {
                 context.enemySession.isDamaging = true;
+
+                console.log('DAMAGE');
+                console.log(context.enemySession.isDamaging);
                 context.enemySession.planeDamaging = JSON.parse(response.responses[1].value);
                 context.enemySession.damage = JSON.parse(response.responses[2].value);
+
+                console.log('playerSession');
+                console.log(context.playerSession);
+                console.log('enemySession');
+                console.log(context.enemySession);
             }
         }
     },
-
-
 };
 
-var messagesFormat = {
-    newGame: (playerName) => {
-        return JSON.stringify({
-            action: {
-                name: 'newGame',
-                parameters: {
-                    playerName: playerName
-                }
-            }
-        })
-    },
-
-    guardarPartida: () => {
-        return JSON.stringify({
-            action: {
-                name: 'saveGame',
-                parameters: {
-                    gameId: 1
-                }
-            }
-        })
-    },
-    connectToGame: (playerName, gameId) => {
-        return JSON.stringify({
-            action: {
-                name: 'connectToGame',
-                parameters: {
-                    gameId: gameId,
-                    playerName: playerName
-                }
-            }
-        })
-    },
-
-    syncWithEnemy: () => {
-        return JSON.stringify({
-            action: {
-                name: 'syncWithEnemy',
-                parameters: {
-                    gameId: context.gameId,
-                    playerName: context.playerSession.name
-                }
-            }
-        })
-    },
-
-    syncGame: () => {
-        return JSON.stringify({
-            action: {
-                name: 'syncGame',
-                parameters: {
-                    gameId: context.gameId,
-                    playerName: context.playerSession.name
-                }
-            }
-        })
-    },
-
-    syncMove(planeOne, planeTwo, planeThree, planeFour) {
-		return JSON.stringify({
-			action: {
-				name: 'syncMove',
-				parameters: {
-					gameId: context.gameId,
-					playerName: context.playerSession.name,
-					planeOne: planeOne,
-					planeTwo: planeTwo,
-					planeThree: planeThree,
-					planeFour: planeFour
-				}
-			}
-		})
-	},
-
-	syncShoot(selectedPlaneIndex) {
-		return JSON.stringify({
-			action: {
-				name: 'syncShoot',
-				parameters: {
-					gameId: context.gameId,
-                    playerName: context.playerSession.name,
-					shootingPlane: selectedPlaneIndex
-				}
-			}
-		})
-	},
-
-	syncBomb(selectedPlaneIndex) {
-		return JSON.stringify({
-			action: {
-				name: 'syncBomb',
-				parameters: {
-					gameId: context.gameId,
-                    playerName: context.playerSession.name,
-					bombingPlane: selectedPlaneIndex
-				}
-			}
-		})
-	}
-};
 
 export const context = {
     game: new Phaser.Game(config),
     webSocket: new WebSocketClient(),
     functions: functions,
-    messagesFormat: messagesFormat,
+    messagesFormat: MESSAGES_FORMAT,
     gameId: null,
+    playersConnected: 0,
     playerSession: {},
     enemySession: {},
     currentScene: 'LOAD'

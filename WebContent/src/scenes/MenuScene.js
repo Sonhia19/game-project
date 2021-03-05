@@ -33,31 +33,12 @@ export class MenuScene extends Phaser.Scene {
         newGameButton.on('pointerdown', function () {
 
             this.scene.start("NEWGAME", "hello from MENU scene");
-            // this.time.addEvent({
-            //     delay: 500,
-            //     callback: ()=>{
-            //         this.scene.start("NEWGAME", "hello from MENU scene");
-            //     },
-            //     loop: false
-            // })
     
         }, this);
 
         joinGameButton.on('pointerdown', function () {
 
-            // var gameId = 1; //este dato deberia venir de un input que ponga el usuario
-            // context.gameId = gameId;
-            // var message = context.messagesFormat.connectToGame("player", gameId);
-            // context.functions.sendMessage(message);
-            // console.log('join game ' + context.gameId);
             this.scene.start("JOINGAME", "hello from MENU scene");
-            // this.time.addEvent({
-            //     delay: 500,
-            //     callback: ()=>{
-            //         this.scene.start("GAME", "hello from MENU scene");
-            //     },
-            //     loop: false
-            // })
     
         }, this);
     }

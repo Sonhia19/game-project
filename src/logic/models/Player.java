@@ -37,14 +37,28 @@ public class Player {
 		this.gameId = gameId;
 		this.teamSide = teamSide;
 		this.session = session;
-		this.planes = preloadPlanes();
-		this.artilleries = preloadArtilleries();
 		this.activeFuel = true;
 		this.activeHangar = true;
 		this.activeTower = true;
-		//Crear arreglo de 4 aviones con valores cargados por defecto, y asignarlos al array del jugador
+	}
+	
+	public Player(final String name, final int gameId, final int teamSide) {
+		this.name = name;
+		this.gameId = gameId;
+		this.teamSide = teamSide;
 	}
 
+	public Player(final String name, final int gameId, final int teamSide, final List<Plane> planes, final List<Artillery> artilleries) {
+		this.name = name;
+		this.gameId = gameId;
+		this.teamSide = teamSide;
+		this.activeFuel = true;
+		this.activeHangar = true;
+		this.activeTower = true;
+		this.artilleries = artilleries;
+		this.planes = planes;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -59,6 +73,11 @@ public class Player {
 	
 	public int getTeamSide() {
 		return teamSide;
+	}
+	
+	
+	public void setSession(Session session) {
+		this.session = session;
 	}
 	
 	public Session getSession() {
@@ -78,35 +97,50 @@ public class Player {
 	}
 	
 	
-	private List<Plane> preloadPlanes () {
+	public void preloadPlanes (final List<Integer> planesType) {
 		
 		List<Plane> planes = new ArrayList();
+		int planeId = 1;
+		int positionY = 200;
+		for (Integer type : planesType) {
+			if (type.equals(1) ) {
+				planes.add(new PlaneType1(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			else if (type.equals(2) ) {
+				planes.add(new PlaneType2(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			else if (type.equals(3) ) {
+				planes.add(new PlaneType3(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			else if (type.equals(4) ) {
+				planes.add(new PlaneType4(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			planeId++;
+			// los 4 aviones se colocarian en posicionY = 200, 300, 400, 500
+			positionY += 100;
+		}
 		
-		planes.add(new Plane(1, this.teamSide == 1? 150 : 850, 200, this.teamSide == 1? 90:270));
-		planes.add(new Plane(2, this.teamSide == 1? 150 : 850, 300, this.teamSide == 1? 90:270));
-		planes.add(new Plane(3, this.teamSide == 1? 150 : 850, 400, this.teamSide == 1? 90:270));
-		planes.add(new Plane(4, this.teamSide == 1? 150 : 850, 500, this.teamSide == 1? 90:270));
-		
-		return planes;
+		this.planes = planes;
 	}
 	
-	private List<Artillery> preloadArtilleries()
+	public void preloadArtilleries()
 	{
 		List<Artillery> artilleries = new ArrayList();
 		artilleries.add(new Artillery(1, this.teamSide == 1? 175 : 825, 75, 0));
 		artilleries.add(new Artillery(2, this.teamSide == 1? 175 : 825, 250, 0));
 		artilleries.add(new Artillery(3, this.teamSide == 1? 175 : 825, 350, 0));
 		artilleries.add(new Artillery(4, this.teamSide == 1? 175 : 825, 550, 0));
-		return artilleries;
+		this.artilleries = artilleries;
 	}
 	
 	public Player preparePlayerToSend() {
 		
-		return new Player(this.name, this.gameId, this.teamSide, null);
+		return new Player(this.name, this.gameId, this.teamSide, this.planes, this.artilleries);
 	}
+	
 	public Player preparePlayerToSendMove(final Player player, final int[][] coordinates) {
 		
-		Player returnPlayer = new Player(player.name, player.gameId, player.teamSide, null);
+		Player returnPlayer = new Player(player.name, player.gameId, player.teamSide);
 		returnPlayer.planes = player.planes;
 		
 		Plane p = returnPlayer.planes.get(0);
