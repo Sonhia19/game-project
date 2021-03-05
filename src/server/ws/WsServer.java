@@ -91,14 +91,14 @@ public class WsServer {
 				final int teamSide = parameters.getInt("teamSide");
 				final JSONArray jsonArray = parameters.getJSONArray("planesType");
 				final ArrayList<Integer> planesType = new ArrayList<Integer>();
-				
-				if (jsonArray != null) { 
+
+				if (jsonArray != null) {
 				   int size = jsonArray.length();
-				   for (int i = 0; i < size; i++){ 
+				   for (int i = 0; i < size; i++){
 					   planesType.add(Integer.valueOf(jsonArray.get(i).toString()));
 				   }
 				}
-				
+
 				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, teamSide, planesType, session);
 				response.setAction(action);
 
@@ -128,8 +128,8 @@ public class WsServer {
 				response = facade.getJsonMoveEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
-						response, "syncWithEnemy");
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
+						response, "syncMoveEnemy");
 			}
 			if (action.getString("name").equalsIgnoreCase("syncShoot")) {
 

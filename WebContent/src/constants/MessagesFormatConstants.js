@@ -72,17 +72,15 @@ export const MESSAGES_FORMAT = {
         })
     },
 
-    syncMove(planeOne, planeTwo, planeThree, planeFour) {
+    syncMove(planeId, planePosition) {
 		return JSON.stringify({
 			action: {
 				name: 'syncMove',
 				parameters: {
 					gameId: context.gameId,
 					playerName: context.playerSession.name,
-					planeOne: planeOne,
-					planeTwo: planeTwo,
-					planeThree: planeThree,
-					planeFour: planeFour
+					planeId: planeId,
+                    planePosition: planePosition
 				}
 			}
 		})
