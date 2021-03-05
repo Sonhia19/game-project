@@ -1,47 +1,39 @@
 package logic.models;
 
 //Esta clase refleja una sesion de jugador activo en una partida
-public class Plane {
+public abstract class Plane {
 
-	private int id;
+	int id;
 
-	private double fuel;
+	double fuel;
 
-	private double armor;
+	double armor;
 
-	private boolean hasBomb;
+	boolean hasBomb;
 
-	private boolean highFly;
+	boolean highFly;
 
-	private double positionX;
+	double positionX;
 
-	private double positionY;
+	double positionY;
 
-	private int angle;
+	int angle;
 
-	private double speed;
+	double speed;
 
-	private double firePower;
+	double firePower;
 
 	// planeConfig
-	private int planeType;
+	int planeType;
 
-	// Por ahora se precargan los aviones con este constructor
 	public Plane(int id, double positionX, double positionY, int angle) {
 
 		this.id = id;
-		this.fuel = 100;
-		this.armor = 100;
-		this.speed = 100;
-		this.planeType = 1;
-		this.firePower = 10;
-		this.hasBomb = true;
-		this.highFly = false;
 		this.positionX = positionX;
 		this.positionY = positionY;
 		this.angle = angle;
-
 	}
+	
 
 	public int getId() {
 		return id;
@@ -83,12 +75,12 @@ public class Plane {
 		return planeType;
 	}
 
-	public void setAngle(int a) {
-		angle = a;
-	}
-
 	public double getPositionY() {
 		return positionY;
+	}
+	
+	public void setAngle(int a) {
+		angle = a;
 	}
 
 	public void setPositionX(double x) {

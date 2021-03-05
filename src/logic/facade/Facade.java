@@ -11,6 +11,7 @@ import logic.models.Game;
 import logic.models.Player;
 import server.utils.WsResponse;
 
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,34 +51,57 @@ public class Facade implements IFacade {
 
     	//Se crea primer instancia de jugador, con nombre jugador, id partida y el bando
         final Player player = new Player(playerName, gameId, TEAM_SIDE_BLUE, session);
-        
         final Gson gson = new Gson();
         final String result = gson.toJson(player.preparePlayerToSend());
         response.generateResponse("playerSession", result, "String");
-       
+        
     	//Se agrega sesion a la partida
-        final HashMap<String, Player> gamePlayer = gamePlayersMap.get(gameId);
-        gamePlayer.put(playerName, player);
+        final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+        gamePlayers.put(playerName, player);
         
 		return response;
 		
     }
     
-    public WsResponse connectGameSession(final int gameId, final String playerName, final Session session) {
+    public WsResponse joinGame(final int gameId, final String playerName, final Session session) {
+
+    	final WsResponse response = new WsResponse();
+    	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+        response.generateResponse("gameId", String.valueOf(gameId), "int");
+
+    	//Se joinea el segundo jugador, con bando rojo
+        final Player player = new Player(playerName, gameId, TEAM_SIDE_RED, session);
+        final Gson gson = new Gson();
+        final String result = gson.toJson(player.preparePlayerToSend());
+        gamePlayers.put(playerName, player);
+        
+        response.generateResponse("playerSession", result, "String");
+        response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+        
+    	//Se agrega sesion a la partida
+        
+        
+		return response;
+		
+    }
+    
+    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, final Session session) {
 
     	final WsResponse response = new WsResponse();
     	
-    	//El nro2 indica el team side, al conectarse se lo marca como segundo jugador por ahora
-    	final Player player = new Player(playerName, gameId, TEAM_SIDE_RED, session);
+    	//Despues de haber elegido los tipos de aviones en el lobby, los jugadores se conectan a la partida
+    	
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-        
+    	final Player player = gamePlayers.get(playerName);
+    	player.preloadPlanes(planesType);
+    	player.preloadArtilleries();
+    			
     	Player enemyPlayer = null;
     	
     	for (final Player enemy : gamePlayers.values()) {
     		enemyPlayer = enemy;
     	}
-    	gamePlayers.put(playerName, player);
-        
+    	
         final Gson gson = new Gson();
         final String result = gson.toJson(player.preparePlayerToSend());
         final String resultEnemy = gson.toJson(enemyPlayer.preparePlayerToSend());
@@ -86,8 +110,10 @@ public class Facade implements IFacade {
         response.generateResponse("playerSession", result, "String");
         response.generateResponse("enemySession", resultEnemy, "String");
         
+        
 		return response;
     }
+
 
     public int disconnectGameSession(final Session session) {
 

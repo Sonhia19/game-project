@@ -39,14 +39,6 @@ export class LoadScene extends Phaser.Scene {
             loop: true
         });
         this.add.image(context.game.renderer.width * 0.15, 0, 'logo').setOrigin(0);
-        
-        // var logo = this.physics.add.image(400, 100, "logo");
-
-        // logo.setVelocity(100, 200);
-        // logo.setBounce(1, 1);
-        // logo.setCollideWorldBounds(true);
-
-        
 
         this.time.addEvent({
             delay: 2000,

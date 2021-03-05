@@ -596,26 +596,29 @@ export class GameScene extends Phaser.Scene {
 
 	//#region Aciones
 	moveEnemyPlanes() {
-		let planeEnemyServer = context.enemySession.planes;
-		enemyPlaneOne.y = planeEnemyServer[0].positionY;
-		enemyPlaneOne.x = planeEnemyServer[0].positionX;
-		enemyPlaneOne.planeAngle = planeEnemyServer[0].angle;
-		enemyPlaneOne.angle = planeEnemyServer[0].angle;
-
-		enemyPlaneTwo.y = planeEnemyServer[1].positionY;
-		enemyPlaneTwo.x = planeEnemyServer[1].positionX;
-		enemyPlaneTwo.planeAngle = planeEnemyServer[1].angle;
-		enemyPlaneTwo.angle = planeEnemyServer[1].angle;
-
-		enemyPlaneThree.y = planeEnemyServer[2].positionY;
-		enemyPlaneThree.x = planeEnemyServer[2].positionX;
-		enemyPlaneThree.planeAngle = planeEnemyServer[2].angle;
-		enemyPlaneThree.angle = planeEnemyServer[2].angle;
-
-		enemyPlaneFour.y = planeEnemyServer[3].positionY;
-		enemyPlaneFour.x = planeEnemyServer[3].positionX;
-		enemyPlaneFour.planeAngle = planeEnemyServer[3].angle;
-		enemyPlaneFour.angle = planeEnemyServer[3].angle;
+		if (context.enemySession.planes != undefined) {
+			let planeEnemyServer = context.enemySession.planes;
+			enemyPlaneOne.y = planeEnemyServer[0].positionY;
+			enemyPlaneOne.x = planeEnemyServer[0].positionX;
+			enemyPlaneOne.planeAngle = planeEnemyServer[0].angle;
+			enemyPlaneOne.angle = planeEnemyServer[0].angle;
+	
+			enemyPlaneTwo.y = planeEnemyServer[1].positionY;
+			enemyPlaneTwo.x = planeEnemyServer[1].positionX;
+			enemyPlaneTwo.planeAngle = planeEnemyServer[1].angle;
+			enemyPlaneTwo.angle = planeEnemyServer[1].angle;
+	
+			enemyPlaneThree.y = planeEnemyServer[2].positionY;
+			enemyPlaneThree.x = planeEnemyServer[2].positionX;
+			enemyPlaneThree.planeAngle = planeEnemyServer[2].angle;
+			enemyPlaneThree.angle = planeEnemyServer[2].angle;
+	
+			enemyPlaneFour.y = planeEnemyServer[3].positionY;
+			enemyPlaneFour.x = planeEnemyServer[3].positionX;
+			enemyPlaneFour.planeAngle = planeEnemyServer[3].angle;
+			enemyPlaneFour.angle = planeEnemyServer[3].angle;
+		}
+		
 	}
 
 	existsEnemySession() {
@@ -908,11 +911,13 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	placeEnemyArtilleries() {
-		let artilleryServer = context.enemySession.artilleries;
-		if (artilleryServer[0].armor > 0) { enemyArtilleriesPlaced[0] = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower); }
-		if (artilleryServer[1].armor > 0) { enemyArtilleriesPlaced[1] = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower); }
-		if (artilleryServer[2].armor > 0) { enemyArtilleriesPlaced[2] = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower); }
-		if (artilleryServer[3].armor > 0) { enemyArtilleriesPlaced[3] = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower); }
+		if (context.enemySession.artilleries != undefined) {
+			let artilleryServer = context.enemySession.artilleries;
+			if (artilleryServer[0].armor > 0) { enemyArtilleriesPlaced[0] = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower); }
+			if (artilleryServer[1].armor > 0) { enemyArtilleriesPlaced[1] = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower); }
+			if (artilleryServer[2].armor > 0) { enemyArtilleriesPlaced[2] = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower); }
+			if (artilleryServer[3].armor > 0) { enemyArtilleriesPlaced[3] = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower); }
+		}		
 	}
 
 	placeMyElements() {
@@ -959,13 +964,15 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	placeEnemyPlanes() {
-		let planeEnemyServer = context.enemySession.planes;
-		if (planeEnemyServer[0].armor > 0) { enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, planeEnemyServer[0].speed, planeEnemyServer[0].hasBomb, planeEnemyServer[0].firePower, 1); }
-		if (planeEnemyServer[1].armor > 0) { enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, planeEnemyServer[1].speed, planeEnemyServer[1].hasBomb, planeEnemyServer[1].firePower, 2); }
-		if (planeEnemyServer[2].armor > 0) { enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, planeEnemyServer[2].speed, planeEnemyServer[2].hasBomb, planeEnemyServer[2].firePower, 3); }
-		if (planeEnemyServer[3].armor > 0) { enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, planeEnemyServer[3].speed, planeEnemyServer[3].hasBomb, planeEnemyServer[3].firePower, 4); }
+		if (context.enemySession.planes != undefined) {
+			let planeEnemyServer = context.enemySession.planes;
+			if (planeEnemyServer[0].armor > 0) { enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, planeEnemyServer[0].speed, planeEnemyServer[0].hasBomb, planeEnemyServer[0].firePower, 1); }
+			if (planeEnemyServer[1].armor > 0) { enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, planeEnemyServer[1].speed, planeEnemyServer[1].hasBomb, planeEnemyServer[1].firePower, 2); }
+			if (planeEnemyServer[2].armor > 0) { enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, planeEnemyServer[2].speed, planeEnemyServer[2].hasBomb, planeEnemyServer[2].firePower, 3); }
+			if (planeEnemyServer[3].armor > 0) { enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, planeEnemyServer[3].speed, planeEnemyServer[3].hasBomb, planeEnemyServer[3].firePower, 4); }
 
-		this.physics.add.overlap(myBullets, enemyPlanes, this.damageEnemyPlane);
+			this.physics.add.overlap(myBullets, enemyPlanes, this.damageEnemyPlane);
+		}
 	}
 
 	placeEnemyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
