@@ -131,7 +131,7 @@ export let Plane = new Phaser.Class({
     },
     consumeFuel: function () {
         if (this.fuel > 0) {
-            this.fuel -= this.highFly ? 0.2 : 0.1;
+            //this.fuel -= this.highFly ? 0.2 : 0.1;
         }
         if (this.fuel < 0 && this.fuel > -1) {
             this.emptyTank(true);

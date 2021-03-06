@@ -17,6 +17,7 @@ import { RED_SAFE_ZONE_X, RED_PLANE_X, RED_BASE_X, RED_ARTILLERY_X } from '../co
 
 
 //#region Variables
+let scene;
 //Bandera para saber el bando del jugador
 let isBlue;
 let enemyDraw = false;
@@ -25,6 +26,10 @@ let enemyDraw = false;
 let keyCtrl, keyOne, keyTwo, keyThree, keyFour, keyF, keyShift;
 
 let cursors;
+
+const COLOR_SUCCESS = 0x008025;
+const COLOR_DANGER = 0xFF0000;
+const COLOR_WARNING = 0xE2D510;
 
 
 //Colecciones de elementos del propio bando
@@ -120,6 +125,11 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	preload() {
+		this.load.scenePlugin({
+			key: 'rexuiplugin',
+			url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+			sceneKey: 'rexUI'
+		});
 
 		//Carga de imagenes
 		this.load.image('field', 'assets/field.jpg');
@@ -142,6 +152,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	create() {
+		scene = this;
 		this.add.image(500, 300, 'field');
 
 		isBlue = context.playerSession.teamSide == 1
@@ -513,7 +524,7 @@ export class GameScene extends Phaser.Scene {
 		highFlyPlaneText = this.add.text(1010, 346, '', { fontSize: '11px', fill: '#FFFF00' });
 		infoGameText = this.add.text(1010, 361, 'Presione (1) (2) (3) (4) para seleccionar avión', { fontSize: '11px', fill: '#FF0000' });
 
-		myBaseText = this.add.text(1010, 400, 'Mi Base', { fontSize: '13px', fill: '#009025' });
+		myBaseText = this.add.text(1010, 400, 'Base Aliada', { fontSize: '13px', fill: '#009025' });
 		artilleryText = this.add.text(1010, 415, '', { fontSize: '11px', fill: '#FFFFFF' });
 		towerText = this.add.text(1010, 430, 'Torre', { fontSize: '11px', fill: '#FFFFFF' });
 		hangarText = this.add.text(1010, 445, 'Hangar', { fontSize: '11px', fill: '#FFFFFF' });
@@ -811,16 +822,25 @@ export class GameScene extends Phaser.Scene {
 
 	damageMyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
+			let message;
+			let color;
 			if (plane.receiveDamage(bullet.damage)) {
+				message = "Avión aliado destruido";
+				color = COLOR_DANGER;
+			}
+			else {
+				message = "Avión aliado dañado";
+				color = COLOR_WARNING;
 			}
 			bullet.destroy();
+			scene.createMessage(message, color);
 		}
 	}
 
 	damageEnemyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
-
 			if (plane.receiveDamage(bullet.damage)) {
+				scene.createMessage("Avión enemigo destruido", COLOR_SUCCESS);
 			}
 			bullet.destroy();
 			// let json = JSON.stringify({
@@ -839,39 +859,47 @@ export class GameScene extends Phaser.Scene {
 
 	damageMyStructure(bomb, structure) {
 		if (structure.active === true && bomb.active === true) {
-			if (structure.active === true && bomb.active === true) {
-				if (structure.frame.name == 'tower') {
-					ledGreenTower.setVisible(false);
-					ledRedTower.setVisible(true);
-				} else if (structure.frame.texture.key == 'fuel') {
-					ledGreenFuel.setVisible(false);
-					ledRedFuel.setVisible(true);
-				} else if (structure.frame.texture.key == 'hangar') {
-					ledGreenHangar.setVisible(false);
-					ledRedHangar.setVisible(true);
-				}
+			let message;
+			if (structure.frame.name == 'tower') {
+				ledGreenTower.setVisible(false);
+				ledRedTower.setVisible(true);
+				message = "Torre aliada destruida";
+			} else if (structure.frame.texture.key == 'fuel') {
+				ledGreenFuel.setVisible(false);
+				ledRedFuel.setVisible(true);
+				message = "Tanque aliado destruido";
+			} else if (structure.frame.texture.key == 'hangar') {
+				ledGreenHangar.setVisible(false);
+				ledRedHangar.setVisible(true);
+				message = "Hangar aliado destruido";
 			}
 			bomb.destroy();
 			structure.destroy();
 			structure = false;
+			scene.createMessage(message, COLOR_DANGER);
 		}
 	}
 
 	damageEnemyStructure(bomb, structure) {
 		if (structure.active === true && bomb.active === true) {
+			let message;
 			if (structure.frame.name == 'tower') {
 				ledGreenTowerEnemy.setVisible(false);
 				ledRedTowerEnemy.setVisible(true);
+				message = "Torre enemiga destruida";
 			} else if (structure.frame.texture.key == 'fuel') {
 				ledGreenFuelEnemy.setVisible(false);
 				ledRedFuelEnemy.setVisible(true);
+				message = "Tanque enemigo destruido";
 			} else if (structure.frame.texture.key == 'hangar') {
 				ledGreenHangarEnemy.setVisible(false);
 				ledRedHangarEnemy.setVisible(true);
+				message = "Hangar enemigo destruido";
 			}
 			bomb.destroy();
 			structure.destroy();
 			structure = false;
+			scene.createMessage(message, COLOR_SUCCESS);
 		}
 	}
 
@@ -893,17 +921,24 @@ export class GameScene extends Phaser.Scene {
 
 	damageArtillery(bullet, artillery) {
 		if (artillery.active === true && bullet.active === true) {
+			let message;
+			let color;
 			if (artillery.receiveDamage(bullet.damage)) {
 				if (artillery.isEnemy) {
+					message = "Artillería enemiga destruida";
+					color = COLOR_SUCCESS;
 					console.log(artilleryEnemyCount);
 					artilleryEnemyCount = artilleryEnemyCount - 1;
 					artilleryText.setText('Artillería: ' + artilleryEnemyCount + '/4');
 				}
 				else {
+					message = "Artillería aliada destruida"
+					color = COLOR_DANGER;
 					console.log(artilleryCount);
 					artilleryCount = artilleryCount - 1;
 					artilleryEnemyText.setText('Artillería : ' + artilleryCount + '/4')
 				}
+				scene.createMessage(message, color);
 			}
 			bullet.destroy();
 		}
@@ -912,6 +947,29 @@ export class GameScene extends Phaser.Scene {
 	//#endregion
 
 	//#region Representar elementos
+	createMessage(message, indicator) {
+		var toast = this.rexUI.add.toast({
+			x: 600,
+			y: 500,
+
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 20, indicator),
+			text: this.add.text(0, 0, '', {
+				fontSize: '24px'
+			}),
+			space: {
+				left: 20,
+				right: 20,
+				top: 20,
+				bottom: 20,
+			},
+			duration: {
+				in: 200,
+				hold: 1200,
+				out: 200,
+			},
+		});
+		toast.show(message);
+	}
 	placeEnemyElements() {
 		if (context.enemySession.activeFuel) {
 			enemyFuel = enemyFuels.get();
