@@ -16,9 +16,6 @@ export class LobbyGameScene extends Phaser.Scene {
         this.load.image("plane-type4", "assets/plane-type4.png");
 		this.load.image("joingame_font", "assets/joingame-font.png");
 
-		// playerName.setText(context.gameSession.playerName);
-		// tokenGame.setText(context.gameSession.gameId);
-
 	}
 
 	plane1Type = 1;
@@ -33,8 +30,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		const style = { font: "bold 25px Arial", fill: "#fff" };
   		this.add.text(1, 1, `Game Token: ${context.playerSession.gameId}`, style);
 		this.add.text(1, 35, `Player Name: ${context.playerSession.name}`, style);
-
-		
 		this.add.text(300, 90, `Select planes type`, style);
 		/***   se incorpora boton para tipo avion 1   ***/
 		var plane1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, this.getTypeImage(this.plane1Type)).setDepth(0)
@@ -67,7 +62,6 @@ export class LobbyGameScene extends Phaser.Scene {
 				// se cargan tipos de avion
 				var planesType = [this.plane1Type, this.plane2Type, this.plane3Type, this.plane4Type];
 				var message = context.messagesFormat.connectToGame(context.playerSession.name, context.playerSession.teamSide, planesType, context.playerSession.gameId);
-				console.log(message);
 				context.functions.sendMessage(message);
 
 				this.time.addEvent({
@@ -101,7 +95,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 4) {
 			this.plane1Type = 1;
 		}
-		console.log("");
 	}
 
 	updatPlane2(type) {

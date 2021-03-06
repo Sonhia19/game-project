@@ -104,18 +104,18 @@ public class Player {
 		int positionY = 200;
 		for (Integer type : planesType) {
 			if (type.equals(1) ) {
-				planes.add(new PlaneType1(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+				planes.add(new PlaneType1(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 1));
 			}
 			else if (type.equals(2) ) {
-				planes.add(new PlaneType2(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+				planes.add(new PlaneType2(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 2));
 			}
 			else if (type.equals(3) ) {
-				planes.add(new PlaneType3(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+				planes.add(new PlaneType3(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 3));
 			}
 			else if (type.equals(4) ) {
-				planes.add(new PlaneType4(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+				planes.add(new PlaneType4(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 4));
 			}
-			planeId++;
+			planeId = planeId + 1;
 			// los 4 aviones se colocarian en posicionY = 200, 300, 400, 500
 			positionY += 100;
 		}

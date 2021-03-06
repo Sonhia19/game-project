@@ -603,7 +603,8 @@ export class GameScene extends Phaser.Scene {
 	//#region Aciones
 	moveEnemyPlanes() {
 
-
+		console.log("enemy session");
+		console.log(context.enemySession);
 		let coord = context.enemySession.planeCoord;
 		let index = parseInt(context.enemySession.planeMoving)
 		switch (index) {
@@ -954,6 +955,8 @@ export class GameScene extends Phaser.Scene {
 	}
 	placeMyPlanes() {
 		if (context.playerSession.planes != undefined) {
+			console.log("PLACE MY PLANES");
+			console.log(context.playerSession);
 			let planesServer = context.playerSession.planes;
 			if (planesServer[0].armor > 0) { myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, planesServer[0].speed, planesServer[0].hasBomb, planesServer[0].firePower, 1); }
 			if (planesServer[1].armor > 0) { myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2); }

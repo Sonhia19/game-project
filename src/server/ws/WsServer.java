@@ -108,7 +108,9 @@ public class WsServer {
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 
+				//armar respuesta con enemySession para enviar al otro cliente
 				response = facade.getJsonGameSession(parameters.getInt("gameId"), playerName);
+
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
 						"syncWithEnemy");
@@ -116,21 +118,21 @@ public class WsServer {
 			if (action.getString("name").equalsIgnoreCase("syncGame")) {
 
 				System.out.println("Sync game");
-				response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
+				/*response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
 				response.setAction(action);
 				session.getBasicRemote().sendText(response.toParsedString());
 				response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncGame(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
-						response);
+						response);*/
 			}
 			if (action.getString("name").equalsIgnoreCase("syncMove")) {
 
 				System.out.println("Sync move");
 				response = facade.getJsonMoveEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
-				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
+				// sincroniza todas las sesiones enemigas conectadas
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncMoveEnemy");
 			}
 			if (action.getString("name").equalsIgnoreCase("syncShoot")) {

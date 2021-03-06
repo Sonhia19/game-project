@@ -64,8 +64,9 @@ public class Facade implements IFacade {
     public WsResponse newGame(final String playerName, final Session session)throws LogicException {
     	
     	final WsResponse response = new WsResponse();
-		int gameId = -1; //obtener prox id desde la bd
-		try {
+		int gameId = 1; //obtener prox id desde la bd
+		 gamePlayersMap.put(gameId, new HashMap<>());
+		/*try {
 			IDBConnection icon 	= null;
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
 			gameId = daoGames.getNewGameId(icon);
@@ -74,7 +75,7 @@ public class Facade implements IFacade {
 		catch (PersistenceException ex)
 		{
 			throw new LogicException(ex.getMessage());
-		}
+		}*/
     	//Se crea primer instancia de jugador, con nombre jugador, id partida y bando azul
         final Player player = new Player(playerName, gameId, TEAM_SIDE_BLUE, session);
 
@@ -138,7 +139,7 @@ public class Facade implements IFacade {
 
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
-        response.generateResponse("enemySession", resultEnemy, "String");
+        //response.generateResponse("enemySession", resultEnemy, "String");
         
         
 		return response;
@@ -231,9 +232,8 @@ public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, fi
 		final Gson gson = new Gson();
 	    
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-		response.generateResponse("planeId",gson.toJson(String.valueOf(indexPlane)), "int");
-		response.generateResponse("planePosition",planeObject.toString(), "JSONArray");
-		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		response.generateResponse("planeId", gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("planePosition", planeObject.toString(), "JSONArray");
 		
 		/*final int[][] coordinates = new int [4][3];
 		JSONArray planeObject =(JSONArray)parameters.get("planeOne");

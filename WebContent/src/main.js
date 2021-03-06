@@ -74,16 +74,13 @@ var functions = {
 
             if (response.action.name == 'updatePlayersCount') {
                 context.playersConnected = JSON.parse(response.responses[2].value);
-                console.log("UPDATE PLAYERS COUNT");
-                console.log(context.playersConnected);
             }
 
             if (response.action.name == 'connectToGame') {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
-                context.enemySession = JSON.parse(response.responses[2].value);
 
-                console.log('playerSession');
+                console.log("CONNECT player session");
                 console.log(context.playerSession);
             }
 
@@ -93,7 +90,8 @@ var functions = {
 
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
-                console.log('enemySession');
+
+                console.log("CONNECT enemy session");
                 console.log(context.enemySession);
             }
             if (response.action.name == "syncShootEnemy") {
@@ -107,10 +105,11 @@ var functions = {
             }
             if (response.action.name == "syncMoveEnemy") {
 
+                console.log("ON MOVE ENEMY");
+                console.log(context.enemySession);
                 context.enemySession.isMoving = true;
                 context.enemySession.planeMoving = JSON.parse(response.responses[1].value);
                 context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
-                // context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
         }
     },
