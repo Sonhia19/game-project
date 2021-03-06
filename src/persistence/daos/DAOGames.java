@@ -57,7 +57,7 @@ public class DAOGames implements IDAOGames {
 		int nuevoId = -1;
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("insert into partidas values(0,0,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pstmt = con.prepareStatement("insert into partidas (estado,id_ganador,fecha,fecha_modificacion) values(0,0,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 		    rs.next();
