@@ -2,7 +2,7 @@ package logic.models;
 
 public class PlaneType3 extends Plane {
 
-	public PlaneType3(int id, double positionX, double positionY, int angle) {
+	public PlaneType3(int id, double positionX, double positionY, int angle, int type) {
 
 		super(id, positionX, positionY, angle);
 		this.fuel = 100;
@@ -12,6 +12,7 @@ public class PlaneType3 extends Plane {
 		this.firePower = 10;
 		this.hasBomb = true;
 		this.highFly = false;
+		this.planeType = type;
 	}
 	
 }

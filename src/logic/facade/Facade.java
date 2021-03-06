@@ -66,31 +66,31 @@ public class Facade implements IFacade {
     	final WsResponse response = new WsResponse();
     	int gameId = -1; //obtener prox id desde la bd
     	try {
-    	IDBConnection icon 	= null;
-    	icon = ConnectionsPool.getInstancia().obtenerConexion();
-    	gameId = daoGames.getNewGameId(icon);
-    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
-    	
+	    	IDBConnection icon 	= null;
+	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
+	    	gameId = daoGames.getNewGameId(icon);
+	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+	    	gamePlayersMap.put(gameId, new HashMap<>());
+	    	
     	}
     	catch (PersistenceException ex)
     	{
     		throw new LogicException(ex.getMessage());
     	}
-    	
-        response.generateResponse("gameId", String.valueOf(gameId), "int");
-
-    	//Se crea primer instancia de jugador, con nombre jugador, id partida y el bando
+    	//Se crea primer instancia de jugador, con nombre jugador, id partida y bando azul
         final Player player = new Player(playerName, gameId, TEAM_SIDE_BLUE, session);
-        final Gson gson = new Gson();
-        final String result = gson.toJson(player.preparePlayerToSend());
-        response.generateResponse("playerSession", result, "String");
-        
+
     	//Se agrega sesion a la partida
-        gamePlayersMap.put(gameId,new HashMap());
-        
-        HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+        final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
         gamePlayers.put(playerName, player);
         
+        final Gson gson = new Gson();
+        final String result = gson.toJson(player.preparePlayerToSend());
+
+        //se arma respuesta
+        response.generateResponse("gameId", String.valueOf(gameId), "int");
+        response.generateResponse("playerSession", result, "String");
+
 		return response;
 		
     }
@@ -140,7 +140,7 @@ public class Facade implements IFacade {
 
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
-        response.generateResponse("enemySession", resultEnemy, "String");
+        //response.generateResponse("enemySession", resultEnemy, "String");
         
         
 		return response;
@@ -204,6 +204,37 @@ public WsResponse getJsonBombEnemy(final int gameId, final String playerName, fi
 	return response;
 }
 
+public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+	
+	final WsResponse response = new WsResponse();
+	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+	final Game game = new Game(gameId, playerName, gamePlayers.size());
+	
+	int indexPlane = (int) parameters.get("plane");
+	final Gson gson = new Gson();
+    
+	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+	
+	return response;
+}
+
+public WsResponse getJsonHighFlyEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+	
+	final WsResponse response = new WsResponse();
+	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+	final Game game = new Game(gameId, playerName, gamePlayers.size());
+	
+	int indexPlane = (int) parameters.get("plane");
+	final Gson gson = new Gson();
+    
+	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("enemyHighFly",gson.toJson(String.valueOf(indexPlane)), "int");
+	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+	
+	return response;
+}
+
 public WsResponse getJsonDamagePlane(final int gameId, final String playerName, final JSONObject parameters) {
 	
 	final WsResponse response = new WsResponse();
@@ -233,9 +264,8 @@ public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, fi
 		final Gson gson = new Gson();
 	    
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-		response.generateResponse("planeId",gson.toJson(String.valueOf(indexPlane)), "int");
-		response.generateResponse("planePosition",planeObject.toString(), "JSONArray");
-		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		response.generateResponse("planeId", gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("planePosition", planeObject.toString(), "JSONArray");
 		
 		/*final int[][] coordinates = new int [4][3];
 		JSONArray planeObject =(JSONArray)parameters.get("planeOne");

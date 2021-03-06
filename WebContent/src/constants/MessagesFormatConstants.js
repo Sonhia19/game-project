@@ -1,3 +1,4 @@
+import { context } from '../../src/main.js';
 
 export const MESSAGES_FORMAT = {
     newGame: (playerName) => {

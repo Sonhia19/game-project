@@ -46,14 +46,12 @@ var functions = {
     },
 
     broadcastWebSocket: (webSocket) => {
-        //console.log('On broadcast');
         webSocket.onopen = (event) => {
             //console.log("conexion establecida");
             //console.log(event);
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
-            //console.log("Respuesta del servidor");
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
@@ -63,25 +61,27 @@ var functions = {
             }
 
             if (response.action.name == 'joinGame') {
+
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.playersConnected = parseInt(response.responses[2].value);
 
+                console.log("JOIN GAME");
                 console.log('playerSession');
                 console.log(context.playerSession);
-                console.log('playersConnected');
                 console.log(context.playersConnected);
+            }
+
+            if (response.action.name == 'updatePlayersCount') {
+                context.playersConnected = JSON.parse(response.responses[2].value);
             }
 
             if (response.action.name == 'connectToGame') {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
-                context.enemySession = JSON.parse(response.responses[2].value);
 
-                console.log('playerSession');
+                console.log("CONNECT player session");
                 console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
             }
 
             if (response.action.name == 'syncGame') {
@@ -90,15 +90,9 @@ var functions = {
 
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
-                console.log('SYNC WITH ENEMY');
-                console.log(response.responses);
-                if (response.responses[2] != undefined) {
-                    var key = response.responses[2].name;
-                    if (key == 'playersConnected') {
-                        context.playersConnected = parseInt(response.responses[2].value);
-                    }
-                }
 
+                console.log("CONNECT enemy session");
+                console.log(context.enemySession);
             }
             if (response.action.name == "syncShootEnemy") {
                 context.enemySession.isShooting = true;
@@ -116,6 +110,24 @@ var functions = {
                 context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
                 // context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncEmptyTankEnemy") {
+
+                context.enemySession.isEmptyTank = true;
+                context.enemySession.planeEmptyTank = JSON.parse(response.responses[1].value);
+            }
+            if (response.action.name == "syncHighFlyEnemy") {
+
+                context.enemySession.isHighFlying = true;
+                context.enemySession.planeHighFly = JSON.parse(response.responses[1].value);
+            }
+
+
+
+            // if (response.action.name == "syncDamagePlaneEnemy") {
+            //     context.enemySession.isDamaging = true;
+            //     context.enemySession.planeDamaging = JSON.parse(response.responses[1].value);
+            //     context.enemySession.damage = JSON.parse(response.responses[2].value);
+            // }
         }
     },
 };
