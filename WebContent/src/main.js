@@ -83,12 +83,24 @@ var functions = {
                 context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
             if (response.action.name == "syncMoveEnemy") {
-                
-                 context.enemySession.isMoving = true;
-                 context.enemySession.planeMoving = JSON.parse(response.responses[1].value);
-                 context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
+
+                context.enemySession.isMoving = true;
+                context.enemySession.planeMoving = JSON.parse(response.responses[1].value);
+                context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
                 // context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncEmptyTankEnemy") {
+
+                context.enemySession.isEmptyTank = true;
+                context.enemySession.planeEmptyTank = JSON.parse(response.responses[1].value);
+            }
+            if (response.action.name == "syncHighFlyEnemy") {
+
+                context.enemySession.isHighFlying = true;
+                context.enemySession.planeHighFly = JSON.parse(response.responses[1].value);
+            }
+            
+
 
             // if (response.action.name == "syncDamagePlaneEnemy") {
             //     context.enemySession.isDamaging = true;

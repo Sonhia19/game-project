@@ -243,6 +243,25 @@ export class GameScene extends Phaser.Scene {
 				}
 			}
 
+			if (context.enemySession.isEmptyTank) {
+				let p = this.checkEnemyPlaneAction(context.enemySession.planeEmptyTank);
+				context.enemySession.isEmptyTank = false;
+				context.enemySession.planeEmptyTank = -1;
+				if (p != null) {
+					p.emptyTank(false);
+				}
+			}
+
+			if (context.enemySession.isHighFlying) {
+				let p = this.checkEnemyPlaneAction(context.enemySession.planeHighFly);
+				context.enemySession.isHighFlying = false;
+				context.enemySession.planeHighFly = -1;
+				if (p != null) {
+					p.highFlyPlane(false);
+				}
+			}
+
+
 			// if (context.enemySession.isDamaging) {
 			// 	let p = this.checkMyPlaneAction(context.enemySession.planeDamaging);
 			// 	if (p != null) {
@@ -312,7 +331,7 @@ export class GameScene extends Phaser.Scene {
 
 				// Vuelto alto / vuelo bajo
 				if (Phaser.Input.Keyboard.JustDown(keyShift)) {
-					myPlaneSelected.highFlyPlane();
+					myPlaneSelected.highFlyPlane(true);
 					if (myPlaneSelected.highFly) {
 						highFlyPlaneText.setText('Vuelo Alto');
 					} else {
@@ -760,8 +779,10 @@ export class GameScene extends Phaser.Scene {
 		if (time > artillery.nextTic && artillery.armor > 0) {
 			if (Phaser.Math.Distance.Between(artillery.x, artillery.y, plane.x, plane.y) < artillery.reach) {
 				angle = Phaser.Math.Angle.Between(artillery.x, artillery.y, plane.x, plane.y);
-				artillery.fire(time, angle, bullets);
-				this.checkPlanesArmor();
+				if (!plane.highFly) {
+					artillery.fire(time, angle, bullets);
+					this.checkPlanesArmor();
+				}
 			}
 		}
 	}
@@ -802,17 +823,17 @@ export class GameScene extends Phaser.Scene {
 			if (plane.receiveDamage(bullet.damage)) {
 			}
 			bullet.destroy();
-			let json = JSON.stringify({
-				action: {
-					name: 'syncPlaneDamage',
-					parameters: {
-						gameId: context.gameId,
-						damagePlane: plane.planeIndex,
-						damage: bullet.damage
-					}
-				}
-			})
-			context.functions.sendMessage(json);
+			// let json = JSON.stringify({
+			// 	action: {
+			// 		name: 'syncPlaneDamage',
+			// 		parameters: {
+			// 			gameId: context.gameId,
+			// 			damagePlane: plane.planeIndex,
+			// 			damage: bullet.damage
+			// 		}
+			// 	}
+			// })
+			// context.functions.sendMessage(json);
 		}
 	}
 
