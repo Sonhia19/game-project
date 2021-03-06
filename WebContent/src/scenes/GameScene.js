@@ -150,7 +150,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("ledRed", "./assets/led.png");
 		this.load.image("ledGreen", "./assets/led_green.png");
 
-		this.load.image("joingame_font", "assets/joingame-font.png");
+		this.load.image("savegame_font", "assets/savegame-font.png");
 	}
 
 	create() {
@@ -161,23 +161,14 @@ export class GameScene extends Phaser.Scene {
 
 		this.captureKeys();
 
-		var joinGameButton = this.add.image(context.game.renderer.width * 0.90, context.game.renderer.height * 0.90, "joingame_font").setDepth(0);
-        joinGameButton.setInteractive();
+		var saveGameButton = this.add.image(context.game.renderer.width * 0.85, context.game.renderer.height * 0.94, "savegame_font").setDepth(0);
+        saveGameButton.setInteractive();
 		
-        joinGameButton.on('pointerdown', function () {
+        saveGameButton.on('pointerdown', function () {
 
 			console.log("SAVING");
 			var message = context.messagesFormat.saveGame();
 			context.functions.sendMessage(message);
-
-			this.time.addEvent({
-				delay: 1000,
-				callback: ()=>{
-					this.scene.start("GAME", "hello from LOBBY scene");	
-				},
-				loop: false
-			})
-
 			
         }, this);
 

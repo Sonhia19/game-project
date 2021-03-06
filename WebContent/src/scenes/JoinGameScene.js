@@ -38,7 +38,7 @@ export class JoinGameScene extends Phaser.Scene {
                 context.functions.sendMessage(message);
                 this.destroy();
 
-                var delayInMilliseconds = 5000; //1 second
+                var delayInMilliseconds = 2000; //2 second
                 setTimeout(function() {
                     context.game.scene.start("LOBBYGAME", "hello from JOINGAME scene");
                 }, delayInMilliseconds);

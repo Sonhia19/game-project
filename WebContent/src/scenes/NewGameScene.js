@@ -39,7 +39,7 @@ export class NewGameScene extends Phaser.Scene {
                 
                 this.destroy();
                 
-                var delayInMilliseconds = 5000; //2.5 second
+                var delayInMilliseconds = 2000; //2 second
                 setTimeout(function() {
                         context.game.scene.start("LOBBYGAME", "hello from NEWGAME scene");
                 }, delayInMilliseconds);
