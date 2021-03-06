@@ -46,14 +46,14 @@ var functions = {
     },
 
     broadcastWebSocket: (webSocket) => {
-        console.log('On broadcast');
+        //console.log('On broadcast');
         webSocket.onopen = (event) => {
-            console.log("conexion establecida");
-            console.log(event);
+            //console.log("conexion establecida");
+            //console.log(event);
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
-            console.log("Respuesta del servidor");
+            //console.log("Respuesta del servidor");
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
@@ -77,7 +77,7 @@ var functions = {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.enemySession = JSON.parse(response.responses[2].value);
-                
+
                 console.log('playerSession');
                 console.log(context.playerSession);
                 console.log('enemySession');
@@ -98,7 +98,7 @@ var functions = {
                         context.playersConnected = parseInt(response.responses[2].value);
                     }
                 }
-                
+
             }
             if (response.action.name == "syncShootEnemy") {
                 context.enemySession.isShooting = true;
@@ -109,18 +109,12 @@ var functions = {
                 context.enemySession.isBombing = true;
                 context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
-            if (response.action.name == "syncDamagePlaneEnemy") {
-                context.enemySession.isDamaging = true;
+            if (response.action.name == "syncMoveEnemy") {
 
-                console.log('DAMAGE');
-                console.log(context.enemySession.isDamaging);
-                context.enemySession.planeDamaging = JSON.parse(response.responses[1].value);
-                context.enemySession.damage = JSON.parse(response.responses[2].value);
-
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
+                context.enemySession.isMoving = true;
+                context.enemySession.planeMoving = JSON.parse(response.responses[1].value);
+                context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
+                // context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
         }
     },

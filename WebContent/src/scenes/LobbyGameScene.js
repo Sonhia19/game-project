@@ -1,8 +1,7 @@
 import { context } from '../../src/main.js';
 
 
-let playerName;
-let tokenGame;
+
 
 export class LobbyGameScene extends Phaser.Scene {
 	
@@ -13,6 +12,7 @@ export class LobbyGameScene extends Phaser.Scene {
 	preload() {
         console.log('FROM LOBBY GAME');
 
+		this.add.image(0, 0, 'background_menu').setOrigin(0);
 		this.load.image("plane-type1", "assets/plane-type1.png");
         this.load.image("plane-type2", "assets/plane-type2.png");
         this.load.image("plane-type3", "assets/plane-type3.png");
@@ -23,54 +23,47 @@ export class LobbyGameScene extends Phaser.Scene {
 		// tokenGame.setText(context.gameSession.gameId);
 
 	}
+
+	plane1Type = 1;
+	plane2Type = 1;
+	plane3Type = 1;
+	plane4Type = 1;
 	
 	create() {
 		context.currentScene = 'LOBBYGAME';
 		console.log(context.playerSession);
 
-		const style = { font: "bold 32px Arial", fill: "#fff" };
-  		this.add.text(0, 0, `Game Token: ${context.playerSession.gameId}`, style);
-		this.add.text(0, 30, `Player Name: ${context.playerSession.name}`, style);
+		const style = { font: "bold 25px Arial", fill: "#fff" };
+  		this.add.text(1, 1, `Game Token: ${context.playerSession.gameId}`, style);
+		this.add.text(1, 35, `Player Name: ${context.playerSession.name}`, style);
 
-		var plane1Type = 1;
-		var plane2Type = 1;
-		var plane3Type = 1;
-		var plane4Type = 1;
+		
+		this.add.text(300, 90, `Select planes type`, style);
+		/***   se incorpora boton para tipo avion 1   ***/
+		var plane1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, this.getTypeImage(this.plane1Type)).setDepth(0)
+								.setInteractive()
+								.on('pointerdown', () => this.updatPlane1(this.plane1Type));
 
-		//se incorporan botones avion 1
-        var plane1Type1Button = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.40, "plane-type1").setDepth(0);
-        plane1Type1Button.setInteractive();
+		/***   se incorpora boton para tipo avion 2   ***/
+		var plane2TypeButton = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, this.getTypeImage(this.plane2Type)).setDepth(0)
+								.setInteractive()
+								.on('pointerdown', () => this.updatPlane2(this.plane2Type));
 
-        var plane1Type2Button = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.40, "plane-type2").setDepth(0);
-        plane1Type2Button.setInteractive();
-
-		var plane1Type3Button = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.40, "plane-type3").setDepth(0);
-        plane1Type3Button.setInteractive();
-
-		var plane1Type4Button = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.40, "plane-type4").setDepth(0);
-        plane1Type4Button.setInteractive();
-
-        plane1Type1Button.on('pointerdown', function () {
-			//this.style.border = "2px solid red";
-            plane1Type = 1
-        }, this);
-
-		plane1Type2Button.on('pointerdown', function () {
-            plane1Type = 2
-        }, this);
-
-		plane1Type3Button.on('pointerdown', function () {
-            plane1Type = 3
-        }, this);
-
-		plane1Type4Button.on('pointerdown', function () {
-            plane1Type = 4
-        }, this);
+		/***   se incorpora boton para tipo avion 3   ***/
+		var plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getTypeImage(this.plane3Type)).setDepth(0)
+								.setInteractive()
+								.on('pointerdown', () => this.updatPlane3(this.plane3Type));
 
 
-		var planesType = [plane1Type, plane2Type, plane3Type, plane4Type];
+		/***   se incorpora boton para tipo avion 4  ***/
+		var plane4TypeButton = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, this.getTypeImage(this.plane4Type)).setDepth(0)
+								.setInteractive()
+								.on('pointerdown', () => this.updatPlane4(this.plane4Type));
 
-		var joinGameButton = this.add.image(context.game.renderer.width * 0.80, context.game.renderer.height * 0.80, "joingame_font").setDepth(0);
+		// se cargan tipos de avion
+		var planesType = [this.plane1Type, this.plane2Type, this.plane3Type, this.plane4Type];
+
+		var joinGameButton = this.add.image(context.game.renderer.width * 0.90, context.game.renderer.height * 0.90, "joingame_font").setDepth(0);
         joinGameButton.setInteractive();
 		
         joinGameButton.on('pointerdown', function () {
@@ -92,6 +85,76 @@ export class LobbyGameScene extends Phaser.Scene {
 			
         }, this);
 		
+		
 	}
 
+	update() {
+		this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, this.getTypeImage(this.plane1Type)).setDepth(0);
+		this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, this.getTypeImage(this.plane2Type)).setDepth(0);
+		this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getTypeImage(this.plane3Type)).setDepth(0);
+		this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, this.getTypeImage(this.plane4Type)).setDepth(0);
+	}
+
+	updatPlane1(type) {
+		if (type  == 1) {
+			this.plane1Type = 2;
+		} else if (type == 2) {
+			this.plane1Type = 3;
+		} else if (type == 3) {
+			this.plane1Type = 4;
+		} else if (type == 4) {
+			this.plane1Type = 1;
+		}
+	}
+
+	updatPlane2(type) {
+		if (type  == 1) {
+			this.plane2Type = 2;
+		} else if (type == 2) {
+			this.plane2Type = 3;
+		} else if (type == 3) {
+			this.plane2Type = 4;
+		} else if (type == 4) {
+			this.plane2Type = 1;
+		}
+	}
+
+	updatPlane3(type) {
+		if (type  == 1) {
+			this.plane3Type = 2;
+		} else if (type == 2) {
+			this.plane3Type = 3;
+		} else if (type == 3) {
+			this.plane3Type = 4;
+		} else if (type == 4) {
+			this.plane3Type = 1;
+		}
+	}
+
+	updatPlane4(type) {
+		if (type  == 1) {
+			this.plane4Type = 2;
+		} else if (type == 2) {
+			this.plane4Type = 3;
+		} else if (type == 3) {
+			this.plane4Type = 4;
+		} else if (type == 4) {
+			this.plane4Type = 1;
+		}
+	}
+	getTypeImage(planeNumber) {
+
+		var imageName = "plane-type1";
+		if (planeNumber  == 1) {
+			imageName = "plane-type1";
+		} else if (planeNumber == 2) {
+			imageName = "plane-type2";
+		} else if (planeNumber == 3) {
+			imageName = "plane-type3";
+		} else if (planeNumber == 4) {
+			imageName = "plane-type4";
+		}
+
+		return imageName;
+	}
 }
