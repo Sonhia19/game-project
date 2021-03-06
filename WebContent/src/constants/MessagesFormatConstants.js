@@ -17,7 +17,7 @@ export const MESSAGES_FORMAT = {
             action: {
                 name: 'saveGame',
                 parameters: {
-                    gameId: 1
+                    gameId: context.gameId
                 }
             }
         })
