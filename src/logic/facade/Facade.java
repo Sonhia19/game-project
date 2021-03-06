@@ -38,7 +38,7 @@ public class Facade implements IFacade {
         if (!(instance instanceof Facade)) {
         	System.out.println("New facade");
             instance = new Facade();
-            gamePlayersMap.put(1, new HashMap());
+            
         }
 
         return instance;
@@ -61,7 +61,7 @@ public class Facade implements IFacade {
     }
 
 
-    public WsResponse newGame(final String playerName, final Session session)throws LogicException {
+    public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	
     	final WsResponse response = new WsResponse();
     	int gameId = -1; //obtener prox id desde la bd
@@ -76,8 +76,7 @@ public class Facade implements IFacade {
     		throw new LogicException(ex.getMessage());
     	}
     	
-    	final Game game = new Game(gameId);
-        response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+        response.generateResponse("gameId", String.valueOf(gameId), "int");
 
     	//Se crea primer instancia de jugador, con nombre jugador, id partida y el bando
         final Player player = new Player(playerName, gameId, TEAM_SIDE_BLUE, session);
@@ -86,7 +85,9 @@ public class Facade implements IFacade {
         response.generateResponse("playerSession", result, "String");
         
     	//Se agrega sesion a la partida
-        final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+        gamePlayersMap.put(gameId,new HashMap());
+        
+        HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
         gamePlayers.put(playerName, player);
         
 		return response;
