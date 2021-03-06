@@ -77,11 +77,12 @@ public class WsServer {
 				final String playerName = parameters.getString("playerName");
 				response = facade.joinGame(gameId, playerName, session);
 				response.setAction(action);
+				
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
+				
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
-						"syncWithEnemy");
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
 			}
 			// Conectar jugador a una partida existente.
 			if (action.getString("name").equalsIgnoreCase("connectToGame")) {
@@ -92,6 +93,7 @@ public class WsServer {
 				final JSONArray jsonArray = parameters.getJSONArray("planesType");
 				final ArrayList<Integer> planesType = new ArrayList<Integer>();
 
+				//cargo tipos de avion
 				if (jsonArray != null) {
 				   int size = jsonArray.length();
 				   for (int i = 0; i < size; i++){

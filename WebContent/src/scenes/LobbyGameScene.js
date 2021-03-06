@@ -1,8 +1,5 @@
 import { context } from '../../src/main.js';
 
-
-
-
 export class LobbyGameScene extends Phaser.Scene {
 	
 	constructor() {
@@ -60,9 +57,6 @@ export class LobbyGameScene extends Phaser.Scene {
 								.setInteractive()
 								.on('pointerdown', () => this.updatPlane4(this.plane4Type));
 
-		// se cargan tipos de avion
-		var planesType = [this.plane1Type, this.plane2Type, this.plane3Type, this.plane4Type];
-
 		var joinGameButton = this.add.image(context.game.renderer.width * 0.90, context.game.renderer.height * 0.90, "joingame_font").setDepth(0);
         joinGameButton.setInteractive();
 		
@@ -70,6 +64,8 @@ export class LobbyGameScene extends Phaser.Scene {
 
 			if (context.playersConnected == 2) {
 
+				// se cargan tipos de avion
+				var planesType = [this.plane1Type, this.plane2Type, this.plane3Type, this.plane4Type];
 				var message = context.messagesFormat.connectToGame(context.playerSession.name, context.playerSession.teamSide, planesType, context.playerSession.gameId);
 				console.log(message);
 				context.functions.sendMessage(message);
@@ -105,6 +101,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 4) {
 			this.plane1Type = 1;
 		}
+		console.log("");
 	}
 
 	updatPlane2(type) {

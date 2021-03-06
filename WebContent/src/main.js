@@ -46,14 +46,12 @@ var functions = {
     },
 
     broadcastWebSocket: (webSocket) => {
-        //console.log('On broadcast');
         webSocket.onopen = (event) => {
             //console.log("conexion establecida");
             //console.log(event);
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
-            //console.log("Respuesta del servidor");
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
@@ -63,13 +61,20 @@ var functions = {
             }
 
             if (response.action.name == 'joinGame') {
+
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.playersConnected = parseInt(response.responses[2].value);
-
+                
+                console.log("JOIN GAME");
                 console.log('playerSession');
                 console.log(context.playerSession);
-                console.log('playersConnected');
+                console.log(context.playersConnected);
+            }
+
+            if (response.action.name == 'updatePlayersCount') {
+                context.playersConnected = JSON.parse(response.responses[2].value);
+                console.log("UPDATE PLAYERS COUNT");
                 console.log(context.playersConnected);
             }
 
@@ -80,8 +85,6 @@ var functions = {
 
                 console.log('playerSession');
                 console.log(context.playerSession);
-                console.log('enemySession');
-                console.log(context.enemySession);
             }
 
             if (response.action.name == 'syncGame') {
@@ -90,15 +93,8 @@ var functions = {
 
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
-                console.log('SYNC WITH ENEMY');
-                console.log(response.responses);
-                if (response.responses[2] != undefined) {
-                    var key = response.responses[2].name;
-                    if (key == 'playersConnected') {
-                        context.playersConnected = parseInt(response.responses[2].value);
-                    }
-                }
-
+                console.log('enemySession');
+                console.log(context.enemySession);
             }
             if (response.action.name == "syncShootEnemy") {
                 context.enemySession.isShooting = true;
