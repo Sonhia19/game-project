@@ -70,7 +70,15 @@ public class DAOGames implements IDAOGames {
 		}
 		return nuevoId;
 	}
-
+	public Game restoreGame(IDBConnection icon) throws PersistenceException{
+		Game restoredGame = null;
+		
+		return restoredGame;
+		
+	}
+	public void saveGame(IDBConnection icon) throws PersistenceException{
+	
+	}
 	/**
 	 * Busca una partida en la BD.
 	 * 

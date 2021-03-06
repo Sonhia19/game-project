@@ -69,6 +69,7 @@ public class Facade implements IFacade {
     	IDBConnection icon 	= null;
     	icon = ConnectionsPool.getInstancia().obtenerConexion();
     	gameId = daoGames.getNewGameId(icon);
+    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
     	
     	}
     	catch (PersistenceException ex)
