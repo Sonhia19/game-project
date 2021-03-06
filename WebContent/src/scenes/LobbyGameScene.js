@@ -65,7 +65,7 @@ export class LobbyGameScene extends Phaser.Scene {
 				context.functions.sendMessage(message);
 
 				this.time.addEvent({
-					delay: 2000,
+					delay: 1000,
 					callback: ()=>{
 						this.scene.start("GAME", "hello from LOBBY scene");	
 					},

@@ -65,7 +65,7 @@ var functions = {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.playersConnected = parseInt(response.responses[2].value);
-                
+
                 console.log("JOIN GAME");
                 console.log('playerSession');
                 console.log(context.playerSession);
@@ -105,12 +105,29 @@ var functions = {
             }
             if (response.action.name == "syncMoveEnemy") {
 
-                console.log("ON MOVE ENEMY");
-                console.log(context.enemySession);
                 context.enemySession.isMoving = true;
                 context.enemySession.planeMoving = JSON.parse(response.responses[1].value);
                 context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
+                // context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncEmptyTankEnemy") {
+
+                context.enemySession.isEmptyTank = true;
+                context.enemySession.planeEmptyTank = JSON.parse(response.responses[1].value);
+            }
+            if (response.action.name == "syncHighFlyEnemy") {
+
+                context.enemySession.isHighFlying = true;
+                context.enemySession.planeHighFly = JSON.parse(response.responses[1].value);
+            }
+
+
+
+            // if (response.action.name == "syncDamagePlaneEnemy") {
+            //     context.enemySession.isDamaging = true;
+            //     context.enemySession.planeDamaging = JSON.parse(response.responses[1].value);
+            //     context.enemySession.damage = JSON.parse(response.responses[2].value);
+            // }
         }
     },
 };

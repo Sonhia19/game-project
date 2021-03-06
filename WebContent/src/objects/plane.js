@@ -25,18 +25,28 @@ export let Plane = new Phaser.Class({
         },
 
 
-    emptyTank() {
-        
-        console.log("test");
-        setTimeout(this.startCrash(), 2000);
-        setTimeout(this.startCrash(), 2000);
-        setTimeout(this.startCrash(), 2000);
-        setTimeout(this.startCrash(), 2000);
-        console.log("test2");
+    emptyTank(sync) {
+        this.armor = 0;
+        this.flying = false;
+        this.startCrash();
+        this.destroy()
+        if (sync) {
+            let json = JSON.stringify({
+                action: {
+                    name: 'syncEmptyTank',
+                    parameters: {
+                        gameId: context.gameId,
+                        plane: this.planeIndex
+                    }
+                }
+            })
+            context.functions.sendMessage(json);
+        }
+
     },
     startCrash() {
-            this.displayWidth = this.displayWidth * 0.95;
-            this.displayHeight = this.displayHeight * 0.95;
+        this.displayWidth = this.displayWidth * 0.95;
+        this.displayHeight = this.displayHeight * 0.95;
     },
     fire: function (time, bullets) {
         let bullet = bullets.get();
@@ -64,8 +74,8 @@ export let Plane = new Phaser.Class({
     receiveDamage: function (damage) {
         let destroy = false;
         this.armor -= damage;
-        if (this.armor <= 0) {   
-            this.flying = false;    
+        if (this.armor <= 0) {
+            this.flying = false;
             //this.setTexture('explosion');     
             this.destroy();
             destroy = true;
@@ -124,7 +134,7 @@ export let Plane = new Phaser.Class({
             //this.fuel -= this.highFly ? 0.2 : 0.1;
         }
         if (this.fuel < 0 && this.fuel > -1) {
-            this.emptyTank();
+            this.emptyTank(true);
         }
     },
     crash() {
@@ -156,7 +166,7 @@ export let Plane = new Phaser.Class({
             console.log("vuelva a la base para aterrizar");
         }
     },
-    highFlyPlane() {
+    highFlyPlane(sync) {
 
         this.highFly = !this.highFly;
         //Tamaño
@@ -166,6 +176,20 @@ export let Plane = new Phaser.Class({
 
         //Velocidad
         this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
+
+        if (sync) {
+            let json = JSON.stringify({
+                action: {
+                    name: 'syncHighFly',
+                    parameters: {
+                        gameId: context.gameId,
+                        plane: this.planeIndex
+                    }
+                }
+            })
+            context.functions.sendMessage(json);
+        }
+
 
     },
     fly(move, angle, orientation, delta) {
@@ -197,29 +221,3 @@ export let Plane = new Phaser.Class({
     }
 
 });
-
-// // explosion aviones solucionar problema de torretas(siguen disparando luego que la imagen desaparece)
-// function collisionPlane() {
-//     if (plane.active === true && plane2.active === true) {
-//         plane.destroy();
-//         plane2.destroy();
-//         collision.setVisible(true);
-//         setTimeout("collision.setVisible(false)", 150)
-//         //collision.setVisible(false);
-
-//     }
-
-//     //alert("Choque aviones");
-// }
-
-// function highFlyPlane(plane) {
-
-//     //Tamaño
-//     let height = 50;
-//     plane.displayWidth = plane.highFly ? height * 1.2 : height;
-//     plane.displayHeight = plane.displayWidth * (plane.height / plane.width);
-
-//     //Velocidad
-//     plane.speed = plane.highFly ? plane.speed / 2 : plane.speed * 2;
-
-// }
