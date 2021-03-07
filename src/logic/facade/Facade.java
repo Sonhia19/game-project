@@ -64,19 +64,20 @@ public class Facade implements IFacade {
     public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	
     	final WsResponse response = new WsResponse();
-    	int gameId = -1; //obtener prox id desde la bd
-    	try {
+    	int gameId = 1; //obtener prox id desde la bd
+    	/*try {
 	    	IDBConnection icon 	= null;
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
 	    	gameId = daoGames.getNewGameId(icon);
 	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
-	    	gamePlayersMap.put(gameId, new HashMap<>());
+	    	
 	    	
     	}
     	catch (PersistenceException ex)
     	{
     		throw new LogicException(ex.getMessage());
-    	}
+    	}*/
+    	gamePlayersMap.put(gameId, new HashMap<>());
     	//Se crea primer instancia de jugador, con nombre jugador, id partida y bando azul
         final Player player = new Player(playerName, gameId, TEAM_SIDE_BLUE, session);
 

@@ -12,12 +12,14 @@ export const MESSAGES_FORMAT = {
         })
     },
 
-    saveGame: () => {
+    saveGame: (playerSession, enemySession) => {
         return JSON.stringify({
             action: {
                 name: 'saveGame',
                 parameters: {
-                    gameId: context.gameId
+                    gameId: context.gameId,
+                    playerSession: playerSession,
+                    enemySession: enemySession,
                 }
             }
         })

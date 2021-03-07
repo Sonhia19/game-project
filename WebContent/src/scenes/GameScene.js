@@ -156,7 +156,6 @@ export class GameScene extends Phaser.Scene {
 	create() {
 		scene = this;
 		this.add.image(500, 300, 'field');
-
 		isBlue = context.playerSession.teamSide == 1
 
 		this.captureKeys();
@@ -167,7 +166,7 @@ export class GameScene extends Phaser.Scene {
         saveGameButton.on('pointerdown', function () {
 
 			console.log("SAVING");
-			var message = context.messagesFormat.saveGame();
+			var message = context.messagesFormat.saveGame(context.playerSession, context.enemySession);
 			context.functions.sendMessage(message);
 			
         }, this);

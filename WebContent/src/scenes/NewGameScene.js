@@ -33,17 +33,21 @@ export class NewGameScene extends Phaser.Scene {
 
             if (event.target.name === 'loginButton') {
                 var inputUsername = this.getChildByName('username');
-                //envio msj al servidor con nombre de usuario
-                var message = context.messagesFormat.newGame(inputUsername.value);
-                context.functions.sendMessage(message);
-                
-                this.destroy();
-                
-                var delayInMilliseconds = 2000; //2 second
-                setTimeout(function() {
-                        context.game.scene.start("LOBBYGAME", "hello from NEWGAME scene");
-                }, delayInMilliseconds);
-                
+
+                if (inputUsername.value != undefined && inputUsername.value != '') {
+
+                    console.log(inputUsername);
+                    //envio msj al servidor con nombre de usuario
+                    var message = context.messagesFormat.newGame(inputUsername.value);
+                    context.functions.sendMessage(message);
+                    
+                    this.destroy();
+                    
+                    var delayInMilliseconds = 2000; //2 second
+                    setTimeout(function() {
+                            context.game.scene.start("LOBBYGAME", "hello from NEWGAME scene");
+                    }, delayInMilliseconds);
+                }
             }
             
         })
