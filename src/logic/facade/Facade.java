@@ -11,10 +11,13 @@ import exceptions.LogicException;
 import exceptions.PersistenceException;
 import logic.models.Game;
 import logic.models.Player;
+import logic.models.Plane;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
 import persistence.daos.DAOGames;
 import persistence.daos.interfaces.IDAOGames;
+import persistence.daos.interfaces.IDAOPlanes;
+import persistence.daos.interfaces.IDAOPlayers;
 import server.utils.WsResponse;
 
 import java.awt.List;
@@ -32,6 +35,8 @@ public class Facade implements IFacade {
     
     private static Facade instance;
     private IDAOGames daoGames;
+    private IDAOPlanes daoPlanes;
+    private IDAOPlayers daoPlayers;
 
     public static Facade getInstance()throws LogicException {
 
@@ -60,6 +65,33 @@ public class Facade implements IFacade {
     	}
     }
 
+    public WsResponse saveGame(final int gameId) throws LogicException{
+    	final WsResponse response = new WsResponse();
+    	////Este player deberia cargarse con los datos de un player por parametro
+    	Player player = new Player("name",gameId,1);
+    	///
+    	try {
+	    	IDBConnection icon 	= null;
+	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
+	    	
+	    	daoGames.saveGame(daoGames.buscar(gameId, icon), icon);//ojo aca tal vez se puede hacer mejor.
+	    	daoPlayers.savePlayer(gameId, player, icon);
+	    	//agregue el get planes para obtener la lista de aviones
+	    	for (Plane plane : player.getPlanes()) {
+	    		daoPlanes.savePlanes(gameId, plane, icon);
+	    	}
+	    	
+	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+	    	
+    	}
+    	catch (PersistenceException ex)
+    	{
+    		throw new LogicException(ex.getMessage());
+    	}
+    	
+        
+    	return response;
+    }
 
     public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	

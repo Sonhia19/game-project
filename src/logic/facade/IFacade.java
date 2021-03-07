@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface IFacade {
-
+	WsResponse saveGame(final int gameId) throws LogicException;
+	
 	WsResponse newGame(final String playerName, final Session session) throws LogicException;
 	
 	WsResponse joinGame(final int gameId, final String playerName, final Session session);

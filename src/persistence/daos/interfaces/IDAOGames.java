@@ -9,7 +9,7 @@ public interface IDAOGames {
 	
 	Game restoreGame(IDBConnection icon) throws PersistenceException;
 	
-	void saveGame(IDBConnection icon) throws PersistenceException;
+	void saveGame(Game game,IDBConnection icon) throws PersistenceException;
 	
 	boolean existe(int idGame, IDBConnection icon) throws PersistenceException;
 	
