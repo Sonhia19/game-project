@@ -20,7 +20,7 @@ var config = {
     parent: 'main',
     type: Phaser.AUTO,
     width: 1350,
-    height: 650,
+    height: 600,
     physics: {
         default: "arcade",
         arcade: {
@@ -120,6 +120,19 @@ var functions = {
                 context.enemySession.isHighFlying = true;
                 context.enemySession.planeHighFly = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncTakeOffEnemy") {
+                context.enemySession.isTakeOff = true;
+                context.enemySession.planeTakeOff = JSON.parse(response.responses[1].value);
+                context.enemySession.takeOff = JSON.parse(response.responses[2].value);
+            }
+            if (response.action.name == "syncPlaneViewEnemy") {
+                context.enemySession.isPlaneView = true;
+                context.enemySession.planeViewPlane = JSON.parse(response.responses[1].value);
+                context.enemySession.planeViewCoord = JSON.parse(response.responses[2].value);
+            }
+            
+
+            
 
 
 

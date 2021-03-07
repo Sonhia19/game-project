@@ -19,10 +19,21 @@ export const ANGLE_315 = 315;
 
 export const BLUE_SAFE_ZONE_X = 200;
 export const BLUE_BASE_X = 75;
+export const BLUE_BASE_X_VIEW = 1030;
 export const BLUE_PLANE_X = 150;
 export const BLUE_ARTILLERY_X = 175;
+export const BLUE_ARTILLERY_X_VIEW = 1061;
+export const BLUE_PLANE_LOW_VIEW_Y = 150;
+export const BLUE_PLANE_HIGH_VIEW_Y = 60;
+export const BLUE_PLANE_LAND_VIEW_Y = 280;
+
 
 export const RED_SAFE_ZONE_X = 800;
 export const RED_BASE_X = 925;
+export const RED_BASE_X_VIEW = 1305;
 export const RED_PLANE_X = 850;
 export const RED_ARTILLERY_X = 825;
+export const RED_ARTILLERY_X_VIEW = 1289;
+export const RED_PLANE_LOW_VIEW_Y = 175;
+export const RED_PLANE_HIGH_VIEW_Y = 40;
+export const RED_PLANE_LAND_VIEW_Y = 280;

@@ -161,19 +161,35 @@ public class WsServer {
 			}
 			if (action.getString("name").equalsIgnoreCase("syncEmptyTank")) {
 
-				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), "player".concat(session.getId()),
+				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncEmptyTankEnemy");
 			}
 			if (action.getString("name").equalsIgnoreCase("syncHighFly")) {
 
-				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), "player".concat(session.getId()),
+				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncHighFlyEnemy");
+			}
+			if (action.getString("name").equalsIgnoreCase("syncTakeOff")) {
+
+				response = facade.getJsonTakeOffEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
+						parameters);
+				// sincroniza todas las sesiones conectadas
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
+						response, "syncTakeOffEnemy");
+			}
+			if (action.getString("name").equalsIgnoreCase("syncPlaneView")) {
+
+				response = facade.getJsonPlaneViewEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
+						parameters);
+				// sincroniza todas las sesiones conectadas
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
+						response, "syncPlaneViewEnemy");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -24,7 +24,7 @@ public class main {
 		// Obtenemos una nueva conexión del pool.
 		icon = persistence.connection.ConnectionsPool.getInstancia().obtenerConexion();
 		suca = daogames.buscar(1, icon);
-		persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+		//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 		System.out.print("\n");
 		System.out.print(String.valueOf(suca.getId()) +""+ suca.getUserId()+suca.getFecha());
 		
