@@ -95,6 +95,9 @@ public class Player {
 	public boolean getActiveFuel() {
 		return activeFuel;
 	}
+	public List<Plane> getPlanes() {
+		return this.planes;
+	}
 	
 	
 	public void preloadPlanes (final List<Integer> planesType) {

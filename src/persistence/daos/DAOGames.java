@@ -76,8 +76,28 @@ public class DAOGames implements IDAOGames {
 		return restoredGame;
 		
 	}
-	public void saveGame(IDBConnection icon) throws PersistenceException{
-	
+	public void saveGame(Game game,IDBConnection icon) throws PersistenceException{
+		Connection con = icon.getConnection();
+		
+		try {
+			
+			PreparedStatement pstmt = con.prepareStatement("insert into partidas (estado,id_ganador,fecha,fecha_modificacion) values(?,?,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
+//agregue state y winnerid al model el constructor y el get
+			pstmt.setInt(1, game.getState());
+			pstmt.setInt(2,game.getWinnerId());
+			
+
+			pstmt.executeUpdate();
+			
+			ResultSet rs = pstmt.getGeneratedKeys();
+			if (rs.next()){
+			  int risultato=rs.getInt(1);
+			}
+			pstmt.close();
+			
+		} catch (SQLException e) {
+			throw new PersistenceException("Error SQL: " + e.getMessage());
+		}
 	}
 	/**
 	 * Busca una partida en la BD.

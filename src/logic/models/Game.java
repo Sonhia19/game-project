@@ -39,6 +39,8 @@ public class Game {
 //	 * Cantidad de jugadores conectados actualmente.
 //	 */
 	private int usersCount;
+	private int state;
+	private int winnerId;
 
 	public Game(final int gameId, final String userId, final int usersCount) {
 		
@@ -58,6 +60,14 @@ public class Game {
 		this.userId = userId;
 		this.fecha = fecha;
 	}
+	public Game(final int gameId, final String userId,final Date fecha,final int state,final int winnerId) {
+		
+		this.id = gameId;
+		this.userId = userId;
+		this.fecha = fecha;
+		this.state = state;
+		this.winnerId = winnerId;
+	}
 	public Game(final int gameId) {
 		
 		this.id = gameId;
@@ -67,7 +77,12 @@ public class Game {
 		return id;
 	}
 	
-	
+	public int getState() {
+		return this.state;
+	}
+	public int getWinnerId() {
+		return this.winnerId;
+	}
 	public String getUserId() {
 		return userId;
 	}
