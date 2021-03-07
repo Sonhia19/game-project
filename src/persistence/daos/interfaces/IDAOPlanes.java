@@ -8,7 +8,7 @@ import logic.models.*;
 
 public interface IDAOPlanes {
 	
-	void savePlanes (int id_jugador,Plane plane, IDBConnection icon)throws PersistenceException;
+	void savePlanes (int id_jugador, Plane plane, IDBConnection icon) throws PersistenceException;
 	
 	boolean existe(int idBarco, IDBConnection icon) throws PersistenceException;
 	

@@ -9,12 +9,15 @@ import com.google.gson.Gson;
 
 import exceptions.LogicException;
 import exceptions.PersistenceException;
+import logic.models.Artillery;
 import logic.models.Game;
 import logic.models.Player;
 import logic.models.Plane;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
 import persistence.daos.DAOGames;
+import persistence.daos.DAOPlanes;
+import persistence.daos.DAOPlayers;
 import persistence.daos.interfaces.IDAOGames;
 import persistence.daos.interfaces.IDAOPlanes;
 import persistence.daos.interfaces.IDAOPlayers;
@@ -38,7 +41,7 @@ public class Facade implements IFacade {
     private IDAOPlanes daoPlanes;
     private IDAOPlayers daoPlayers;
 
-    public static Facade getInstance()throws LogicException {
+    public static Facade getInstance() throws LogicException {
 
         if (!(instance instanceof Facade)) {
         	System.out.println("New facade");
@@ -49,38 +52,49 @@ public class Facade implements IFacade {
         return instance;
     }
 
-    private Facade()throws LogicException {
+    private Facade() throws LogicException {
     	gamePlayersMap = new HashMap<Integer, HashMap<String, Player>>();
     	daoGames = new DAOGames();
-    	try {
-    	//IDBConnection icon 	= null;
-		//icon = ConnectionsPool.getInstancia().obtenerConexion();
-		
-		//partidas = new Partidas(daoPartidas.maximoId(icon));
-		//ConnectionsPool.getInstancia().liberarConexion(icon, true);
-    	}
-    	catch (Exception ex)
-    	{
-    		throw new LogicException(ex.getMessage());
-    	}
+    	daoPlayers = new DAOPlayers();
+    	daoPlanes = new DAOPlanes();
     }
 
-    public WsResponse saveGame(final int gameId) throws LogicException{
+    public WsResponse saveGame(final int gameId, final JSONObject jsonPlayerSession, final JSONObject jsonEnemySession) throws LogicException {
+    	
+    	//hacer que venga una partida entera desde el cliente con gameid, estado y si hay ganador quien
     	final WsResponse response = new WsResponse();
-    	////Este player deberia cargarse con los datos de un player por parametro
-    	Player player = new Player("name",gameId,1);
-    	///
+    	final Gson gson = new Gson();
+    	//cargamos datos que vienen desde servidor a objetos player
+        final Player playerSession = gson.fromJson(jsonPlayerSession.toString(), Player.class);
+        final Player enemySession = gson.fromJson(jsonEnemySession.toString(), Player.class);
+        
     	try {
 	    	IDBConnection icon 	= null;
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
 	    	
 	    	daoGames.saveGame(daoGames.buscar(gameId, icon), icon);//ojo aca tal vez se puede hacer mejor.
-	    	daoPlayers.savePlayer(gameId, player, icon);
-	    	//agregue el get planes para obtener la lista de aviones
-	    	for (Plane plane : player.getPlanes()) {
+	    	daoPlayers.savePlayer(gameId, playerSession, icon);
+	    	daoPlayers.savePlayer(gameId, enemySession, icon);
+	    	
+	    	//se guardan aviones de player y enemy session
+	    	for (Plane plane : playerSession.getPlanes()) {
 	    		daoPlanes.savePlanes(gameId, plane, icon);
 	    	}
 	    	
+	    	for (Plane plane : enemySession.getPlanes()) {
+	    		daoPlanes.savePlanes(gameId, plane, icon);
+	    	}
+	    	
+	    	//se guardan artillerias de player y enemy session
+	    	/*
+	    	for (Artillery artillery : playerSession.getArtilleries()) {
+	    		daoArtillery.saveArtillery(gameId, artillery, icon);
+	    	}
+	    	
+	    	for (Artillery artillery : enemySession.getArtilleries()) {
+	    		daoArtillery.saveArtillery(gameId, artillery, icon);
+	    	}
+	    	*/
 	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 	    	
     	}
@@ -102,8 +116,6 @@ public class Facade implements IFacade {
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
 	    	gameId = daoGames.getNewGameId(icon);
 	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
-	    	
-	    	
     	}
     	catch (PersistenceException ex)
     	{

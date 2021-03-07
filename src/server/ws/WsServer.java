@@ -15,6 +15,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 import exceptions.LogicException;
 import logic.facade.Facade;
 import logic.models.Player;
@@ -114,6 +116,23 @@ public class WsServer {
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
 						"syncWithEnemy");
+			}
+			if (action.getString("name").equalsIgnoreCase("saveGame")) {
+
+				System.out.println("Save game ");
+				final int gameId = parameters.getInt("gameId");
+				final JSONObject jsonPlayerSession = parameters.getJSONObject("playerSession");
+				final JSONObject jsonEnemySession = parameters.getJSONObject("enemySession");
+
+				try {
+					response = facade.saveGame(gameId, jsonPlayerSession, jsonEnemySession);
+				} catch (LogicException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				response.setAction(action);
+				// envia msj al servidor que lo invoco
+				session.getBasicRemote().sendText(response.toParsedString());
 			}
 			if (action.getString("name").equalsIgnoreCase("syncGame")) {
 

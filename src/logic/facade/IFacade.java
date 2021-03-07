@@ -2,6 +2,8 @@ package logic.facade;
 
 import javax.websocket.Session;
 
+import org.json.JSONObject;
+
 import exceptions.LogicException;
 import logic.models.Player;
 import server.utils.WsResponse;
@@ -11,7 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface IFacade {
-	WsResponse saveGame(final int gameId) throws LogicException;
+	
+	WsResponse saveGame(final int gameId, final JSONObject playerSession, final JSONObject enemySession) throws LogicException;
 	
 	WsResponse newGame(final String playerName, final Session session) throws LogicException;
 	

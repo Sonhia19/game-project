@@ -95,10 +95,14 @@ public class Player {
 	public boolean getActiveFuel() {
 		return activeFuel;
 	}
+	
 	public List<Plane> getPlanes() {
 		return this.planes;
 	}
 	
+	public List<Artillery> getArtilleries() {
+		return this.artilleries;
+	}
 	
 	public void preloadPlanes (final List<Integer> planesType) {
 		
