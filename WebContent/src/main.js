@@ -8,14 +8,10 @@ import { JoinGameScene } from '../src/scenes/JoinGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 import { MESSAGES_FORMAT } from '../src/constants/MessagesFormatConstants.js';
 
-//import Phaser from '/phaser';
-
 var config = {
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        //scaleMode: Phaser.ScaleManager.SHOW_ALL,
-
     },
     parent: 'main',
     type: Phaser.AUTO,
@@ -47,29 +43,36 @@ var functions = {
 
     broadcastWebSocket: (webSocket) => {
         webSocket.onopen = (event) => {
-            //console.log("conexion establecida");
-            //console.log(event);
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
-                context.playerSession = JSON.parse(response.responses[1].value);
-                console.log('playerSession');
-                console.log(context.playerSession);
+
+                if (context.gameId != -1) {
+                    context.playerSession = JSON.parse(response.responses[1].value);
+                    console.log('playerSession');
+                    console.log(context.playerSession);
+
+                    context.functions.changeScene("NEWGAME", "LOBBYGAME");
+                }
             }
 
             if (response.action.name == 'joinGame') {
 
                 context.gameId = parseInt(response.responses[0].value);
-                context.playerSession = JSON.parse(response.responses[1].value);
-                context.playersConnected = parseInt(response.responses[2].value);
 
-                console.log("JOIN GAME");
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log(context.playersConnected);
+                if (context.gameId != -1) {
+                    context.playerSession = JSON.parse(response.responses[1].value);
+                    context.playersConnected = parseInt(response.responses[2].value);
+
+                    console.log("JOIN GAME");
+                    console.log('playerSession');
+                    console.log(context.playerSession);
+                    console.log(context.playersConnected);
+                    context.functions.changeScene("JOINGAME", "LOBBYGAME");
+                }
             }
 
             if (response.action.name == 'updatePlayersCount') {

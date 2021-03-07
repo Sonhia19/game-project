@@ -1,6 +1,8 @@
 
 import { context } from '../main.js';
 
+let isJoined = false;
+
 export class JoinGameScene extends Phaser.Scene {  
     constructor() {
         super('JOINGAME');
@@ -19,6 +21,7 @@ export class JoinGameScene extends Phaser.Scene {
 
     create() {
 
+        isJoined = true;
         this.add.image(0, 0, 'background_menu').setOrigin(0);
         this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.20, "play_font").setDepth(0);
 
@@ -39,16 +42,17 @@ export class JoinGameScene extends Phaser.Scene {
                     //envio msj al servidor con nombre de usuario
                     var message = context.messagesFormat.joinGame(inputUsername.value, gameToken.value);
                     context.functions.sendMessage(message);
-                    this.destroy();
-
-                    var delayInMilliseconds = 2000; //2 second
-                    setTimeout(function() {
-                        context.game.scene.start("LOBBYGAME", "hello from JOINGAME scene");
-                    }, delayInMilliseconds);
                 }
             }
             
         })
+    }
+
+    update () {
+        if (isJoined && context.gameId == -1) {
+            console.log("DATOS INVALIDOS");
+            isJoined = false;
+        }
     }
 
 }
