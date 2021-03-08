@@ -67,7 +67,7 @@ export let Plane = new Phaser.Class({
                     reach = (this.y - this.height)
                     break;
             }
-            bullet.fire(this.x, this.y, this.planeAngle, reach, this.firePower);
+            bullet.fire(this.x, this.y, this.planeAngle, reach, this.firePower, this.highFly);
 
             this.cadency = time + 150;
         }

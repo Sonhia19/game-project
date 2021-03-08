@@ -15,9 +15,10 @@ export let Bullet = new Phaser.Class({
             this.speed = Phaser.Math.GetSpeed(400, 1);
             this.bulletAngle = ANGLE_90;
             this.damage = 0;
+            this.highFlyPlane = false;
         },
 
-    fire: function (x, y, angle, reach, damage) {
+    fire: function (x, y, angle, reach, damage, highFlyPlane) {
         switch (angle) {
             case 90:
                 this.setPosition(x + 20, y);
@@ -35,6 +36,7 @@ export let Bullet = new Phaser.Class({
                 break;
         }
 
+        this.highFlyPlane = highFlyPlane;
         this.damage = damage;
         this.bulletAngle = angle;
         this.reach = reach;

@@ -142,7 +142,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("hangar", "./assets/hangar.png");
 		this.load.image("tower", "./assets/tower.png");
 		this.load.image("artillery", "./assets/artillery.png");
-		this.load.image("bulletTorret", "./assets/bullet.png");
+		this.load.image("bulletArtillery", "./assets/bullet.png");
 		this.load.image("bomb", "./assets/bomb.png");
 		this.load.image("border", "./assets/border.png");
 		this.load.image("borderView", "./assets/border2.png");
@@ -928,8 +928,7 @@ export class GameScene extends Phaser.Scene {
 
 	damageMyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
-			
-			//if (bullet.frame.texture.key == 'bullet' || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+			if (bullet.frame.texture.key == 'bullet' || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
 				let message;
 				let color;
 				if (plane.receiveDamage(bullet.damage)) {
@@ -946,21 +945,23 @@ export class GameScene extends Phaser.Scene {
 				}
 				bullet.destroy();
 				scene.createMessage(message, color);
-			//}
-
+			}
 		}
 	}
 
 	damageEnemyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
-			if (plane.receiveDamage(bullet.damage)) {
-				scene.createMessage("Avión enemigo destruido", COLOR_SUCCESS);
-				let planeView = scene.checkPlaneView(true, plane.planeIndex);
-				if (planeView != null) {
-					planeView.destroy();
+			if (bullet.frame.texture.key == 'bullet' || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+				if (plane.receiveDamage(bullet.damage)) {
+					scene.createMessage("Avión enemigo destruido", COLOR_SUCCESS);
+					let planeView = scene.checkPlaneView(true, plane.planeIndex);
+					if (planeView != null) {
+						planeView.destroy();
+					}
 				}
+				bullet.destroy();
 			}
-			bullet.destroy();
+
 			// let json = JSON.stringify({
 			// 	action: {
 			// 		name: 'syncPlaneDamage',
@@ -1045,39 +1046,41 @@ export class GameScene extends Phaser.Scene {
 
 	damageArtillery(bullet, artillery) {
 		if (artillery.active === true && bullet.active === true) {
-			let message;
-			let color;
-			let index = artillery.artilleryIndex;
-			if (artillery.receiveDamage(bullet.damage)) {
-				if (artillery.isEnemy) {
-					message = "Artillería enemiga destruida";
-					color = COLOR_SUCCESS;
-					artilleryEnemyCount = artilleryEnemyCount - 1;
-					artilleryText.setText('Artillería: ' + artilleryEnemyCount + '/4');
+			if (!bullet.highFlyPlane) {
+				let message;
+				let color;
+				let index = artillery.artilleryIndex;
+				if (artillery.receiveDamage(bullet.damage)) {
+					if (artillery.isEnemy) {
+						message = "Artillería enemiga destruida";
+						color = COLOR_SUCCESS;
+						artilleryEnemyCount = artilleryEnemyCount - 1;
+						artilleryText.setText('Artillería: ' + artilleryEnemyCount + '/4');
+					}
+					else {
+						message = "Artillería aliada destruida"
+						color = COLOR_DANGER;
+						artilleryCount = artilleryCount - 1;
+						artilleryEnemyText.setText('Artillería : ' + artilleryCount + '/4')
+					}
+					switch (index) {
+						case 1:
+							if (artillery.isEnemy) { enemyArtilleryOneView.destroy(); } else { myArtilleryOneView.destroy(); }
+							break;
+						case 2:
+							if (artillery.isEnemy) { enemyArtilleryTwoView.destroy(); } else { myArtilleryTwoView.destroy(); }
+							break;
+						case 3:
+							if (artillery.isEnemy) { enemyArtilleryThreeView.destroy(); } else { myArtilleryThreeView.destroy(); }
+							break;
+						case 4:
+							if (artillery.isEnemy) { enemyArtilleryFourView.destroy(); } else { myArtilleryFourView.destroy(); }
+							break;
+					}
+					scene.createMessage(message, color);
 				}
-				else {
-					message = "Artillería aliada destruida"
-					color = COLOR_DANGER;
-					artilleryCount = artilleryCount - 1;
-					artilleryEnemyText.setText('Artillería : ' + artilleryCount + '/4')
-				}
-				switch (index) {
-					case 1:
-						if (artillery.isEnemy) { enemyArtilleryOneView.destroy(); } else { myArtilleryOneView.destroy(); }
-						break;
-					case 2:
-						if (artillery.isEnemy) { enemyArtilleryTwoView.destroy(); } else { myArtilleryTwoView.destroy(); }
-						break;
-					case 3:
-						if (artillery.isEnemy) { enemyArtilleryThreeView.destroy(); } else { myArtilleryThreeView.destroy(); }
-						break;
-					case 4:
-						if (artillery.isEnemy) { enemyArtilleryFourView.destroy(); } else { myArtilleryFourView.destroy(); }
-						break;
-				}
-				scene.createMessage(message, color);
+				bullet.destroy();
 			}
-			bullet.destroy();
 		}
 	}
 
