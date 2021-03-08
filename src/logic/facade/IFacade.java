@@ -22,7 +22,7 @@ public interface IFacade {
 
 	WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, final Session session);
 
-    WsResponse disconnectGameSession(final Session session, int gameId);
+	WsResponse disconnectGameSession(final Session session);
     
     WsResponse getJsonGameSession(final int gameId, final String userId);
 

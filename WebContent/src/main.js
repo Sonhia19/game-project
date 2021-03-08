@@ -16,7 +16,7 @@ var config = {
     parent: 'main',
     type: Phaser.AUTO,
     width: 1350,
-    height: 650,
+    height: 600,
     physics: {
         default: "arcade",
         arcade: {
@@ -72,6 +72,8 @@ var functions = {
                     console.log(context.playerSession);
                     console.log(context.playersConnected);
                     context.functions.changeScene("JOINGAME", "LOBBYGAME");
+                } else {
+                    context.functions.changeScene("JOINGAME", "JOINGAME");
                 }
             }
 
@@ -80,9 +82,10 @@ var functions = {
             }
 
             if (response.action.name == 'connectToGame') {
+
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
-                context.gameStatus = JSON.parse(response.responses[2].value);
+                context.gameStatus = response.responses[2].value;
 
                 console.log("CONNECT player session");
                 console.log(context.playerSession);
@@ -93,7 +96,7 @@ var functions = {
                 
                 if (gameStatus == "ABANDONADA") {
                     console.log("DISCONNECT player session");
-                    context.enemySession = null;
+                    context.enemySession.id = null;
                 }
             }
             if (response.action.name == 'syncGame') {
@@ -132,6 +135,19 @@ var functions = {
                 context.enemySession.isHighFlying = true;
                 context.enemySession.planeHighFly = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncTakeOffEnemy") {
+                context.enemySession.isTakeOff = true;
+                context.enemySession.planeTakeOff = JSON.parse(response.responses[1].value);
+                context.enemySession.takeOff = JSON.parse(response.responses[2].value);
+            }
+            if (response.action.name == "syncPlaneViewEnemy") {
+                context.enemySession.isPlaneView = true;
+                context.enemySession.planeViewPlane = JSON.parse(response.responses[1].value);
+                context.enemySession.planeViewCoord = JSON.parse(response.responses[2].value);
+            }
+            
+
+            
 
 
 
@@ -153,6 +169,6 @@ export const context = {
     gameId: null,
     gameStatus: null,
     playersConnected: 0,
-    playerSession: undefined,
-    enemySession: undefined
+    playerSession: {},
+    enemySession: {}
 };

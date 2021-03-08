@@ -12,8 +12,9 @@ export let Artillery = new Phaser.Class({
             this.armor = 0;
             this.firePower = 0;
             this.isEnemy = false;
+            this.artilleryIndex = 0;
         },
-    place: function (i, j, cadency, reach, armor, firePower, isEnemy) {
+    place: function (i, j, cadency, reach, armor, firePower, isEnemy, artilleryIndex) {
         this.y = i;
         this.x = j;
         this.cadency = cadency;
@@ -24,6 +25,7 @@ export let Artillery = new Phaser.Class({
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.5);
+        this.artilleryIndex = artilleryIndex;
 
         return this;
     },

@@ -146,8 +146,8 @@ public class Facade implements IFacade {
     	final WsResponse response = new WsResponse();
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
         
-    	//se valida si ya existe jugador en la partida con mismo nombre
-    	if (gamePlayers.containsKey(playerName)) {
+    	//se valida si existe la partida y si ya existe jugador en la partida con mismo nombre
+    	if (gamePlayers == null  || gamePlayers.containsKey(playerName)) {
     		response.generateResponse("gameId", "-1", "int");	
     	} else {
         	//Se joinea el segundo jugador, con bando rojo
@@ -165,7 +165,8 @@ public class Facade implements IFacade {
 		return response;		
     }
     
-    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, final Session session) {
+    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, 
+    		final ArrayList<Integer> artilleriesType, final Session session) {
 
     	final WsResponse response = new WsResponse();
     	
@@ -174,7 +175,7 @@ public class Facade implements IFacade {
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	final Player player = gamePlayers.get(playerName);
     	player.preloadPlanes(planesType);
-    	player.preloadArtilleries();
+    	player.preloadArtilleries(artilleriesType);
     			
     	Player enemyPlayer = null;
     	
@@ -194,9 +195,9 @@ public class Facade implements IFacade {
     }
 
 
-    public WsResponse disconnectGameSession(final Session session, int gameId) {
+    public WsResponse disconnectGameSession(final Session session) {
 
-        gameId = removeSession(session);
+        int gameId = removeSession(session);
         final WsResponse response = new WsResponse();
         
         if (gameId != -1) {
@@ -271,6 +272,42 @@ public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerNam
 	final Gson gson = new Gson();
     
 	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+	
+	return response;
+}
+
+public WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+	
+	final WsResponse response = new WsResponse();
+	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+	final Game game = new Game(gameId, playerName, gamePlayers.size());
+	
+	int indexPlane = (int) parameters.get("TakeOffPlane");
+	boolean takeOff = (boolean)parameters.get("takeOff");
+	final Gson gson = new Gson();
+    
+	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
+	response.generateResponse("takeOff",gson.toJson(String.valueOf(takeOff)), "boolean");
+	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+	
+	return response;
+}
+
+public WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+	
+	final WsResponse response = new WsResponse();
+	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+	final Game game = new Game(gameId, playerName, gamePlayers.size());
+	
+	int indexPlane = (int) parameters.get("viewPlane");
+	int coord = (int)parameters.get("coord");
+	final Gson gson = new Gson();
+    
+	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
+	response.generateResponse("takeOff",gson.toJson(String.valueOf(coord)), "int");
 	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 	
 	return response;

@@ -39,10 +39,10 @@ public class WsServer {
 	public void onClose(final Session session, final CloseReason reason) {
 		
 		System.out.println("Close Connection ...");
-		int gameId = -1;
-		final WsResponse response = facade.disconnectGameSession(session, gameId);
+		final WsResponse response = facade.disconnectGameSession(session);
 		// sincroniza sesiones enemigas para actualizar que un jugador abandona la partida
 		try {
+			int gameId = Integer.valueOf(response.getValue(1).toString());
 			WsSynchronization.syncWithEnemy(facade, gameId, response, "disconnectSession");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -191,19 +191,35 @@ public class WsServer {
 			}
 			if (action.getString("name").equalsIgnoreCase("syncEmptyTank")) {
 
-				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), "player".concat(session.getId()),
+				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncEmptyTankEnemy");
 			}
 			if (action.getString("name").equalsIgnoreCase("syncHighFly")) {
 
-				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), "player".concat(session.getId()),
+				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), "player".concat(session.getId()),
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncHighFlyEnemy");
+			}
+			if (action.getString("name").equalsIgnoreCase("syncTakeOff")) {
+
+				response = facade.getJsonTakeOffEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
+						parameters);
+				// sincroniza todas las sesiones conectadas
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
+						response, "syncTakeOffEnemy");
+			}
+			if (action.getString("name").equalsIgnoreCase("syncPlaneView")) {
+
+				response = facade.getJsonPlaneViewEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
+						parameters);
+				// sincroniza todas las sesiones conectadas
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
+						response, "syncPlaneViewEnemy");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

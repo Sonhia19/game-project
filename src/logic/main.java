@@ -25,7 +25,7 @@ public class main {
 		IDBConnection icon 	= null;
 		try
 		{
-		// Obtenemos una nueva conexión del pool.
+		// Obtenemos una nueva conexiï¿½n del pool.
 		icon = persistence.connection.ConnectionsPool.getInstancia().obtenerConexion();
 		suca = daogames.buscar(1, icon);
 		

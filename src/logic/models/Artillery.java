@@ -1,36 +1,22 @@
 package logic.models;
 
-public class Artillery {
+public abstract class Artillery {
 
-	private int id;
+	int id;
 
-	private double armor;
+	double armor;
 
-	private double positionX;
+	double positionX;
 
-	private double positionY;
+	double positionY;
 
-	private double cadency;
+	double cadency;
 
-	private double firePower;
+	double firePower;
 
-	private double reach;
+	double reach;
 
-	// artilleryConfig
-	private int artilleryType;
-
-	public Artillery(int id, double positionX, double positionY, int angle) {
-
-		this.id = id;
-		this.armor = 100;
-		this.cadency = 1500;
-		this.reach = 200;
-		this.artilleryType = 1;
-		this.firePower = 10;
-		this.positionX = positionX;
-		this.positionY = positionY;
-
-	}
+	int artilleryType;
 
 	public int getId() {
 		return id;
@@ -56,7 +42,7 @@ public class Artillery {
 		return reach;
 	}
 
-	public int getArtilType() {
+	public int getArtilleryType() {
 		return artilleryType;
 	}
 

@@ -111,16 +111,16 @@ public class Player {
 		int positionY = 200;
 		for (Integer type : planesType) {
 			if (type.equals(1) ) {
-				planes.add(new PlaneType1(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 1));
+				planes.add(new PlaneType1(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
 			}
 			else if (type.equals(2) ) {
-				planes.add(new PlaneType2(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 2));
+				planes.add(new PlaneType2(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
 			}
 			else if (type.equals(3) ) {
-				planes.add(new PlaneType3(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 3));
+				planes.add(new PlaneType3(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
 			}
 			else if (type.equals(4) ) {
-				planes.add(new PlaneType4(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270, 4));
+				planes.add(new PlaneType4(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
 			}
 			planeId = planeId + 1;
 			// los 4 aviones se colocarian en posicionY = 200, 300, 400, 500
@@ -130,13 +130,29 @@ public class Player {
 		this.planes = planes;
 	}
 	
-	public void preloadArtilleries()
-	{
+	public void preloadArtilleries(final List<Integer> artilleriesType) {
+		
 		List<Artillery> artilleries = new ArrayList();
-		artilleries.add(new Artillery(1, this.teamSide == 1? 175 : 825, 75, 0));
-		artilleries.add(new Artillery(2, this.teamSide == 1? 175 : 825, 250, 0));
-		artilleries.add(new Artillery(3, this.teamSide == 1? 175 : 825, 350, 0));
-		artilleries.add(new Artillery(4, this.teamSide == 1? 175 : 825, 550, 0));
+		int artilleryId = 1;
+		int positionY = 200;
+		for (Integer type : artilleriesType) {
+			if (type.equals(1) ) {
+				artilleries.add(new ArtilleryType1(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			else if (type.equals(2) ) {
+				artilleries.add(new ArtilleryType2(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			else if (type.equals(3) ) {
+				artilleries.add(new ArtilleryType3(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			else if (type.equals(4) ) {
+				artilleries.add(new ArtilleryType4(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
+			}
+			artilleryId = artilleryId + 1;
+			// las 4 artillerias se colocarian en posicionY = 200, 300, 400, 500
+			positionY += 100;
+		}
+		
 		this.artilleries = artilleries;
 	}
 	
