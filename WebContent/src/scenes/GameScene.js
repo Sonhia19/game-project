@@ -20,30 +20,17 @@ import { BLUE_SAFE_ZONE_X, BLUE_PLANE_X, BLUE_BASE_X, BLUE_ARTILLERY_X_VIEW } fr
 let scene;
 //Bandera para saber el bando del jugador
 let isBlue;
+//Bandera para saber si se dibujaron los elementos del enemigo
 let enemyDraw = false;
 
 //Teclas a capturar
 let keyCtrl, keyOne, keyTwo, keyThree, keyFour, keyF, keyAlt;
-
 let cursors;
 
+//Constantes de colores para mensajes
 const COLOR_SUCCESS = 0x008025;
 const COLOR_DANGER = 0xFF0000;
 const COLOR_WARNING = 0xE2D510;
-
-
-//Colecciones de elementos del propio bando
-let myBullets;
-let myBulletsArtillery
-let myPlanes;
-let myFuels;
-let myTowers;
-let myHangars;
-let myBombs;
-let myArtilleries;
-let borders;
-let blacks;
-let grays;
 
 //Tablero
 let fuelText;
@@ -87,7 +74,18 @@ let ledRedFuelEnemy;
 let ledGreenTowerEnemy;
 let ledRedTowerEnemy;
 
-
+//Colecciones de elementos del propio bando
+let myBullets;
+let myBulletsArtillery
+let myPlanes;
+let myFuels;
+let myTowers;
+let myHangars;
+let myBombs;
+let myArtilleries;
+let borders;
+let blacks;
+let grays;
 
 //Colecciones de elementos del bando enemigo
 let enemyPlanes;
@@ -180,8 +178,6 @@ export class GameScene extends Phaser.Scene {
 		this.add.image(1180, 140, 'fieldView').setScale(0.4);
 		this.add.image(1178, 460, 'dashboard').setScale(0.27);
 		this.add.image(500, 300, 'field');
-		// this.add.image(1070, 290, 'borderView').setScale(0.03);
-		// this.add.image(1280, 290, 'borderView').setScale(0.03);
 
 		isBlue = context.playerSession.teamSide == 1
 
@@ -210,8 +206,8 @@ export class GameScene extends Phaser.Scene {
 		enemyArtilleries = this.physics.add.group({ classType: Artillery, runChildUpdate: true });
 		enemyBulletsArtillery = this.physics.add.group({ classType: BulletArtillery, runChildUpdate: true });
 
+		//Fronteras internas
 		let border = borders.get();
-
 		border.place(50, 800, true);
 		border = borders.get();
 		border.place(50, 200, true);
@@ -232,6 +228,7 @@ export class GameScene extends Phaser.Scene {
 		path.draw(graphics);
 
 
+		//Frontera externa
 		border = borders.get();
 		border.place(50, 1005, false);
 
@@ -415,9 +412,15 @@ export class GameScene extends Phaser.Scene {
 				if (Phaser.Input.Keyboard.JustDown(keyCtrl)) {
 					if (myPlaneSelected.flying) {
 						if (myPlaneSelected.withBomb) {
-							myPlaneSelected.fireBomb(myBombs);
-							this.syncBomb();
-							this.checkBomb();
+							if (myPlaneSelected.highFly) {
+								infoGameText.setText("El vuelo alto no permite disparar la bomba");
+							}
+							else {
+								myPlaneSelected.fireBomb(myBombs);
+								this.syncBomb();
+								this.checkBomb();
+							}
+
 						}
 						else {
 							infoGameText.setText("Retorne a la base para recargar bomba");
@@ -925,22 +928,26 @@ export class GameScene extends Phaser.Scene {
 
 	damageMyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
-			let message;
-			let color;
-			if (plane.receiveDamage(bullet.damage)) {
-				message = "Avión aliado destruido";
-				color = COLOR_DANGER;
-				let planeView = scene.checkPlaneView(false, plane.planeIndex);
-				if (planeView != null) {
-					planeView.destroy();
+			
+			//if (bullet.frame.texture.key == 'bullet' || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+				let message;
+				let color;
+				if (plane.receiveDamage(bullet.damage)) {
+					message = "Avión aliado destruido";
+					color = COLOR_DANGER;
+					let planeView = scene.checkPlaneView(false, plane.planeIndex);
+					if (planeView != null) {
+						planeView.destroy();
+					}
 				}
-			}
-			else {
-				message = "Avión aliado dañado";
-				color = COLOR_WARNING;
-			}
-			bullet.destroy();
-			scene.createMessage(message, color);
+				else {
+					message = "Avión aliado dañado";
+					color = COLOR_WARNING;
+				}
+				bullet.destroy();
+				scene.createMessage(message, color);
+			//}
+
 		}
 	}
 
