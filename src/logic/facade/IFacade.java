@@ -22,13 +22,13 @@ public interface IFacade {
 
 	WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, final Session session);
 
-    int disconnectGameSession(final Session session);
+    WsResponse disconnectGameSession(final Session session, int gameId);
     
     WsResponse getJsonGameSession(final int gameId, final String userId);
 
     HashMap<String, Player> getGamePlayers(final int gameId);
 
-    int getGameId(final Player player);
+    int removeSession(final Session session);
 
 
 }

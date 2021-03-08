@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -35,8 +36,18 @@ public class WsServer {
 	}
 
 	@OnClose
-	public void onClose() {
+	public void onClose(final Session session, final CloseReason reason) {
+		
 		System.out.println("Close Connection ...");
+		int gameId = -1;
+		final WsResponse response = facade.disconnectGameSession(session, gameId);
+		// sincroniza sesiones enemigas para actualizar que un jugador abandona la partida
+		try {
+			WsSynchronization.syncWithEnemy(facade, gameId, response, "disconnectSession");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@OnMessage

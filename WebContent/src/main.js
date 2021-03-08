@@ -82,11 +82,20 @@ var functions = {
             if (response.action.name == 'connectToGame') {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
+                context.gameStatus = JSON.parse(response.responses[2].value);
 
                 console.log("CONNECT player session");
                 console.log(context.playerSession);
+                console.log(context.gameStatus);
             }
-
+            if (response.action.name == 'disconnectSession') {
+                context.gameStatus = JSON.parse(response.responses[0].value);
+                
+                if (gameStatus == "ABANDONADA") {
+                    console.log("DISCONNECT player session");
+                    context.enemySession = null;
+                }
+            }
             if (response.action.name == 'syncGame') {
                 context.gameId = JSON.parse(response.responses[0].value);
             }
@@ -142,8 +151,8 @@ export const context = {
     functions: functions,
     messagesFormat: MESSAGES_FORMAT,
     gameId: null,
+    gameStatus: null,
     playersConnected: 0,
-    playerSession: {},
-    enemySession: {},
-    currentScene: 'LOAD'
+    playerSession: undefined,
+    enemySession: undefined
 };
