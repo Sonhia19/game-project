@@ -151,6 +151,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("ledRed", "./assets/led.png");
 		this.load.image("ledGreen", "./assets/led_green.png");
 		this.load.image("view", "./assets/view.png");
+		this.load.image("dashboard", "./assets/dashboard.png");
 
 
 		//Vista lateral
@@ -176,8 +177,8 @@ export class GameScene extends Phaser.Scene {
 
 	create() {
 		scene = this;
-		let vista = this.add.image(1180, 140, 'fieldView').setScale(0.4);
-		//vista.setScale(0.21)
+		this.add.image(1180, 140, 'fieldView').setScale(0.4);
+		this.add.image(1178, 460, 'dashboard').setScale(0.27);
 		this.add.image(500, 300, 'field');
 		// this.add.image(1070, 290, 'borderView').setScale(0.03);
 		// this.add.image(1280, 290, 'borderView').setScale(0.03);
@@ -494,21 +495,21 @@ export class GameScene extends Phaser.Scene {
 
 
 		//Aviones Consola
-		consolePlane1 = this.add.image(1040, 530, 'plane');
+		consolePlane1 = this.add.image(1040, 520, 'plane');
 		consolePlane1.setScale(0.3);
-		plane1ArmorText = this.add.text(1025, 545, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane1ArmorText = this.add.text(1025, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
-		consolePlane2 = this.add.image(1120, 530, 'plane');
+		consolePlane2 = this.add.image(1120, 520, 'plane');
 		consolePlane2.setScale(0.3);
-		plane2ArmorText = this.add.text(1105, 545, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane2ArmorText = this.add.text(1105, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
-		consolePlane3 = this.add.image(1200, 530, 'plane');
+		consolePlane3 = this.add.image(1200, 520, 'plane');
 		consolePlane3.setScale(0.3);
-		plane3ArmorText = this.add.text(1185, 545, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane3ArmorText = this.add.text(1185, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
-		consolePlane4 = this.add.image(1280, 530, 'plane');
+		consolePlane4 = this.add.image(1280, 520, 'plane');
 		consolePlane4.setScale(0.3);
-		plane4ArmorText = this.add.text(1265, 545, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane4ArmorText = this.add.text(1265, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
 		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '11px', fill: '#FFFFFF', });
 		fuelText = this.add.text(1010, 316, '', { fontSize: '11px', fill: '#FFFFFF' });
