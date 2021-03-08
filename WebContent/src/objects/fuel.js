@@ -6,6 +6,7 @@ export let Fuel = new Phaser.Class({
 
         function Fuel(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'fuel');
+            this.destroyed = false;
         },
     place: function (i, j) {
         this.y = i;

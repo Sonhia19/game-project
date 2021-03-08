@@ -735,6 +735,7 @@ export class GameScene extends Phaser.Scene {
 		// 	context.enemySession.damage = -1;
 		// }
 		this.checkAllArtilleryFire(time);
+		this.checkTowersFire(time);
 	}
 
 	moveEnemyPlanes() {
@@ -903,6 +904,33 @@ export class GameScene extends Phaser.Scene {
 			}
 		}
 	}
+
+	checkTowersFire(time) {
+		let angle;
+		if (enemyPlaneSelected != null && enemyPlaneSelected.armor > 0) {
+			if (time > myTower.nextTic && !myTower.destroyed) {
+				if (Phaser.Math.Distance.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y) < 200) {
+					angle = Phaser.Math.Angle.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y);
+					if (!enemyPlaneSelected.highFly) {
+						myTower.fire(time, angle, myBulletsArtillery);
+						this.checkPlanesArmor();
+					}
+				}
+			}
+		}
+
+		if (myPlaneSelected != null && myPlaneSelected.armor > 0) {
+			if (time > enemyTower.nextTic && !enemyTower.destroyed) {
+				if (Phaser.Math.Distance.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y) < 300) {
+					angle = Phaser.Math.Angle.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y);
+					if (!myPlaneSelected.highFly) {
+						enemyTower.fire(time, angle, enemyBulletsArtillery);
+						this.checkPlanesArmor();
+					}
+				}
+			}
+		}
+	}
 	//#endregion
 
 	//#region Colisiones de objetos
@@ -997,6 +1025,7 @@ export class GameScene extends Phaser.Scene {
 			}
 			bomb.destroy();
 			structure.destroy();
+			structure.destroyed = true;
 			structure = false;
 			scene.createMessage(message, COLOR_DANGER);
 		}
@@ -1023,6 +1052,7 @@ export class GameScene extends Phaser.Scene {
 			}
 			bomb.destroy();
 			structure.destroy();
+			structure.destroyed = true;
 			structure = false;
 			scene.createMessage(message, COLOR_SUCCESS);
 		}

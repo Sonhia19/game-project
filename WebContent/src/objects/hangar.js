@@ -6,6 +6,7 @@ export let Hangar = new Phaser.Class({
 
         function Hangar(scene) {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'hangar');
+            this.destroyed = false;
         },
     place: function (i, j) {
         this.y = i;
