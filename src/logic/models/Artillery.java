@@ -19,6 +19,9 @@ public class Artillery {
 	// artilleryConfig
 	private int artilleryType;
 
+	public Artillery() {
+
+	}
 	public Artillery(int id, double positionX, double positionY, int angle) {
 
 		this.id = id;

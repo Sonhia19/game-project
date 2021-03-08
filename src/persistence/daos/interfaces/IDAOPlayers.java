@@ -7,5 +7,5 @@ import persistence.connection.*;
 import logic.models.*;
 
 public interface IDAOPlayers {
-	void savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException;
+	int savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException;
 }

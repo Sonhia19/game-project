@@ -1,7 +1,7 @@
 package logic.models;
 
 //Esta clase refleja una sesion de jugador activo en una partida
-public abstract class Plane {
+public class Plane {
 
 	int id;
 
@@ -26,6 +26,10 @@ public abstract class Plane {
 	// planeConfig
 	int planeType;
 
+	public Plane() {
+		
+	}
+	
 	public Plane(int id, double positionX, double positionY, int angle) {
 
 		this.id = id;

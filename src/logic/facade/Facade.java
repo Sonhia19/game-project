@@ -18,6 +18,7 @@ import persistence.connection.IDBConnection;
 import persistence.daos.DAOGames;
 import persistence.daos.DAOPlanes;
 import persistence.daos.DAOPlayers;
+import persistence.daos.interfaces.IDAOArtillery;
 import persistence.daos.interfaces.IDAOGames;
 import persistence.daos.interfaces.IDAOPlanes;
 import persistence.daos.interfaces.IDAOPlayers;
@@ -40,6 +41,7 @@ public class Facade implements IFacade {
     private IDAOGames daoGames;
     private IDAOPlanes daoPlanes;
     private IDAOPlayers daoPlayers;
+    private IDAOArtillery daoArtillery;
 
     public static Facade getInstance() throws LogicException {
 
@@ -73,29 +75,29 @@ public class Facade implements IFacade {
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
 	    	
 	    	daoGames.saveGame(daoGames.buscar(gameId, icon), icon);//ojo aca tal vez se puede hacer mejor.
-	    	daoPlayers.savePlayer(gameId, playerSession, icon);
-	    	daoPlayers.savePlayer(gameId, enemySession, icon);
+	    	int playerSessionId = daoPlayers.savePlayer(gameId, playerSession, icon);
+	    	int enemySessionId = daoPlayers.savePlayer(gameId, enemySession, icon);
 	    	
 	    	//se guardan aviones de player y enemy session
 	    	for (Plane plane : playerSession.getPlanes()) {
-	    		daoPlanes.savePlanes(gameId, plane, icon);
+	    		daoPlanes.savePlanes(playerSessionId, plane, icon);
 	    	}
 	    	
 	    	for (Plane plane : enemySession.getPlanes()) {
-	    		daoPlanes.savePlanes(gameId, plane, icon);
+	    		daoPlanes.savePlanes(enemySessionId, plane, icon);
 	    	}
 	    	
 	    	//se guardan artillerias de player y enemy session
 	    	/*
 	    	for (Artillery artillery : playerSession.getArtilleries()) {
-	    		daoArtillery.saveArtillery(gameId, artillery, icon);
+	    		daoArtillery.saveArtillery(playerSessionId, artillery, icon);
 	    	}
 	    	
 	    	for (Artillery artillery : enemySession.getArtilleries()) {
-	    		daoArtillery.saveArtillery(gameId, artillery, icon);
+	    		daoArtillery.saveArtillery(enemySessionId, artillery, icon);
 	    	}
 	    	*/
-	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 	    	
     	}
     	catch (PersistenceException ex)
@@ -111,16 +113,16 @@ public class Facade implements IFacade {
     	
     	final WsResponse response = new WsResponse();
     	int gameId = 1; //obtener prox id desde la bd
-    	/*try {
+    	try {
 	    	IDBConnection icon 	= null;
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
 	    	gameId = daoGames.getNewGameId(icon);
-	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
     	}
     	catch (PersistenceException ex)
     	{
     		throw new LogicException(ex.getMessage());
-    	}*/
+    	}
     	gamePlayersMap.put(gameId, new HashMap<>());
     	//Se crea primer instancia de jugador, con nombre jugador, id partida y bando azul
         final Player player = new Player(playerName, gameId, TEAM_SIDE_BLUE, session);

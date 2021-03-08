@@ -32,6 +32,10 @@ public class Player {
 	//tanqueActivo
 	//hangarActivo
 	
+	public Player() {
+		
+	}
+	
 	public Player(final String name, final int gameId, final int teamSide, final Session session) {
 		this.name = name;
 		this.gameId = gameId;
@@ -102,6 +106,10 @@ public class Player {
 	
 	public List<Artillery> getArtilleries() {
 		return this.artilleries;
+	}
+	
+	public void setPlanes(List<Plane> planes) {
+		this.planes = planes;
 	}
 	
 	public void preloadPlanes (final List<Integer> planesType) {
