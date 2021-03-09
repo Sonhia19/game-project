@@ -195,7 +195,7 @@ public class Facade implements IFacade {
 
         if (gameId != -1) {
 
-        	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+        	//final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
         	response.generateResponse("gameStatus", String.valueOf(GameStatus.ABANDONADA), "String");
         	response.generateResponse("gameId", String.valueOf(gameId), "int");
         } else {

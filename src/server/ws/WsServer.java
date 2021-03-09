@@ -42,16 +42,19 @@ public class WsServer {
 		final WsResponse response = facade.disconnectGameSession(session);
 		// sincroniza sesiones enemigas para actualizar que un jugador abandona la partida
 		try {
-			int gameId = Integer.valueOf(response.getValue(1).toString());
-			WsSynchronization.syncWithEnemy(facade, gameId, response, "disconnectSession");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(response.getValue(1) != null) {
+				int gameId = Integer.valueOf(response.getValue(1).toString());
+				WsSynchronization.syncWithEnemy(facade, gameId, response, "disconnectSession");
+			}
+		} catch (IOException ex) {
+			System.out.println("Ha ocurrido un error al cerrar la conexion");
+			//throw new LogicException(ex.getMessage());
 		}
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {//throws LogicException {
+		
 		System.out.println(message);
 
 		final JSONObject action = (new JSONObject(message)).getJSONObject("action");

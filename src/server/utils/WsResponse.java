@@ -37,7 +37,11 @@ public class WsResponse {
 	
 	public Object getValue(final int index) {
 		
-		return responses.get(index);
+		Object value = null;
+		if (responses.isNull(index)) {
+			value = responses.get(index);
+		}
+		return value;
 	}
 	
 	public void deleteResponse(final String name) {
