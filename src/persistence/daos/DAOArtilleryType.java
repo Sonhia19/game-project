@@ -1,7 +1,7 @@
 package persistence.daos;
 
-import persistence.daos.interfaces.IDAOPlaneType;
+import persistence.daos.interfaces.IDAOArtilleryType;
 
-public class DAOArtilleryType implements IDAOPlaneType {
+public class DAOArtilleryType implements IDAOArtilleryType {
 
 }

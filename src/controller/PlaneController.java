@@ -56,5 +56,17 @@ public class PlaneController {
 			throw new LogicException(ex.getMessage());
 		}
     }
+    public Plane getPlaneByType(int planetype)throws LogicException {
+    	Plane plane = null;
+    	IDBConnection icon = null;
+    	try {
+		icon = ConnectionsPool.getInstancia().obtenerConexion();
+    	plane = daoPlaneType.getPlaneByType(planetype,icon);
+    	}
+    	catch (PersistenceException ex) {
+    		throw new LogicException(ex.getMessage());
+    	}
+    	return plane;
+    }
 
 }
