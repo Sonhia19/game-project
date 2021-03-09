@@ -36,6 +36,7 @@ export let Plane = new Phaser.Class({
                     name: 'syncEmptyTank',
                     parameters: {
                         gameId: context.gameId,
+                        playerName: context.playerSession.name,
                         plane: this.planeIndex
                     }
                 }
@@ -158,6 +159,7 @@ export let Plane = new Phaser.Class({
             }
         }
         if (landed) {
+            this.highFly = false;
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
@@ -178,12 +180,15 @@ export let Plane = new Phaser.Class({
         this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
 
         if (sync) {
+            console.log("entra");
             let json = JSON.stringify({
                 action: {
                     name: 'syncHighFly',
                     parameters: {
                         gameId: context.gameId,
+                        playerName: context.playerSession.name,
                         plane: this.planeIndex
+
                     }
                 }
             })

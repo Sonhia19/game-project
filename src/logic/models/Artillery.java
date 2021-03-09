@@ -16,7 +16,6 @@ public class Artillery {
 
 	private double reach;
 
-	// artilleryConfig
 	private int artilleryType;
 
 	public Artillery() {
@@ -59,7 +58,7 @@ public class Artillery {
 		return reach;
 	}
 
-	public int getArtilType() {
+	public int getArtilleryType() {
 		return artilleryType;
 	}
 

@@ -8,19 +8,15 @@ import { JoinGameScene } from '../src/scenes/JoinGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 import { MESSAGES_FORMAT } from '../src/constants/MessagesFormatConstants.js';
 
-//import Phaser from '/phaser';
-
 var config = {
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        //scaleMode: Phaser.ScaleManager.SHOW_ALL,
-
     },
     parent: 'main',
     type: Phaser.AUTO,
     width: 1350,
-    height: 650,
+    height: 600,
     physics: {
         default: "arcade",
         arcade: {
@@ -47,29 +43,38 @@ var functions = {
 
     broadcastWebSocket: (webSocket) => {
         webSocket.onopen = (event) => {
-            //console.log("conexion establecida");
-            //console.log(event);
         }
         webSocket.onmessage = (event) => {
             var response = JSON.parse(event.data);
 
             if (response.action.name == 'newGame') {
                 context.gameId = parseInt(response.responses[0].value);
-                context.playerSession = JSON.parse(response.responses[1].value);
-                console.log('playerSession');
-                console.log(context.playerSession);
+
+                if (context.gameId != -1) {
+                    context.playerSession = JSON.parse(response.responses[1].value);
+                    console.log('playerSession');
+                    console.log(context.playerSession);
+
+                    context.functions.changeScene("NEWGAME", "LOBBYGAME");
+                }
             }
 
             if (response.action.name == 'joinGame') {
 
                 context.gameId = parseInt(response.responses[0].value);
-                context.playerSession = JSON.parse(response.responses[1].value);
-                context.playersConnected = parseInt(response.responses[2].value);
 
-                console.log("JOIN GAME");
-                console.log('playerSession');
-                console.log(context.playerSession);
-                console.log(context.playersConnected);
+                if (context.gameId != -1) {
+                    context.playerSession = JSON.parse(response.responses[1].value);
+                    context.playersConnected = parseInt(response.responses[2].value);
+
+                    console.log("JOIN GAME");
+                    console.log('playerSession');
+                    console.log(context.playerSession);
+                    console.log(context.playersConnected);
+                    context.functions.changeScene("JOINGAME", "LOBBYGAME");
+                } else {
+                    context.functions.changeScene("JOINGAME", "JOINGAME");
+                }
             }
 
             if (response.action.name == 'updatePlayersCount') {
@@ -77,13 +82,23 @@ var functions = {
             }
 
             if (response.action.name == 'connectToGame') {
+
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
+                context.gameStatus = response.responses[2].value;
 
                 console.log("CONNECT player session");
                 console.log(context.playerSession);
+                console.log(context.gameStatus);
             }
-
+            if (response.action.name == 'disconnectSession') {
+                context.gameStatus = JSON.parse(response.responses[0].value);
+                
+                if (gameStatus == "ABANDONADA") {
+                    console.log("DISCONNECT player session");
+                    context.enemySession.id = null;
+                }
+            }
             if (response.action.name == 'syncGame') {
                 context.gameId = JSON.parse(response.responses[0].value);
             }
@@ -120,6 +135,19 @@ var functions = {
                 context.enemySession.isHighFlying = true;
                 context.enemySession.planeHighFly = JSON.parse(response.responses[1].value);
             }
+            if (response.action.name == "syncTakeOffEnemy") {
+                context.enemySession.isTakeOff = true;
+                context.enemySession.planeTakeOff = JSON.parse(response.responses[1].value);
+                context.enemySession.takeOff = JSON.parse(response.responses[2].value);
+            }
+            if (response.action.name == "syncPlaneViewEnemy") {
+                context.enemySession.isPlaneView = true;
+                context.enemySession.planeViewPlane = JSON.parse(response.responses[1].value);
+                context.enemySession.planeViewCoord = JSON.parse(response.responses[2].value);
+            }
+            
+
+            
 
 
 
@@ -139,8 +167,8 @@ export const context = {
     functions: functions,
     messagesFormat: MESSAGES_FORMAT,
     gameId: null,
+    gameStatus: null,
     playersConnected: 0,
     playerSession: {},
-    enemySession: {},
-    currentScene: 'LOAD'
+    enemySession: {}
 };

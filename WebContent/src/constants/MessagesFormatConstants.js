@@ -113,5 +113,33 @@ export const MESSAGES_FORMAT = {
 				}
 			}
 		})
+	},
+
+    syncTakeOff(selectedPlaneIndex, takeOff) {
+		return JSON.stringify({
+			action: {
+				name: 'syncTakeOff',
+				parameters: {
+					gameId: context.gameId,
+                    playerName: context.playerSession.name,
+					TakeOffPlane: selectedPlaneIndex,
+                    takeOff: takeOff
+				}
+			}
+		})
+	},
+
+    syncPlaneView(selectedPlaneIndex, x) {
+		return JSON.stringify({
+			action: {
+				name: 'syncPlaneView',
+				parameters: {
+					gameId: context.gameId,
+                    playerName: context.playerSession.name,
+					viewPlane: selectedPlaneIndex,
+                    coord: x
+				}
+			}
+		})
 	}
 };

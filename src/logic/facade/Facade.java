@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import exceptions.LogicException;
 import exceptions.PersistenceException;
+import logic.GameStatus;
 import logic.models.Artillery;
 import logic.models.Game;
 import logic.models.Player;
@@ -112,7 +113,7 @@ public class Facade implements IFacade {
     public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	
     	final WsResponse response = new WsResponse();
-    	int gameId = 1; //obtener prox id desde la bd
+    	int gameId = -1; //obtener prox id desde la bd
     	try {
 	    	IDBConnection icon 	= null;
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
@@ -146,25 +147,28 @@ public class Facade implements IFacade {
 
     	final WsResponse response = new WsResponse();
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-        response.generateResponse("gameId", String.valueOf(gameId), "int");
 
-    	//Se joinea el segundo jugador, con bando rojo
-        final Player player = new Player(playerName, gameId, TEAM_SIDE_RED, session);
-        final Gson gson = new Gson();
-        final String result = gson.toJson(player.preparePlayerToSend());
-        gamePlayers.put(playerName, player);
-        
-        response.generateResponse("playerSession", result, "String");
-        response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-        
-    	//Se agrega sesion a la partida
-        
-        
+    	//se valida si existe la partida y si ya existe jugador en la partida con mismo nombre
+    	if (gamePlayers == null  || gamePlayers.containsKey(playerName)) {
+    		response.generateResponse("gameId", "-1", "int");
+    	} else {
+        	//Se joinea el segundo jugador, con bando rojo
+            final Player player = new Player(playerName, gameId, TEAM_SIDE_RED, session);
+            final Gson gson = new Gson();
+            final String result = gson.toJson(player.preparePlayerToSend());
+            gamePlayers.put(playerName, player);
+
+            response.generateResponse("gameId", String.valueOf(gameId), "int");
+            response.generateResponse("playerSession", result, "String");
+            response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+
+    	}
+
 		return response;
-		
     }
     
-    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, final Session session) {
+    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
+    		final ArrayList<Integer> artilleriesType, final Session session) {
 
     	final WsResponse response = new WsResponse();
     	
@@ -173,7 +177,7 @@ public class Facade implements IFacade {
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	final Player player = gamePlayers.get(playerName);
     	player.preloadPlanes(planesType);
-    	player.preloadArtilleries();
+    	player.preloadArtilleries(artilleriesType);
     			
     	Player enemyPlayer = null;
     	
@@ -187,19 +191,28 @@ public class Facade implements IFacade {
 
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
-        //response.generateResponse("enemySession", resultEnemy, "String");
-        
+        response.generateResponse("gameStatus", String.valueOf(GameStatus.INICIADA), "String");
         
 		return response;
     }
 
 
-    public int disconnectGameSession(final Session session) {
+    public WsResponse disconnectGameSession(final Session session) {
 
-       /* final int gameId = getGameId(session);
-        final HashMap sessions = gamePlayersMap.get(gameId);
-        sessions.remove(session);*/
-        return 1;
+        int gameId = removeSession(session);
+        final WsResponse response = new WsResponse();
+
+        if (gameId != -1) {
+
+        	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+        	response.generateResponse("gameStatus", String.valueOf(GameStatus.ABANDONADA), "String");
+        	response.generateResponse("gameId", String.valueOf(gameId), "int");
+        } else {
+        	response.generateResponse("gameStatus", String.valueOf(GameStatus.INICIADA), "String");
+        }
+
+        return response;
+
     }
     
 	public WsResponse getJsonGameSession(final int gameId, final String playerName) {
@@ -263,6 +276,42 @@ public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerNam
 	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 	
+	return response;
+}
+
+public WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+
+	final WsResponse response = new WsResponse();
+	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+	final Game game = new Game(gameId, playerName, gamePlayers.size());
+
+	int indexPlane = (int) parameters.get("TakeOffPlane");
+	boolean takeOff = (boolean)parameters.get("takeOff");
+	final Gson gson = new Gson();
+
+	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
+	response.generateResponse("takeOff",gson.toJson(String.valueOf(takeOff)), "boolean");
+	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+
+	return response;
+}
+
+public WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+
+	final WsResponse response = new WsResponse();
+	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+	final Game game = new Game(gameId, playerName, gamePlayers.size());
+
+	int indexPlane = (int) parameters.get("viewPlane");
+	int coord = (int)parameters.get("coord");
+	final Gson gson = new Gson();
+
+	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+	response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
+	response.generateResponse("takeOff",gson.toJson(String.valueOf(coord)), "int");
+	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+
 	return response;
 }
 
@@ -367,14 +416,22 @@ public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, fi
         return gamePlayersMap.get(gameId);
     }
     
-    public int getGameId(final Player player) {
+    public int removeSession(final Session session) {
 
-        for (final HashMap playersMap : gamePlayersMap.values() ) {
-            if (playersMap.containsKey(player.getId())) {
-            	gamePlayersMap.get(playersMap);
-                //validar que obj devuelve para obtener id de partida
-            }
+    	int resultGameId = -1;
+        for (final int gameId : gamePlayersMap.keySet() ) {
+
+        	final HashMap<String, Player> playerSessions = gamePlayersMap.get(gameId);
+
+        	for (final Player playerSession : playerSessions.values()) {
+
+        		if (playerSession.getSession().equals(session)) {
+        			gamePlayersMap.get(gameId).remove(playerSession.getName());
+        			resultGameId = gameId;
+        			break;
+        		}
+        	}
         }
-        return 1;
+        return resultGameId;
     }
 }

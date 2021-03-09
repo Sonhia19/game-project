@@ -53,4 +53,24 @@ public class WsSynchronization {
 			}
 		}
 	}
+	
+	//Sincroniza abandono de partida
+	public static void syncWithEnemy(final Facade facadeInstance, final int gameId, final WsResponse response, String action) throws IOException {
+
+		response.setAction((new JSONObject()).put("name", action));
+		
+		final HashMap<String, Player> gamePlayers = facadeInstance.getGamePlayers(gameId);
+		
+		if (gamePlayers != null) {
+			
+			for(final Player player : gamePlayers.values()) {
+
+				//Aviso a las sesiones que quedaron conectadas
+				final Session session = player.getSession();
+				if (session != null) {
+					session.getBasicRemote().sendText(response.toParsedString());
+				}
+			}
+		}
+	}
 }

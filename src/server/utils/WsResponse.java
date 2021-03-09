@@ -35,6 +35,11 @@ public class WsResponse {
 		responses.put(response);
 	}
 	
+	public Object getValue(final int index) {
+		
+		return responses.get(index);
+	}
+	
 	public void deleteResponse(final String name) {
 		for (int i = 0; i < this.responses.length(); i++) {
 			if (((JSONObject) this.responses.get(i)).getString("name")
