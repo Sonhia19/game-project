@@ -80,7 +80,7 @@ public class ConnectionsPool implements IConnectionsPool {
 		IDBConnection c = null;
 		try {
 			c = new DBconnection(DriverManager.getConnection(url, usuario, contrasenia));
-			c.getConnection().setAutoCommit(false);
+			c.getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			throw new PersistenceException("Error: " + e.getMessage());
 		}

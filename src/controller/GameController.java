@@ -5,11 +5,13 @@ import exceptions.PersistenceException;
 import logic.models.Game;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
+import persistence.daos.DAOGame;
+import persistence.daos.interfaces.IDAOGame;
 
 public class GameController {
 
 	private static GameController instance;
-    //private IDAOGame daoGame;
+    private IDAOGame daoGame;
     
 	 public static GameController getInstance() throws LogicException {
 
@@ -23,19 +25,32 @@ public class GameController {
 
     private GameController() throws LogicException {
     	
-    	//this.daoGame = new DAOGame();
+    	this.daoGame = new DAOGame();
     }
     
-    
-    public void saveGame(final int gameId, final Game game) {
-    	
+    public void saveGame(final int gameId) throws LogicException {
+
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			//daoGame.saveGame(gameId, game, icon);
-		} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            Game game = daoGame.buscar(gameId, icon);
+			daoGame.saveGame(game, icon);
+		} catch (PersistenceException ex) {
+            throw new LogicException(ex.getMessage());
 		}
     }
+
+    public int getNewGameId() throws LogicException {
+
+        IDBConnection icon = null;
+        int gameId = -1;
+        try {
+            icon = ConnectionsPool.getInstancia().obtenerConexion();
+            gameId = daoGame.getNewGameId(icon);
+        } catch (PersistenceException ex) {
+            throw new LogicException(ex.getMessage());
+        }
+        return gameId;
+    }
+
 }

@@ -6,7 +6,7 @@ import exceptions.PersistenceException;
 import persistence.connection.*;
 import logic.models.*;
 
-public interface IDAOPlanes {
+public interface IDAOPlane {
 	
 	void savePlanes (int id_jugador, Plane plane, IDBConnection icon) throws PersistenceException;
 	

@@ -1,32 +1,23 @@
 package logic.facade;
 
-import javax.websocket.Session;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
-
 import controller.ArtilleryController;
+import controller.GameController;
 import controller.PlaneController;
+import controller.PlayerController;
 import exceptions.LogicException;
 import exceptions.PersistenceException;
 import logic.GameStatus;
-import logic.models.Artillery;
 import logic.models.Game;
-import logic.models.Player;
 import logic.models.Plane;
+import logic.models.Player;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
-import persistence.daos.DAOGames;
-import persistence.daos.DAOPlanes;
-import persistence.daos.DAOPlayers;
-import persistence.daos.interfaces.IDAOGames;
-import persistence.daos.interfaces.IDAOPlanes;
-import persistence.daos.interfaces.IDAOPlayers;
 import server.utils.WsResponse;
 
-import java.awt.List;
+import javax.websocket.Session;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,18 +31,17 @@ public class Facade implements IFacade {
     private static int TEAM_SIDE_BLUE = 1;
     
     private static Facade instance;
-    private IDAOGames daoGames;
-   // private IDAOPlanes daoPlanes;
-    //private IDAOArtilery daoArtilleries;
+	private GameController gameController;
+	private PlayerController playerController;
     private PlaneController planeController;
     private ArtilleryController artilleryController;
-    private IDAOPlayers daoPlayers;
 
     public static Facade getInstance() throws LogicException {
 
         if (!(instance instanceof Facade)) {
         	System.out.println("New facade");
             instance = new Facade();
+            
         }
 
         return instance;
@@ -59,11 +49,10 @@ public class Facade implements IFacade {
 
     private Facade() throws LogicException {
     	gamePlayersMap = new HashMap<Integer, HashMap<String, Player>>();
-    	daoGames = new DAOGames();
-    	daoPlayers = new DAOPlayers();
+		gameController = GameController.getInstance();
+		playerController = PlayerController.getInstance();
     	planeController = PlaneController.getInstance();
     	artilleryController = ArtilleryController.getInstance();
-    	//daoPlanes = new DAOPlanes();
     }
 
     public WsResponse saveGame(final int gameId, final JSONObject jsonPlayerSession, final JSONObject jsonEnemySession) throws LogicException {
@@ -79,38 +68,37 @@ public class Facade implements IFacade {
 	    	IDBConnection icon 	= null;
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
 	    	
-	    	daoGames.saveGame(daoGames.buscar(gameId, icon), icon);//ojo aca tal vez se puede hacer mejor.
-	    	daoPlayers.savePlayer(gameId, playerSession, icon);
-	    	daoPlayers.savePlayer(gameId, enemySession, icon);
+	    	gameController.saveGame(gameId);//ojo aca tal vez se puede hacer mejor.
+	    	int playerSessionId = playerController.savePlayer(gameId, playerSession);
+	    	int enemySessionId = playerController.savePlayer(gameId, enemySession);
 	    	
 	    	//se guardan aviones de player y enemy session
 	    	for (Plane plane : playerSession.getPlanes()) {
-	    		daoPlanes.savePlanes(gameId, plane, icon);
+	    		planeController.savePlane(playerSessionId, plane);
 	    	}
 	    	
 	    	for (Plane plane : enemySession.getPlanes()) {
-	    		daoPlanes.savePlanes(gameId, plane, icon);
+				planeController.savePlane(enemySessionId, plane);
 	    	}
 	    	
 	    	//se guardan artillerias de player y enemy session
 	    	/*
 	    	for (Artillery artillery : playerSession.getArtilleries()) {
-	    		daoArtillery.saveArtillery(gameId, artillery, icon);
+	    		daoArtillery.saveArtillery(playerSessionId, artillery, icon);
 	    	}
 	    	
 	    	for (Artillery artillery : enemySession.getArtilleries()) {
-	    		daoArtillery.saveArtillery(gameId, artillery, icon);
+	    		daoArtillery.saveArtillery(enemySessionId, artillery, icon);
 	    	}
 	    	*/
-	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 	    	
     	}
     	catch (PersistenceException ex)
     	{
     		throw new LogicException(ex.getMessage());
     	}
-    	
-        
+
     	return response;
     }
 
@@ -119,12 +107,10 @@ public class Facade implements IFacade {
     	final WsResponse response = new WsResponse();
     	int gameId = -1; //obtener prox id desde la bd
     	try {
-	    	IDBConnection icon 	= null;
-	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
-	    	gameId = daoGames.getNewGameId(icon);
-	    	persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
+	    	gameId = gameController.getNewGameId();
+	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
     	}
-    	catch (PersistenceException ex)
+    	catch (LogicException ex)
     	{
     		throw new LogicException(ex.getMessage());
     	}
@@ -151,27 +137,27 @@ public class Facade implements IFacade {
 
     	final WsResponse response = new WsResponse();
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-        
+
     	//se valida si existe la partida y si ya existe jugador en la partida con mismo nombre
     	if (gamePlayers == null  || gamePlayers.containsKey(playerName)) {
-    		response.generateResponse("gameId", "-1", "int");	
+    		response.generateResponse("gameId", "-1", "int");
     	} else {
         	//Se joinea el segundo jugador, con bando rojo
             final Player player = new Player(playerName, gameId, TEAM_SIDE_RED, session);
             final Gson gson = new Gson();
             final String result = gson.toJson(player.preparePlayerToSend());
             gamePlayers.put(playerName, player);
-            
+
             response.generateResponse("gameId", String.valueOf(gameId), "int");
             response.generateResponse("playerSession", result, "String");
             response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-            
+
     	}
 
-		return response;		
+		return response;
     }
     
-    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, 
+    public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
     		final ArrayList<Integer> artilleriesType, final Session session) {
 
     	final WsResponse response = new WsResponse();
@@ -180,10 +166,10 @@ public class Facade implements IFacade {
     	
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	final Player player = gamePlayers.get(playerName);
-    	
+
     	player.setPlanes(planeController.generatePlanesList(planesType));
-    	player.setPlanes(artilleryController.generateArtilleriesList(artilleriesType));
-    	
+    	player.setArtilleries(artilleryController.generateArtilleriesList(artilleriesType));
+
     	Player enemyPlayer = null;
     	
     	for (final Player enemy : gamePlayers.values()) {
@@ -206,9 +192,9 @@ public class Facade implements IFacade {
 
         int gameId = removeSession(session);
         final WsResponse response = new WsResponse();
-        
+
         if (gameId != -1) {
-        	
+
         	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
         	response.generateResponse("gameStatus", String.valueOf(GameStatus.ABANDONADA), "String");
         	response.generateResponse("gameId", String.valueOf(gameId), "int");
@@ -217,7 +203,7 @@ public class Facade implements IFacade {
         }
 
         return response;
-        
+
     }
     
 	public WsResponse getJsonGameSession(final int gameId, final String playerName) {
@@ -236,126 +222,126 @@ public class Facade implements IFacade {
 		
 		return response;
 	}
-		
+
 	public WsResponse getJsonShootEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-			
+
 			final WsResponse response = new WsResponse();
 			final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 			final Game game = new Game(gameId, playerName, gamePlayers.size());
-			
+
 			int indexPlane =(int)parameters.get("shootingPlane");
 			final Gson gson = new Gson();
-	        
+
 			response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 			response.generateResponse("enemyShoot",gson.toJson(String.valueOf(indexPlane)), "int");
 			response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-			
+
 			return response;
 		}
-	
+
 	public WsResponse getJsonBombEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-		
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
-		
+
 		int indexPlane = (int) parameters.get("bombingPlane");
 		final Gson gson = new Gson();
-	    
+
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("enemyBomb",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-		
+
 		return response;
 	}
-	
+
 	public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-		
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
-		
+
 		int indexPlane = (int) parameters.get("plane");
 		final Gson gson = new Gson();
-	    
+
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-		
+
 		return response;
 	}
-	
+
 	public WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-		
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
-		
+
 		int indexPlane = (int) parameters.get("TakeOffPlane");
 		boolean takeOff = (boolean)parameters.get("takeOff");
 		final Gson gson = new Gson();
-	    
+
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("takeOff",gson.toJson(String.valueOf(takeOff)), "boolean");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-		
+
 		return response;
 	}
-	
+
 	public WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-		
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
-		
+
 		int indexPlane = (int) parameters.get("viewPlane");
 		int coord = (int)parameters.get("coord");
 		final Gson gson = new Gson();
-	    
+
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("takeOff",gson.toJson(String.valueOf(coord)), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-		
+
 		return response;
 	}
-	
+
 	public WsResponse getJsonHighFlyEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-		
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
-		
+
 		int indexPlane = (int) parameters.get("plane");
 		final Gson gson = new Gson();
-	    
+
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("enemyHighFly",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-		
+
 		return response;
 	}
-	
+
 	public WsResponse getJsonDamagePlane(final int gameId, final String playerName, final JSONObject parameters) {
-		
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
-		
+
 		int indexPlane = (int) parameters.get("damagePlane");
 		int damage = (int)parameters.get("damage");
 		final Gson gson = new Gson();
-	    
+
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("damagePlane",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("damage",gson.toJson(String.valueOf(damage)), "double");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-		
+
 		return response;
 	}
-		
+
 	public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-			
+
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
@@ -425,11 +411,11 @@ public class Facade implements IFacade {
 
     	int resultGameId = -1;
         for (final int gameId : gamePlayersMap.keySet() ) {
-        	
+
         	final HashMap<String, Player> playerSessions = gamePlayersMap.get(gameId);
-        	
+
         	for (final Player playerSession : playerSessions.values()) {
-        		
+
         		if (playerSession.getSession().equals(session)) {
         			gamePlayersMap.get(gameId).remove(playerSession.getName());
         			resultGameId = gameId;

@@ -4,7 +4,7 @@ import exceptions.*;
 import persistence.connection.*;
 import logic.models.*;
 
-public interface IDAOGames {
+public interface IDAOGame {
 	
 	int getNewGameId( IDBConnection icon) throws PersistenceException;
 	

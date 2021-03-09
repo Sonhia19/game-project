@@ -8,14 +8,15 @@ import exceptions.PersistenceException;
 import logic.models.Plane;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
-import persistence.daos.DAOPlanes;
-import persistence.daos.interfaces.IDAOPlanes;
+import persistence.daos.DAOPlane;
+import persistence.daos.interfaces.IDAOPlane;
+import persistence.daos.interfaces.IDAOPlaneType;
 
 public class PlaneController {
 
 	private static PlaneController instance;
-    private IDAOPlanes daoPlanes;
-    //private IDAOPlanesType daoPlanesType;
+    private IDAOPlane daoPlanes;
+    private IDAOPlaneType daoPlaneType;
     
 	 public static PlaneController getInstance() throws LogicException {
 
@@ -29,7 +30,7 @@ public class PlaneController {
 
     private PlaneController() throws LogicException {
     	
-    	this.daoPlanes = new DAOPlanes();
+    	this.daoPlanes = new DAOPlane();
     }
     
     
@@ -39,23 +40,21 @@ public class PlaneController {
     	final ArrayList<Plane> planes = new ArrayList<Plane>();
     	
     	for (int planeType : planesType) {
-    		//final Plane plane = daoPlanesType.getPlaneByType(planeType);
+    		//final Plane plane = daoPlaneType.getPlaneByType(planeType);
     		//planes.add(plane);
     	}
     	return planes;
     }
     
-    public void savePlane (final int gameId, final Plane plane) {
+    public void savePlane (final int playerId, final Plane plane) throws LogicException {
     	
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			daoPlanes.savePlanes(gameId, plane, icon);
-		} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			daoPlanes.savePlanes(playerId, plane, icon);
+		} catch (PersistenceException ex) {
+			throw new LogicException(ex.getMessage());
 		}
     }
 
-	    
 }

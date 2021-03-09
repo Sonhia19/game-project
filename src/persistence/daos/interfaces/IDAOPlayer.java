@@ -6,6 +6,6 @@ import exceptions.PersistenceException;
 import persistence.connection.*;
 import logic.models.*;
 
-public interface IDAOPlayers {
-	void savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException;
+public interface IDAOPlayer {
+	int savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException;
 }

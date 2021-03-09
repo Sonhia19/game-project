@@ -1,26 +1,22 @@
 package controller;
 
-
-import java.util.ArrayList;
-
 import exceptions.LogicException;
 import exceptions.PersistenceException;
-import logic.models.Plane;
+import logic.models.Player;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
-import persistence.daos.DAOPlanes;
-import persistence.daos.interfaces.IDAOPlanes;
+import persistence.daos.DAOPlayer;
+import persistence.daos.interfaces.IDAOPlayer;
 
 public class PlayerController {
 
 	private static PlayerController instance;
-    private IDAOPlanes daoPlanes;
-    //private IDAOPlanesType daoPlanesType;
+    private IDAOPlayer daoPlayer;
     
 	 public static PlayerController getInstance() throws LogicException {
 
         if (!(instance instanceof PlayerController)) {
-        	System.out.println("New PlaneController");
+        	System.out.println("New PlayerController");
             instance = new PlayerController();
         }
 
@@ -29,33 +25,20 @@ public class PlayerController {
 
     private PlayerController() throws LogicException {
     	
-    	this.daoPlanes = new DAOPlanes();
+    	this.daoPlayer = new DAOPlayer();
     }
     
-    
-    public ArrayList<Plane> generatePlanesList (final ArrayList<Integer> planesType) {
-    	
-    	//se cargan aviones de jugador por tipo
-    	final ArrayList<Plane> planes = new ArrayList<Plane>();
-    	
-    	for (int planeType : planesType) {
-    		//final Plane plane = daoPlanesType.getPlaneByType(planeType);
-    		//planes.add(plane);
-    	}
-    	return planes;
-    }
-    
-    public void savePlane (final int gameId, final Plane plane) {
-    	
+    public int savePlayer (final int gameId, final Player player) throws LogicException {
+
+	 	int playerId = -1;
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			daoPlanes.savePlanes(gameId, plane, icon);
-		} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			playerId = daoPlayer.savePlayer(gameId, player, icon);
+		} catch (PersistenceException ex) {
+			throw new LogicException(ex.getMessage());
 		}
+		return playerId;
     }
 
-	    
 }

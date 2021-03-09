@@ -1,16 +1,14 @@
 package logic;
 
-import java.sql.Connection;
-
 import exceptions.PersistenceException;
 import logic.models.Game;
 import logic.models.Player;
 import persistence.connection.IDBConnection;
-import persistence.daos.DAOGames;
-import persistence.daos.DAOPlayers;
-import persistence.daos.interfaces.IDAOGames;
-import persistence.daos.interfaces.IDAOPlayers;
-import logic.facade.IFacade;
+import persistence.daos.DAOGame;
+import persistence.daos.DAOPlayer;
+import persistence.daos.interfaces.IDAOGame;
+import persistence.daos.interfaces.IDAOPlayer;
+
 public class main {
 
 	public static void main(String[] args) {
@@ -19,8 +17,8 @@ public class main {
 		System.out.print("hola");
 		Game suca = new Game(1) ;
 
-		IDAOGames daogames= new DAOGames();
-		IDAOPlayers daoplayers= new DAOPlayers();
+		IDAOGame daogames= new DAOGame();
+		IDAOPlayer daoplayers= new DAOPlayer();
 		
 		IDBConnection icon 	= null;
 		try

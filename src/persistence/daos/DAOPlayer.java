@@ -8,14 +8,14 @@ import java.sql.Statement;
 
 import exceptions.PersistenceException;
 import logic.models.Player;
-import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
-import persistence.daos.interfaces.IDAOPlayers;
+import persistence.daos.interfaces.IDAOPlayer;
 
-public class DAOPlayers implements IDAOPlayers {
-	public void savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException{
-Connection con = icon.getConnection();
-		
+public class DAOPlayer implements IDAOPlayer {
+
+	public int savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException{
+	Connection con = icon.getConnection();
+	int resultado = 0;
 		try {
 			
 			PreparedStatement pstmt = con.prepareStatement("insert into jugadores (NOMBRE,ID_PARTIDA,BANDO,TORRE_ACTIVA,TANQUE_ACTIVO,HANGAR_ACTIVO) values(?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
@@ -32,10 +32,11 @@ Connection con = icon.getConnection();
 			
 			ResultSet rs = pstmt.getGeneratedKeys();
 			if (rs.next()){
-			  int risultato=rs.getInt(1);
+			  resultado=rs.getInt(1);
 			}
 			pstmt.close();
 			
+			return resultado;
 		} catch (SQLException e) {
 			throw new PersistenceException("Error SQL: " + e.getMessage());
 		}

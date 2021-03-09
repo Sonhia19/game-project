@@ -13,9 +13,9 @@ import logic.models.*;
 
 import persistence.daos.interfaces.*;
 
-public class DAOGames implements IDAOGames {
+public class DAOGame implements IDAOGame {
 
-	public DAOGames() {
+	public DAOGame() {
 		
 	}
 	
@@ -144,7 +144,7 @@ public class DAOGames implements IDAOGames {
 	}
 
 	/**
-	 * Devuelve el máximo id que existe.
+	 * Devuelve el mï¿½ximo id que existe.
 	 * 
 	 * @return int
 	 */
