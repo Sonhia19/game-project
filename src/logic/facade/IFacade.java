@@ -20,7 +20,8 @@ public interface IFacade {
 	
 	WsResponse joinGame(final int gameId, final String playerName, final Session session);
 
-	WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType, final Session session);
+	WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
+										 final ArrayList<Integer> artilleriesType, final Session session);
 
 	WsResponse disconnectGameSession(final Session session);
     
