@@ -100,11 +100,19 @@ public class Player {
 		return this.planes;
 	}
 	
+	public void setPlanes(final List<Plane> planes) {
+		this.planes = planes;
+	}
+	
 	public List<Artillery> getArtilleries() {
 		return this.artilleries;
 	}
 	
-	public void preloadPlanes (final List<Integer> planesType) {
+	public void setArtilleries(final List<Artillery> artilleries) {
+		this.artilleries = artilleries;
+	}
+	
+	/*public void preloadPlanes (final List<Integer> planesType) {
 		
 		List<Plane> planes = new ArrayList();
 		int planeId = 1;
@@ -154,7 +162,7 @@ public class Player {
 		}
 		
 		this.artilleries = artilleries;
-	}
+	}*/
 	
 	public Player preparePlayerToSend() {
 		

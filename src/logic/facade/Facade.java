@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import controller.ArtilleryController;
+import controller.PlaneController;
 import exceptions.LogicException;
 import exceptions.PersistenceException;
 import logic.GameStatus;
@@ -39,7 +41,10 @@ public class Facade implements IFacade {
     
     private static Facade instance;
     private IDAOGames daoGames;
-    private IDAOPlanes daoPlanes;
+   // private IDAOPlanes daoPlanes;
+    //private IDAOArtilery daoArtilleries;
+    private PlaneController planeController;
+    private ArtilleryController artilleryController;
     private IDAOPlayers daoPlayers;
 
     public static Facade getInstance() throws LogicException {
@@ -47,7 +52,6 @@ public class Facade implements IFacade {
         if (!(instance instanceof Facade)) {
         	System.out.println("New facade");
             instance = new Facade();
-            
         }
 
         return instance;
@@ -57,7 +61,9 @@ public class Facade implements IFacade {
     	gamePlayersMap = new HashMap<Integer, HashMap<String, Player>>();
     	daoGames = new DAOGames();
     	daoPlayers = new DAOPlayers();
-    	daoPlanes = new DAOPlanes();
+    	planeController = PlaneController.getInstance();
+    	artilleryController = ArtilleryController.getInstance();
+    	//daoPlanes = new DAOPlanes();
     }
 
     public WsResponse saveGame(final int gameId, final JSONObject jsonPlayerSession, final JSONObject jsonEnemySession) throws LogicException {
@@ -174,9 +180,10 @@ public class Facade implements IFacade {
     	
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	final Player player = gamePlayers.get(playerName);
-    	player.preloadPlanes(planesType);
-    	player.preloadArtilleries(artilleriesType);
-    			
+    	
+    	player.setPlanes(planeController.generatePlanesList(planesType));
+    	player.setPlanes(artilleryController.generateArtilleriesList(artilleriesType));
+    	
     	Player enemyPlayer = null;
     	
     	for (final Player enemy : gamePlayers.values()) {
@@ -229,126 +236,126 @@ public class Facade implements IFacade {
 		
 		return response;
 	}
+		
+	public WsResponse getJsonShootEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+			
+			final WsResponse response = new WsResponse();
+			final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+			final Game game = new Game(gameId, playerName, gamePlayers.size());
+			
+			int indexPlane =(int)parameters.get("shootingPlane");
+			final Gson gson = new Gson();
+	        
+			response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+			response.generateResponse("enemyShoot",gson.toJson(String.valueOf(indexPlane)), "int");
+			response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+			
+			return response;
+		}
 	
-public WsResponse getJsonShootEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+	public WsResponse getJsonBombEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 		
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
 		
-		int indexPlane =(int)parameters.get("shootingPlane");
+		int indexPlane = (int) parameters.get("bombingPlane");
 		final Gson gson = new Gson();
-        
+	    
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-		response.generateResponse("enemyShoot",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("enemyBomb",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 		
 		return response;
 	}
-
-public WsResponse getJsonBombEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 	
-	final WsResponse response = new WsResponse();
-	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-	final Game game = new Game(gameId, playerName, gamePlayers.size());
-	
-	int indexPlane = (int) parameters.get("bombingPlane");
-	final Gson gson = new Gson();
-    
-	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-	response.generateResponse("enemyBomb",gson.toJson(String.valueOf(indexPlane)), "int");
-	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-	
-	return response;
-}
-
-public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-	
-	final WsResponse response = new WsResponse();
-	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-	final Game game = new Game(gameId, playerName, gamePlayers.size());
-	
-	int indexPlane = (int) parameters.get("plane");
-	final Gson gson = new Gson();
-    
-	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-	
-	return response;
-}
-
-public WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-	
-	final WsResponse response = new WsResponse();
-	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-	final Game game = new Game(gameId, playerName, gamePlayers.size());
-	
-	int indexPlane = (int) parameters.get("TakeOffPlane");
-	boolean takeOff = (boolean)parameters.get("takeOff");
-	final Gson gson = new Gson();
-    
-	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-	response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
-	response.generateResponse("takeOff",gson.toJson(String.valueOf(takeOff)), "boolean");
-	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-	
-	return response;
-}
-
-public WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-	
-	final WsResponse response = new WsResponse();
-	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-	final Game game = new Game(gameId, playerName, gamePlayers.size());
-	
-	int indexPlane = (int) parameters.get("viewPlane");
-	int coord = (int)parameters.get("coord");
-	final Gson gson = new Gson();
-    
-	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-	response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
-	response.generateResponse("takeOff",gson.toJson(String.valueOf(coord)), "int");
-	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-	
-	return response;
-}
-
-public WsResponse getJsonHighFlyEnemy(final int gameId, final String playerName, final JSONObject parameters) {
-	
-	final WsResponse response = new WsResponse();
-	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-	final Game game = new Game(gameId, playerName, gamePlayers.size());
-	
-	int indexPlane = (int) parameters.get("plane");
-	final Gson gson = new Gson();
-    
-	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-	response.generateResponse("enemyHighFly",gson.toJson(String.valueOf(indexPlane)), "int");
-	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-	
-	return response;
-}
-
-public WsResponse getJsonDamagePlane(final int gameId, final String playerName, final JSONObject parameters) {
-	
-	final WsResponse response = new WsResponse();
-	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-	final Game game = new Game(gameId, playerName, gamePlayers.size());
-	
-	int indexPlane = (int) parameters.get("damagePlane");
-	int damage = (int)parameters.get("damage");
-	final Gson gson = new Gson();
-    
-	response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-	response.generateResponse("damagePlane",gson.toJson(String.valueOf(indexPlane)), "int");
-	response.generateResponse("damage",gson.toJson(String.valueOf(damage)), "double");
-	response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
-	
-	return response;
-}
-	
-public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+	public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 		
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
+		
+		int indexPlane = (int) parameters.get("plane");
+		final Gson gson = new Gson();
+	    
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+	
+	public WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+		
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
+		
+		int indexPlane = (int) parameters.get("TakeOffPlane");
+		boolean takeOff = (boolean)parameters.get("takeOff");
+		final Gson gson = new Gson();
+	    
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("takeOff",gson.toJson(String.valueOf(takeOff)), "boolean");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+	
+	public WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+		
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
+		
+		int indexPlane = (int) parameters.get("viewPlane");
+		int coord = (int)parameters.get("coord");
+		final Gson gson = new Gson();
+	    
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("enemyTakeOff",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("takeOff",gson.toJson(String.valueOf(coord)), "int");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+	
+	public WsResponse getJsonHighFlyEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+		
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
+		
+		int indexPlane = (int) parameters.get("plane");
+		final Gson gson = new Gson();
+	    
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("enemyHighFly",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+	
+	public WsResponse getJsonDamagePlane(final int gameId, final String playerName, final JSONObject parameters) {
+		
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
+		
+		int indexPlane = (int) parameters.get("damagePlane");
+		int damage = (int)parameters.get("damage");
+		final Gson gson = new Gson();
+	    
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("damagePlane",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("damage",gson.toJson(String.valueOf(damage)), "double");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+		
+	public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, final JSONObject parameters) {
+			
 		final WsResponse response = new WsResponse();
 		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		final Game game = new Game(gameId, playerName, gamePlayers.size());
