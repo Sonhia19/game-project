@@ -15,7 +15,7 @@ public class Artillery {
 	private double firePower;
 
 	private double reach;
-
+	private String name;
 	private int artilleryType;
 
 	public Artillery() {
@@ -33,7 +33,17 @@ public class Artillery {
 		this.positionY = positionY;
 
 	}
+	public Artillery(String name,double cadency,double armor,double reach,double firePower) {
 
+		this.name = name;
+		this.cadency = cadency;
+		this.armor = armor;
+		this.reach = reach;
+		this.firePower = firePower;
+
+	}
+	
+	
 	public int getId() {
 		return id;
 	}

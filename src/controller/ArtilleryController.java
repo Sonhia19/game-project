@@ -33,14 +33,20 @@ public class ArtilleryController {
     }
     
     
-    public ArrayList<Artillery> generateArtilleriesList (final ArrayList<Integer> artilleriesType) {
+    public ArrayList<Artillery> generateArtilleriesList (final ArrayList<Integer> artilleriesType) throws LogicException {
     	
     	//se cargan artillerias de jugador por tipo
     	final ArrayList<Artillery> artilleries = new ArrayList<Artillery>();
-    	
+    	IDBConnection icon = null;
     	for (int artilleryType : artilleriesType) {
     		//agregar codigo de artillery type
-    		//final Artillery artillery = daoArtilleryType.getArtilleryByType(artilleryType);
+    		try {
+    		final Artillery artillery = daoArtilleryType.getArtilleryByType(artilleryType,icon);
+    		}
+    		catch (PersistenceException ex)
+    		{
+    			throw new LogicException(ex.getMessage());
+    		}
     		//artilleries.add(artillery);
     	}
     	return artilleries;
