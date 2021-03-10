@@ -144,6 +144,7 @@ export let Plane = new Phaser.Class({
     },
     takeOff() {
         this.flying = true;
+        this.setDepth(1);
         this.setTexture('sprites', 'plane_flying');
     },
     land() {
@@ -159,6 +160,7 @@ export let Plane = new Phaser.Class({
             }
         }
         if (landed) {
+            this.setDepth(0);
             this.highFly = false;
             this.flying = false;
             this.fuel = 100;
@@ -171,6 +173,7 @@ export let Plane = new Phaser.Class({
     highFlyPlane(sync) {
 
         this.highFly = !this.highFly;
+        this.setDepth(this.highFly ? 2 : 1);
         //Tamaño
         let height = 50;
         this.displayWidth = this.highFly ? height * 1.2 : height;

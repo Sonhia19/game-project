@@ -14,6 +14,7 @@ export let Hangar = new Phaser.Class({
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.2);
+        this.setDepth(0);
     },
     update: function (time, delta) {
 

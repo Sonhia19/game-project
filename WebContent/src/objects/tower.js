@@ -15,6 +15,7 @@ export let Tower = new Phaser.Class({
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.3);
+        this.setDepth(0);
     },
     fire: function (time, angle, bullets) {
         var bullet = bullets.get();
