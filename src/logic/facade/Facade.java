@@ -167,9 +167,14 @@ public class Facade implements IFacade {
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	final Player player = gamePlayers.get(playerName);
 
-    	player.setPlanes(planeController.generatePlanesList(planesType));
-    	player.setArtilleries(artilleryController.generateArtilleriesList(artilleriesType));
-
+    	try {
+			player.setPlanes(planeController.generatePlanesList(planesType));
+			player.setArtilleries(artilleryController.generateArtilleriesList(artilleriesType));
+		} catch (LogicException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     	Player enemyPlayer = null;
     	
     	for (final Player enemy : gamePlayers.values()) {

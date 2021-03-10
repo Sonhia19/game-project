@@ -34,15 +34,23 @@ public class PlaneController {
     }
     
     
-    public ArrayList<Plane> generatePlanesList (final ArrayList<Integer> planesType) {
+    public ArrayList<Plane> generatePlanesList (final ArrayList<Integer> planesType) throws LogicException {
     	
     	//se cargan aviones de jugador por tipo
     	final ArrayList<Plane> planes = new ArrayList<Plane>();
     	
-    	for (int planeType : planesType) {
-    		//final Plane plane = daoPlaneType.getPlaneByType(planeType);
-    		//planes.add(plane);
-    	}
+    	IDBConnection icon = null;
+		try {
+			icon = ConnectionsPool.getInstancia().obtenerConexion();
+			
+			for (int planeType : planesType) {
+	    		final Plane plane = daoPlaneType.getPlaneByType(planeType,icon);
+	    		planes.add(plane);
+	    	}
+		} catch (PersistenceException ex) {
+			throw new LogicException(ex.getMessage());
+		}
+		
     	return planes;
     }
     
@@ -56,7 +64,9 @@ public class PlaneController {
 			throw new LogicException(ex.getMessage());
 		}
     }
-    public Plane getPlaneByType(int planetype)throws LogicException {
+    
+   /* public Plane getPlaneByType(int planetype) throws LogicException {
+    	
     	Plane plane = null;
     	IDBConnection icon = null;
     	try {
@@ -68,5 +78,5 @@ public class PlaneController {
     	}
     	return plane;
     }
-
+*/
 }

@@ -37,14 +37,17 @@ public class WsResponse {
 	
 	public Object getValue(final int index) {
 		
+		JSONObject json = null;
 		Object value = null;
-		if (responses.isNull(index)) {
-			value = responses.get(index);
+		if (!responses.isNull(index)) {
+			json = (JSONObject) responses.get(index);
+			value = json.get("value");
 		}
 		return value;
 	}
 	
 	public void deleteResponse(final String name) {
+		
 		for (int i = 0; i < this.responses.length(); i++) {
 			if (((JSONObject) this.responses.get(i)).getString("name")
 					.equalsIgnoreCase(name)) {
