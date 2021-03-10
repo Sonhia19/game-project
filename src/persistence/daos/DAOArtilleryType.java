@@ -7,15 +7,15 @@ import java.sql.SQLException;
 
 import exceptions.PersistenceException;
 import logic.models.Artillery;
-import logic.models.Plane;
 import persistence.connection.IDBConnection;
 import persistence.daos.interfaces.IDAOArtilleryType;
 
 public class DAOArtilleryType implements IDAOArtilleryType {
 
-	public Artillery getArtilleryByType(int artilleryTypeId, IDBConnection icon) throws PersistenceException{
+	public Artillery getArtilleryByType(int artilleryTypeId, IDBConnection icon) throws PersistenceException {
+		
 		Artillery artillery = null;
-Connection con = icon.getConnection();
+		Connection con = icon.getConnection();
 		
 		try {
 			PreparedStatement pstmt = con.prepareStatement("select id,nombre,cadencia,blindaje,alcance,poder_fuego from ARTILLERIA_CONFIG where id = ?");

@@ -9,6 +9,7 @@ import logic.models.Plane;
 import persistence.connection.ConnectionsPool;
 import persistence.connection.IDBConnection;
 import persistence.daos.DAOPlane;
+import persistence.daos.DAOPlaneType;
 import persistence.daos.interfaces.IDAOPlane;
 import persistence.daos.interfaces.IDAOPlaneType;
 
@@ -31,6 +32,7 @@ public class PlaneController {
     private PlaneController() throws LogicException {
     	
     	this.daoPlanes = new DAOPlane();
+    	this.daoPlaneType = new DAOPlaneType();
     }
     
     

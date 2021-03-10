@@ -1,6 +1,5 @@
 package persistence.daos;
 
-import logic.models.Game;
 import logic.models.Plane;
 import persistence.connection.IDBConnection;
 import persistence.daos.interfaces.IDAOPlaneType;
@@ -13,9 +12,9 @@ import java.sql.SQLException;
 import exceptions.*;
 public class DAOPlaneType implements IDAOPlaneType {
 	
-	public Plane getPlaneByType(int planetypeId, IDBConnection icon) throws PersistenceException{
+	public Plane getPlaneByType(int planetypeId, IDBConnection icon) throws PersistenceException {
 		Plane plane = null;
-Connection con = icon.getConnection();
+		Connection con = icon.getConnection();
 		
 		try {
 			PreparedStatement pstmt = con.prepareStatement("select id,nombre,velocidad,consumo_combustible,blindaje,poder_fuego from AVIONES_CONFIG where id = ?");

@@ -37,7 +37,7 @@ export const MESSAGES_FORMAT = {
         })
     },
 
-    connectToGame: (playerName, teamSide, planesType, gameId) => {
+    connectToGame: (playerName, teamSide, planesType, artilleriesType, gameId) => {
         return JSON.stringify({
             action: {
                 name: 'connectToGame',
@@ -45,7 +45,8 @@ export const MESSAGES_FORMAT = {
                     gameId: gameId,
                     playerName: playerName,
                     teamSide: teamSide,
-                    planesType: planesType
+                    planesType: planesType,
+                    artilleriesType: artilleriesType
                 }
             }
         })
