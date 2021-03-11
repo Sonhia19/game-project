@@ -268,7 +268,7 @@ export class GameScene extends Phaser.Scene {
 	update(time, delta) {
 
 		if (gameOver) {
-			context.teamSideWin = 1; //cambia segun quien gano
+			context.teamSideWin = 1; //cambiar segun quien gano
 			context.gameStatus = "FINALIZADA";
 			context.functions.navigateScene("GAME", "FINISHGAME");
 		} else {
