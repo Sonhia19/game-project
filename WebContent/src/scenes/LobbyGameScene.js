@@ -133,10 +133,6 @@ export class LobbyGameScene extends Phaser.Scene {
 
 		})
 
-
-
-
-		context.currentScene = 'LOBBYGAME';
 		console.log(context.playerSession);
 
 		const style = { font: "bold 25px Arial", fill: "#fff" };

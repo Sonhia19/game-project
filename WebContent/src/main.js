@@ -33,13 +33,14 @@ var config = {
 };
 
 var functions = {
-    changeScene: (last, next) => {
-        context.game.scene.remove(last);
-        context.game.scene.start(next);
-    },
 
     sendMessage: (message) => {
         context.webSocket.sendMessage(message);
+    },
+
+    navigateScene: (last, next) => {
+        context.game.scene.stop(last);
+        context.game.scene.start(next);
     },
 
     broadcastWebSocket: (webSocket) => {
@@ -56,7 +57,7 @@ var functions = {
                     console.log('playerSession');
                     console.log(context.playerSession);
 
-                    context.functions.changeScene("NEWGAME", "LOBBYGAME");
+                    context.functions.navigateScene("NEWGAME", "LOBBYGAME");
                 }
             }
 
@@ -72,9 +73,9 @@ var functions = {
                     console.log('playerSession');
                     console.log(context.playerSession);
                     console.log(context.playersConnected);
-                    context.functions.changeScene("JOINGAME", "LOBBYGAME");
+                    context.functions.navigateScene("JOINGAME", "LOBBYGAME");
                 } else {
-                    context.functions.changeScene("JOINGAME", "JOINGAME");
+                    context.functions.navigateScene("JOINGAME", "JOINGAME");
                 }
             }
 
@@ -92,7 +93,7 @@ var functions = {
                 console.log(context.playerSession);
                 console.log(context.gameStatus);
 
-                context.functions.changeScene("LOBBYGAME", "GAME");
+                context.functions.navigateScene("LOBBYGAME", "GAME");
             }
             if (response.action.name == 'disconnectSession') {
                 context.gameStatus = JSON.parse(response.responses[0].value);
@@ -170,8 +171,9 @@ export const context = {
     functions: functions,
     messagesFormat: MESSAGES_FORMAT,
     gameId: null,
-    gameStatus: null,
+    gameStatus: null, // INICIADA, GANO, ENEMY_ABANDONO, FINALIZADA
     playersConnected: 0,
     playerSession: {},
-    enemySession: {}
+    enemySession: {},
+    teamSideWin: 0
 };

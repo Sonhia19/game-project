@@ -33,25 +33,16 @@ export class MenuScene extends Phaser.Scene {
         recoverGameButton.setInteractive();
 
         newGameButton.on('pointerdown', function () {
-            
-            console.log("ON CLIC NEW");
-            context.functions.changeScene("MENU", "NEWGAME");
-            //this.scene.start("NEWGAME", "hello from MENU scene");
+            context.functions.navigateScene("MENU", "NEWGAME");
     
         }, this);
 
         joinGameButton.on('pointerdown', function () {
-
-            context.functions.changeScene("MENU", "JOINGAME");
-            //this.scene.start("JOINGAME", "hello from MENU scene");
-    
+            context.functions.navigateScene("MENU", "JOINGAME");
         }, this);
 
         recoverGameButton.on('pointerdown', function () {
-
-            context.functions.changeScene("MENU", "JOINGAME");
-            //this.scene.start("JOINGAME", "hello from MENU scene");
-    
+            context.functions.navigateScene("MENU", "JOINGAME");
         }, this);
     }
 

@@ -28,8 +28,8 @@ public class Facade implements IFacade {
      * { GameId, {PlayerName, PlayerSession} }
      */
     private static HashMap<Integer, HashMap<String, Player>> gamePlayersMap;
-    private static int TEAM_SIDE_RED = 2;
     private static int TEAM_SIDE_BLUE = 1;
+    private static int TEAM_SIDE_RED = 2;
     
     private static Facade instance;
 	private GameController gameController;
@@ -66,9 +66,6 @@ public class Facade implements IFacade {
         final Player enemySession = gson.fromJson(jsonEnemySession.toString(), Player.class);
         
     	try {
-	    	/*IDBConnection icon 	= null;
-	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
-	    	*/
 	    	gameController.saveGame(gameId);//ojo aca tal vez se puede hacer mejor.
 	    	int playerSessionId = playerController.savePlayer(gameId, playerSession);
 	    	int enemySessionId = playerController.savePlayer(gameId, enemySession);
@@ -100,6 +97,25 @@ public class Facade implements IFacade {
 
     	return response;
     }
+    
+   /* public WsResponse recoverGame(final int gameId) throws LogicException {
+    	
+    	//hacer que venga una partida entera desde el cliente con gameid, estado y si hay ganador quien
+    	final WsResponse response = new WsResponse();
+    	final Gson gson = new Gson();
+        
+    	try {
+	    	Game game = gameController.recoverGame(gameId);//ojo aca tal vez se puede hacer mejor.
+	    	Player playerSession = playerController.recoverPlayer(gameId, TEAM_SIDE_BLUE);
+	    	Player enemySession = playerController.recoverPlayer(gameId, TEAM_SIDE_RED);
+    	}
+    	catch (LogicException ex)
+    	{
+    		throw new LogicException(ex.getMessage());
+    	}
+
+    	return response;
+    }*/
 
     public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	

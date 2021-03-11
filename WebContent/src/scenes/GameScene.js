@@ -268,196 +268,198 @@ export class GameScene extends Phaser.Scene {
 	update(time, delta) {
 
 		if (Phaser.Input.Keyboard.JustDown(keyOne)) {
-			this.scene.start("FINISHGAME", "hello from GAME scene");
-		}
-
-		if (this.existsEnemySession()) {
-			this.checkEnemyAction(time);
-		}
-
-		//Selección de avión
-		if (Phaser.Input.Keyboard.JustDown(keyOne)) {
-			if (myPlaneOne.scene) {
-				this.selectPlane(myPlaneOne);
+			context.teamSideWin = 1; //cambiar segun quien gano
+			context.gameStatus = "FINALIZADA";
+			context.functions.navigateScene("GAME", "FINISHGAME");
+		} else {
+			if (this.existsEnemySession()) {
+				this.checkEnemyAction(time);
 			}
-		}
-		else if (Phaser.Input.Keyboard.JustDown(keyTwo)) {
-			if (myPlaneTwo.scene) {
-				this.selectPlane(myPlaneTwo);
+	
+			//Selección de avión
+			if (Phaser.Input.Keyboard.JustDown(keyOne)) {
+				if (myPlaneOne.scene) {
+					this.selectPlane(myPlaneOne);
+				}
 			}
-		}
-		else if (Phaser.Input.Keyboard.JustDown(keyThree)) {
-			if (myPlaneThree.scene) {
-				this.selectPlane(myPlaneThree);
+			else if (Phaser.Input.Keyboard.JustDown(keyTwo)) {
+				if (myPlaneTwo.scene) {
+					this.selectPlane(myPlaneTwo);
+				}
 			}
-		}
-		else if (Phaser.Input.Keyboard.JustDown(keyFour)) {
-			if (myPlaneFour.scene) {
-				this.selectPlane(myPlaneFour);
+			else if (Phaser.Input.Keyboard.JustDown(keyThree)) {
+				if (myPlaneThree.scene) {
+					this.selectPlane(myPlaneThree);
+				}
 			}
-		}
-
-		if (myPlaneSelected != null) {
-			if (myPlaneSelected.scene) {
-				//Aterrizar / Despegar
-				if (Phaser.Input.Keyboard.JustDown(keyF)) {
-					if (myPlaneSelected.flying) {
-						myPlaneSelected.land(isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X);
-						if (!myPlaneSelected.flying) {
-							let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
-							if (planeView != null) {
-								this.changeFlyYPlaneView(planeView.y, isBlue ? BLUE_PLANE_LAND_VIEW_Y : RED_PLANE_LAND_VIEW_Y, planeView);
-								this.syncTakeOff(false);
+			else if (Phaser.Input.Keyboard.JustDown(keyFour)) {
+				if (myPlaneFour.scene) {
+					this.selectPlane(myPlaneFour);
+				}
+			}
+	
+			if (myPlaneSelected != null) {
+				if (myPlaneSelected.scene) {
+					//Aterrizar / Despegar
+					if (Phaser.Input.Keyboard.JustDown(keyF)) {
+						if (myPlaneSelected.flying) {
+							myPlaneSelected.land(isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X);
+							if (!myPlaneSelected.flying) {
+								let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
+								if (planeView != null) {
+									this.changeFlyYPlaneView(planeView.y, isBlue ? BLUE_PLANE_LAND_VIEW_Y : RED_PLANE_LAND_VIEW_Y, planeView);
+									this.syncTakeOff(false);
+								}
 							}
-						}
-						if (isBlue) {
-							if (myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
-								this.fuelControl();
-								this.checkBomb();
-								highFlyPlaneText.setText('');
-								infoGameText.setText("Presione (F) para despegar avión");
+							if (isBlue) {
+								if (myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
+									this.fuelControl();
+									this.checkBomb();
+									highFlyPlaneText.setText('');
+									infoGameText.setText("Presione (F) para despegar avión");
+								} else {
+									infoGameText.setText("Vuelva a la base para aterrizar");
+								}
 							} else {
-								infoGameText.setText("Vuelva a la base para aterrizar");
+								if (myPlaneSelected.x > RED_SAFE_ZONE_X) {
+									this.fuelControl();
+									this.checkBomb();
+									highFlyPlaneText.setText('');
+									infoGameText.setText("Presione (F) para despegar avión");
+								} else {
+									infoGameText.setText("Vuelva a la base para aterrizar");
+								}
 							}
 						} else {
-							if (myPlaneSelected.x > RED_SAFE_ZONE_X) {
-								this.fuelControl();
-								this.checkBomb();
-								highFlyPlaneText.setText('');
-								infoGameText.setText("Presione (F) para despegar avión");
-							} else {
-								infoGameText.setText("Vuelva a la base para aterrizar");
-							}
-						}
-					} else {
-						let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
-						if (planeView != null) {
-							this.changeFlyYPlaneView(planeView.y, isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
-						}
-						myPlaneSelected.takeOff();
-						this.syncTakeOff(true);
-						infoGameText.setText('');
-						highFlyPlaneText.setText('Vuelo Bajo');
-					}
-				}
-
-				// Vuelto alto / vuelo bajo
-				if (Phaser.Input.Keyboard.JustDown(keyAlt)) {
-					if (myPlaneSelected.flying) {
-						if ((isBlue && myPlaneSelected.x < RED_SAFE_ZONE_X) || (!isBlue && myPlaneSelected.x > BLUE_SAFE_ZONE_X)) {
-							myPlaneSelected.highFlyPlane(true);
 							let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
 							if (planeView != null) {
-								this.changeFlyYPlaneView(planeView.y, myPlaneSelected.highFly ? isBlue ? BLUE_PLANE_HIGH_VIEW_Y : RED_PLANE_HIGH_VIEW_Y : isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
+								this.changeFlyYPlaneView(planeView.y, isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
 							}
-							if (myPlaneSelected.highFly) {
-								highFlyPlaneText.setText('Vuelo Alto');
-							} else {
-								highFlyPlaneText.setText('Vuelo Bajo');
-							}
-						}
-						else {
-							highFlyPlaneText.setText('No puede volar alto en base enemiga');
+							myPlaneSelected.takeOff();
+							this.syncTakeOff(true);
+							infoGameText.setText('');
+							highFlyPlaneText.setText('Vuelo Bajo');
 						}
 					}
-
-				}
-
-				//Si el avion se encuentra dentro de su zona, limpia todo el mapa
-				if (myPlaneSelected.x < isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X) {
-					myPlaneSelected.gray = null;
-				}
-				//Movimiento de avión
-				if (cursors.left.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
-					this.changeFlyXPlaneView(false, false, myPlaneSelected, delta);
-					this.syncMove();
-				} else if (cursors.right.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
-					this.changeFlyXPlaneView(false, true, myPlaneSelected, delta);
-					this.syncMove();
-				}
-				if (cursors.up.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
-					this.syncMove();
-
-				} else if (cursors.down.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
-					this.syncMove();
-
-				}
-				if (cursors.left.isDown && cursors.up.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(false, ANGLE_315, null, null);
-					this.changeFlyXPlaneView(false, false, null, null);
-					this.syncMove();
-
-				}
-				if (cursors.left.isDown && cursors.down.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(false, ANGLE_225, null, null);
-					this.changeFlyXPlaneView(false, false, null, null);
-					this.syncMove();
-
-				}
-				if (cursors.right.isDown && cursors.down.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(false, ANGLE_135, null, null);
-					this.changeFlyXPlaneView(false, true, null, null);
-					this.syncMove();
-				}
-				if (cursors.right.isDown && cursors.up.isDown) {
-					this.fuelControl();
-					myPlaneSelected.fly(false, ANGLE_45, null, null);
-					this.changeFlyXPlaneView(false, true, null, null);
-					this.syncMove();
-				}
-
-
-
-				//Disparo de avión
-				if (cursors.space.isDown && time > myPlaneSelected.cadency && myPlaneSelected.scene) {
-					if (myPlaneSelected.flying) {
-						switch (myPlaneSelected.planeAngle) {
-							case ANGLE_0:
-							case ANGLE_90:
-							case ANGLE_180:
-							case ANGLE_270:
-								myPlaneSelected.fire(time, myBullets);
-								this.syncShoot();
-								break;
-						}
-					}
-					else {
-						infoGameText.setText("Avión en tierra. No puede disparar");
-					}
-				}
-
-				//Disparo de bomba
-				if (Phaser.Input.Keyboard.JustDown(keyCtrl)) {
-					if (myPlaneSelected.flying) {
-						if (myPlaneSelected.withBomb) {
-							if (myPlaneSelected.highFly) {
-								infoGameText.setText("El vuelo alto no permite disparar la bomba");
+	
+					// Vuelto alto / vuelo bajo
+					if (Phaser.Input.Keyboard.JustDown(keyAlt)) {
+						if (myPlaneSelected.flying) {
+							if ((isBlue && myPlaneSelected.x < RED_SAFE_ZONE_X) || (!isBlue && myPlaneSelected.x > BLUE_SAFE_ZONE_X)) {
+								myPlaneSelected.highFlyPlane(true);
+								let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
+								if (planeView != null) {
+									this.changeFlyYPlaneView(planeView.y, myPlaneSelected.highFly ? isBlue ? BLUE_PLANE_HIGH_VIEW_Y : RED_PLANE_HIGH_VIEW_Y : isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
+								}
+								if (myPlaneSelected.highFly) {
+									highFlyPlaneText.setText('Vuelo Alto');
+								} else {
+									highFlyPlaneText.setText('Vuelo Bajo');
+								}
 							}
 							else {
-								myPlaneSelected.fireBomb(myBombs);
-								this.syncBomb();
-								this.checkBomb();
+								highFlyPlaneText.setText('No puede volar alto en base enemiga');
 							}
-
+						}
+	
+					}
+	
+					//Si el avion se encuentra dentro de su zona, limpia todo el mapa
+					if (myPlaneSelected.x < isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X) {
+						myPlaneSelected.gray = null;
+					}
+					//Movimiento de avión
+					if (cursors.left.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
+						this.changeFlyXPlaneView(false, false, myPlaneSelected, delta);
+						this.syncMove();
+					} else if (cursors.right.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
+						this.changeFlyXPlaneView(false, true, myPlaneSelected, delta);
+						this.syncMove();
+					}
+					if (cursors.up.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
+						this.syncMove();
+	
+					} else if (cursors.down.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
+						this.syncMove();
+	
+					}
+					if (cursors.left.isDown && cursors.up.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_315, null, null);
+						this.changeFlyXPlaneView(false, false, null, null);
+						this.syncMove();
+	
+					}
+					if (cursors.left.isDown && cursors.down.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_225, null, null);
+						this.changeFlyXPlaneView(false, false, null, null);
+						this.syncMove();
+	
+					}
+					if (cursors.right.isDown && cursors.down.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_135, null, null);
+						this.changeFlyXPlaneView(false, true, null, null);
+						this.syncMove();
+					}
+					if (cursors.right.isDown && cursors.up.isDown) {
+						this.fuelControl();
+						myPlaneSelected.fly(false, ANGLE_45, null, null);
+						this.changeFlyXPlaneView(false, true, null, null);
+						this.syncMove();
+					}
+	
+	
+	
+					//Disparo de avión
+					if (cursors.space.isDown && time > myPlaneSelected.cadency && myPlaneSelected.scene) {
+						if (myPlaneSelected.flying) {
+							switch (myPlaneSelected.planeAngle) {
+								case ANGLE_0:
+								case ANGLE_90:
+								case ANGLE_180:
+								case ANGLE_270:
+									myPlaneSelected.fire(time, myBullets);
+									this.syncShoot();
+									break;
+							}
 						}
 						else {
-							infoGameText.setText("Retorne a la base para recargar bomba");
+							infoGameText.setText("Avión en tierra. No puede disparar");
 						}
-
 					}
-					else {
-						infoGameText.setText("Avión en tierra. No puede disparar bomba");
+	
+					//Disparo de bomba
+					if (Phaser.Input.Keyboard.JustDown(keyCtrl)) {
+						if (myPlaneSelected.flying) {
+							if (myPlaneSelected.withBomb) {
+								if (myPlaneSelected.highFly) {
+									infoGameText.setText("El vuelo alto no permite disparar la bomba");
+								}
+								else {
+									myPlaneSelected.fireBomb(myBombs);
+									this.syncBomb();
+									this.checkBomb();
+								}
+	
+							}
+							else {
+								infoGameText.setText("Retorne a la base para recargar bomba");
+							}
+	
+						}
+						else {
+							infoGameText.setText("Avión en tierra. No puede disparar bomba");
+						}
 					}
 				}
 			}

@@ -36,8 +36,6 @@ export class NewGameScene extends Phaser.Scene {
                 var inputUsername = this.getChildByName('username');
 
                 if (inputUsername.value != undefined && inputUsername.value != '') {
-
-                    console.log(inputUsername);
                     //envio msj al servidor con nombre de usuario
                     var message = context.messagesFormat.newGame(inputUsername.value);
                     context.functions.sendMessage(message);
