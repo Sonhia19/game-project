@@ -23,14 +23,16 @@ public class Player {
 	private Session session;
 	
 	private boolean activeTower;
+	private double positionXTower;
+	private double positionYTower;
 	
 	private boolean activeHangar;
+	private double positionXHangar;
+	private double positionYHangar;
 	
 	private boolean activeFuel;
-	
-	//torreActiva
-	//tanqueActivo
-	//hangarActivo
+	private double positionXFuel;
+	private double positionYFuel;
 	
 	public Player() {
 
@@ -56,11 +58,19 @@ public class Player {
 		this.name = name;
 		this.gameId = gameId;
 		this.teamSide = teamSide;
-		this.activeFuel = true;
-		this.activeHangar = true;
-		this.activeTower = true;
 		this.artilleries = artilleries;
 		this.planes = planes;
+
+		this.activeFuel = true;
+		this.positionXFuel = 0.0;
+		this.positionYFuel = 0.0;
+
+		this.activeHangar = true;
+		this.positionXHangar = 0.0;
+		this.positionYHangar = 0.0;
+		this.activeTower = true;
+		this.positionXTower = 0.0;
+		this.positionYTower = 0.0;
 	}
 	
 	public int getId() {

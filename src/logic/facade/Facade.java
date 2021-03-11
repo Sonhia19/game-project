@@ -108,7 +108,6 @@ public class Facade implements IFacade {
     	int gameId = -1; //obtener prox id desde la bd
     	try {
 	    	gameId = gameController.getNewGameId();
-	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
     	}
     	catch (LogicException ex)
     	{
