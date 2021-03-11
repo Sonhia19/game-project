@@ -92,8 +92,6 @@ public class Facade implements IFacade {
 	    		artilleryController.saveArtillery(enemySessionId, artillery);
 	    	}
 	    	
-	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
-	    	
     	}
     	catch (LogicException ex)
     	{
@@ -158,7 +156,7 @@ public class Facade implements IFacade {
     }
     
     public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
-    		final ArrayList<Integer> artilleriesType, final Session session) {
+    		final ArrayList<Integer> artilleriesType, JSONArray structurePositionsJsonArray, final Session session) {
 
     	final WsResponse response = new WsResponse();
     	
@@ -166,6 +164,14 @@ public class Facade implements IFacade {
     	
     	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	final Player player = gamePlayers.get(playerName);
+    	player.setPositionXFuel(Integer.valueOf(structurePositionsJsonArray.get(0).toString()));
+    	player.setPositionYFuel(Integer.valueOf(structurePositionsJsonArray.get(1).toString()));
+    	
+    	player.setPositionXTower(Integer.valueOf(structurePositionsJsonArray.get(2).toString()));
+    	player.setPositionYTower(Integer.valueOf(structurePositionsJsonArray.get(3).toString()));
+    	
+    	player.setPositionXHangar(Integer.valueOf(structurePositionsJsonArray.get(4).toString()));
+    	player.setPositionYHangar(Integer.valueOf(structurePositionsJsonArray.get(5).toString()));
 
     	try {
 			player.setPlanes(planeController.generatePlanesList(planesType, teamSide));

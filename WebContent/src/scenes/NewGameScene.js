@@ -20,7 +20,7 @@ export class NewGameScene extends Phaser.Scene {
     }
 
     create() {
-
+        console.log('FROM ON CREATE');
         isCreated = true;
         this.add.image(0, 0, 'background_menu').setOrigin(0);
         this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.20, "play_font").setDepth(0);

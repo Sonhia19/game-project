@@ -1,9 +1,7 @@
 package logic.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.websocket.Session;
+import java.util.List;
 
 //Esta clase refleja una sesion de jugador activo en una partida
 public class Player {
@@ -54,7 +52,8 @@ public class Player {
 		this.teamSide = teamSide;
 	}
 
-	public Player(final String name, final int gameId, final int teamSide, final List<Plane> planes, final List<Artillery> artilleries) {
+	public Player(final String name, final int gameId, final int teamSide, final List<Plane> planes,
+			final List<Artillery> artilleries, double pfx, double pfy, double ptx, double pty, double phx, double phy) {
 		this.name = name;
 		this.gameId = gameId;
 		this.teamSide = teamSide;
@@ -62,15 +61,15 @@ public class Player {
 		this.planes = planes;
 
 		this.activeFuel = true;
-		this.positionXFuel = 0.0;
-		this.positionYFuel = 0.0;
+		this.positionXFuel = pfx;
+		this.positionYFuel = pfy;
 
 		this.activeHangar = true;
-		this.positionXHangar = 0.0;
-		this.positionYHangar = 0.0;
+		this.positionXHangar = phx;
+		this.positionYHangar = phy;
 		this.activeTower = true;
-		this.positionXTower = 0.0;
-		this.positionYTower = 0.0;
+		this.positionXTower = ptx;
+		this.positionYTower = pty;
 	}
 	
 	public int getId() {
@@ -101,15 +100,66 @@ public class Player {
 	public boolean getActiveTower() {
 		return activeTower;
 	}
+
+
+	public double getPositionXTower() {
+		return positionXTower;
+	}
+
+	public double getPositionYTower() {
+		return positionYTower;
+	}
+
+	public void setPositionXTower(double positionXTower) {
+		this.positionXTower = positionXTower;
+	}
+
+	public void setPositionYTower (double positionYTower) {
+		this.positionYTower = positionYTower;
+	}
 	
 	public boolean getActiveHangar() {
 		return activeHangar;
 	}
+
+
+	public double getPositionXHangar() {
+		return positionXHangar;
+	}
+
+	public double getPositionYHangar() {
+		return positionYHangar;
+	}
 	
+	public void setPositionXHangar(double positionXHangar) {
+		this.positionXHangar = positionXHangar;
+	}
+
+	public void setPositionYHangar (double positionYHangar) {
+		this.positionYHangar = positionYHangar;
+	}
+
 	public boolean getActiveFuel() {
 		return activeFuel;
 	}
+
+
+	public double getPositionXFuel() {
+		return positionXFuel;
+	}
 	
+	public void setPositionXFuel (double positionXFuel) {
+		this.positionXFuel = positionXFuel;
+	}
+
+	public double getPositionYFuel() {
+		return positionYFuel;
+	}
+	
+	public void setPositionYFuel (double positionYFuel) {
+		this.positionYFuel = positionYFuel;
+	}
+
 	public List<Plane> getPlanes() {
 		return this.planes;
 	}
@@ -127,8 +177,10 @@ public class Player {
 	}
 	
 	public Player preparePlayerToSend() {
-		
-		return new Player(this.name, this.gameId, this.teamSide, this.planes, this.artilleries);
+
+		return new Player(this.name, this.gameId, this.teamSide, this.planes, this.artilleries, this.positionXFuel,
+				this.positionYFuel, this.positionXHangar, this.positionYHangar, this.positionXTower,
+				this.positionYTower);
 	}
 	
 	public Player preparePlayerToSendMove(final Player player, final int[][] coordinates) {

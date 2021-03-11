@@ -108,8 +108,10 @@ public class WsServer {
 				final int teamSide = parameters.getInt("teamSide");
 				final JSONArray planesJsonArray = parameters.getJSONArray("planesType");
 				final JSONArray artilleriesJsonArray = parameters.getJSONArray("artilleriesType");
+				final JSONArray structurePositionsJsonArray = parameters.getJSONArray("structurePositions");
 				final ArrayList<Integer> planesType = new ArrayList<Integer>();
 				final ArrayList<Integer> artilleriesType = new ArrayList<Integer>();
+				
 
 				//cargo tipos de avion
 				if (planesJsonArray != null) {
@@ -127,7 +129,7 @@ public class WsServer {
 				   }
 				}
 
-				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, teamSide, planesType, artilleriesType, session);
+				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, teamSide, planesType, artilleriesType,structurePositionsJsonArray, session);
 				response.setAction(action);
 
 				System.out.println(response);
