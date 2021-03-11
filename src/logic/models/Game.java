@@ -41,12 +41,24 @@ public class Game {
 	private int usersCount;
 	private int state;
 	private int winnerId;
+	private Date date;
+	private Date updateDate;
+	
 
 	public Game(final int gameId, final String userId, final int usersCount) {
 		
 		this.id = gameId;
 		this.userId = userId;
 		this.usersCount = usersCount;
+	}
+	public Game(final int gameId, final int state, final int winnerId,final Date date,final Date updateDate) {
+		
+		this.id = gameId;
+		this.state = state;
+		this.winnerId = winnerId;
+		this.date = date;
+		this.updateDate = updateDate;
+		
 	}
 
 	public Game(final int gameId, final String userId) {
@@ -90,8 +102,11 @@ public class Game {
 	public int getUsersCount() {
 		return usersCount;
 	}
-	public Date getFecha() {
-		return this.fecha;
+	public Date getDate() {
+		return this.date;
+	}
+	public Date getUpdateDate() {
+		return this.updateDate;
 	}
 	
 	public JSONObject toJson() {

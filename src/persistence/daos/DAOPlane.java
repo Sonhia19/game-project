@@ -2,6 +2,7 @@ package persistence.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -37,34 +38,25 @@ public class DAOPlane implements IDAOPlane {
 			throw new PersistenceException("Error SQL: " + e.getMessage());
 		}
 	}
-	@Override
-	public boolean existe(int idBarco, IDBConnection icon) throws PersistenceException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void insertar(int idPartida, Plane barco, IDBConnection icon) throws PersistenceException {
-		// TODO Auto-generated method stub
+	public Plane restorePlane(final int planeId,IDBConnection icon) throws PersistenceException{
+		Plane restoredPlane = null;
+		Connection con = icon.getConnection();
+		
+		try {
+			PreparedStatement pstmt = con.prepareStatement("select id,id_jugador,avion_tipo,combustible,blindaje,tiene_bomba,vuelo_alto,posicion_x,posicion_y,angulo,poder_fuego,velocidad from aviones where id = ?");
+			pstmt.setInt(1, planeId);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				restoredPlane = new Plane(rs.getInt("id"),rs.getDouble("posicion_x"),rs.getDouble("posicion_y"),rs.getInt("angulo"),rs.getInt("combustible"),rs.getInt("blindaje"),rs.getInt("poder_fuego"),rs.getBoolean("tiene_bomba"),rs.getBoolean("vuelo_alto"),rs.getInt("velocidad"),rs.getInt("avion_tipo"));
+			}
+			rs.close();
+			pstmt.close();
+		} catch (SQLException e) {
+			throw new PersistenceException("Error SQL: " + e.getMessage());
+		}
+		return restoredPlane;
 		
 	}
 
-	@Override
-	public Plane buscar(int idBarco, IDBConnection icon) throws PersistenceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Plane> listarAvionesPorPartida(int idPartida, IDBConnection icon) throws PersistenceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void eliminar(int idBarco, IDBConnection icon) throws PersistenceException {
-		// TODO Auto-generated method stub
-		
-	}
 }
 	
