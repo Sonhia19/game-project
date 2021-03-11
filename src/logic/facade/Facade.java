@@ -92,8 +92,6 @@ public class Facade implements IFacade {
 	    		artilleryController.saveArtillery(enemySessionId, artillery);
 	    	}
 	    	
-	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
-	    	
     	}
     	catch (LogicException ex)
     	{
