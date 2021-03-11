@@ -37,7 +37,7 @@ export const MESSAGES_FORMAT = {
         })
     },
 
-    connectToGame: (playerName, teamSide, planesType, artilleriesType, gameId) => {
+    connectToGame: (playerName, teamSide, planesType, artilleriesType, gameId, structurePositions) => {
         return JSON.stringify({
             action: {
                 name: 'connectToGame',
@@ -46,7 +46,8 @@ export const MESSAGES_FORMAT = {
                     playerName: playerName,
                     teamSide: teamSide,
                     planesType: planesType,
-                    artilleriesType: artilleriesType
+                    artilleriesType: artilleriesType,
+                    structurePositions: structurePositions
                 }
             }
         })
@@ -77,70 +78,70 @@ export const MESSAGES_FORMAT = {
     },
 
     syncMove(planeId, planePosition) {
-		return JSON.stringify({
-			action: {
-				name: 'syncMove',
-				parameters: {
-					gameId: context.gameId,
-					playerName: context.playerSession.name,
-					planeId: planeId,
+        return JSON.stringify({
+            action: {
+                name: 'syncMove',
+                parameters: {
+                    gameId: context.gameId,
+                    playerName: context.playerSession.name,
+                    planeId: planeId,
                     planePosition: planePosition
-				}
-			}
-		})
-	},
+                }
+            }
+        })
+    },
 
-	syncShoot(selectedPlaneIndex) {
-		return JSON.stringify({
-			action: {
-				name: 'syncShoot',
-				parameters: {
-					gameId: context.gameId,
+    syncShoot(selectedPlaneIndex) {
+        return JSON.stringify({
+            action: {
+                name: 'syncShoot',
+                parameters: {
+                    gameId: context.gameId,
                     playerName: context.playerSession.name,
-					shootingPlane: selectedPlaneIndex
-				}
-			}
-		})
-	},
+                    shootingPlane: selectedPlaneIndex
+                }
+            }
+        })
+    },
 
-	syncBomb(selectedPlaneIndex) {
-		return JSON.stringify({
-			action: {
-				name: 'syncBomb',
-				parameters: {
-					gameId: context.gameId,
+    syncBomb(selectedPlaneIndex) {
+        return JSON.stringify({
+            action: {
+                name: 'syncBomb',
+                parameters: {
+                    gameId: context.gameId,
                     playerName: context.playerSession.name,
-					bombingPlane: selectedPlaneIndex
-				}
-			}
-		})
-	},
+                    bombingPlane: selectedPlaneIndex
+                }
+            }
+        })
+    },
 
     syncTakeOff(selectedPlaneIndex, takeOff) {
-		return JSON.stringify({
-			action: {
-				name: 'syncTakeOff',
-				parameters: {
-					gameId: context.gameId,
+        return JSON.stringify({
+            action: {
+                name: 'syncTakeOff',
+                parameters: {
+                    gameId: context.gameId,
                     playerName: context.playerSession.name,
-					TakeOffPlane: selectedPlaneIndex,
+                    TakeOffPlane: selectedPlaneIndex,
                     takeOff: takeOff
-				}
-			}
-		})
-	},
+                }
+            }
+        })
+    },
 
     syncPlaneView(selectedPlaneIndex, x) {
-		return JSON.stringify({
-			action: {
-				name: 'syncPlaneView',
-				parameters: {
-					gameId: context.gameId,
+        return JSON.stringify({
+            action: {
+                name: 'syncPlaneView',
+                parameters: {
+                    gameId: context.gameId,
                     playerName: context.playerSession.name,
-					viewPlane: selectedPlaneIndex,
+                    viewPlane: selectedPlaneIndex,
                     coord: x
-				}
-			}
-		})
-	}
+                }
+            }
+        })
+    }
 };

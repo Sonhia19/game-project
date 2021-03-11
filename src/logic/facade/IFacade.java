@@ -2,6 +2,7 @@ package logic.facade;
 
 import javax.websocket.Session;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import exceptions.LogicException;
@@ -21,7 +22,7 @@ public interface IFacade {
 	WsResponse joinGame(final int gameId, final String playerName, final Session session);
 
 	WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
-										 final ArrayList<Integer> artilleriesType, final Session session);
+										 final ArrayList<Integer> artilleriesType, JSONArray structurePositionsJsonArray, final Session session);
 
 	WsResponse disconnectGameSession(final Session session);
     
