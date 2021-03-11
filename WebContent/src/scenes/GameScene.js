@@ -193,15 +193,15 @@ export class GameScene extends Phaser.Scene {
 		this.captureKeys();
 
 		var saveGameButton = this.add.image(context.game.renderer.width * 0.85, context.game.renderer.height * 0.94, "savegame_button").setDepth(0);
-        saveGameButton.setInteractive();
+		saveGameButton.setInteractive();
 
-        saveGameButton.on('pointerdown', function () {
+		saveGameButton.on('pointerdown', function () {
 
 			console.log("SAVING");
 			var message = context.messagesFormat.saveGame(context.playerSession, context.enemySession);
 			context.functions.sendMessage(message);
 
-        }, this);
+		}, this);
 
 		//Creación de elementos propios
 		myBullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
@@ -1193,23 +1193,35 @@ export class GameScene extends Phaser.Scene {
 		toast.show(message);
 	}
 	placeEnemyElements() {
+		let yFuel = 0, yTower = 0, yHangar = 0;
+		let xFuel = 0, xTower = 0, xHangar = 0;
+
 		if (context.enemySession.activeFuel) {
+			yFuel = context.enemySession.positionYFuel;
+			xFuel = context.enemySession.positionXFuel;
+
 			enemyFuel = enemyFuels.get();
-			enemyFuel.place(150, isBlue ? RED_BASE_X : BLUE_BASE_X);
+			enemyFuel.place(yFuel, isBlue ? xFuel - 190 : xFuel - 1030);
 			enemyStructuresCount += 1;
 			enemyFuelView = this.add.image(isBlue ? RED_BASE_X_VIEW + 10 : BLUE_BASE_X_VIEW + 8, 270, isBlue ? 'fuelRedView' : 'fuelBlueView').setScale(0.25);
 		}
 
 		if (context.enemySession.activeTower) {
+			yTower = context.enemySession.positionYTower;
+			xTower = context.enemySession.positionXTower;
+
 			enemyTower = enemyTowers.get();
-			enemyTower.place(325, isBlue ? RED_BASE_X : BLUE_BASE_X);
+			enemyTower.place(yTower, isBlue ? xTower - 190 : xTower - 1030);
 			enemyStructuresCount += 1;
 			enemyTowerView = this.add.image(isBlue ? RED_BASE_X_VIEW + 18 : BLUE_BASE_X_VIEW, 268, isBlue ? 'towerRedView' : 'towerBlueView').setScale(0.4);
 		}
 
 		if (context.enemySession.activeHangar) {
+			yHangar = context.enemySession.positionYHangar;
+			xHangar = context.enemySession.positionXHangar;
+
 			enemyHangar = enemyHangars.get();
-			enemyHangar.place(500, isBlue ? RED_BASE_X : BLUE_BASE_X);
+			enemyHangar.place(yHangar, isBlue ? xHangar - 190 : xHangar - 1030);
 			enemyStructuresCount += 1;
 			enemyHangarView = this.add.image(isBlue ? RED_BASE_X_VIEW : BLUE_BASE_X_VIEW + 18, 275, isBlue ? 'hangarRedView' : 'hangarBlueView').setScale(0.3);
 		}
@@ -1247,25 +1259,37 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	placeMyElements() {
+
+		let yFuel = 0, yTower = 0, yHangar = 0;
+		let xFuel = 0, xTower = 0, xHangar = 0;
 		if (context.playerSession.activeFuel) {
+			yFuel = context.playerSession.positionYFuel;
+			xFuel = context.playerSession.positionXFuel;
 			myFuel = myFuels.get();
-			myFuel.place(150, isBlue ? BLUE_BASE_X : RED_BASE_X);
+			myFuel.place(yFuel, isBlue ? xFuel - 1030 : xFuel - 190);
 			myStructuresCount += 1;
 			myFuelView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 8 : RED_BASE_X_VIEW + 10, 270, isBlue ? 'fuelBlueView' : 'fuelRedView').setScale(0.25);
+			console.log(myFuel.x + " - " + myFuel.y);
 		}
 
 		if (context.playerSession.activeTower) {
 			myTower = myTowers.get();
-			myTower.place(325, isBlue ? BLUE_BASE_X : RED_BASE_X);
+			yTower = context.playerSession.positionYTower;
+			xTower = context.playerSession.positionXTower;
+			myTower.place(yTower, isBlue ? xTower - 1030 : xTower - 190);
 			myStructuresCount += 1;
 			myTowerView = this.add.image(isBlue ? BLUE_BASE_X_VIEW : RED_BASE_X_VIEW + 18, 268, isBlue ? 'towerBlueView' : 'towerRedView').setScale(0.4);
+			console.log(myTower.x + " - " + myTower.y);
 		}
 
 		if (context.playerSession.activeHangar) {
 			myHangar = myHangars.get();
-			myHangar.place(500, isBlue ? BLUE_BASE_X : RED_BASE_X);
+			xHangar = context.playerSession.positionXHangar;
+			yHangar = context.playerSession.positionYHangar;
+			myHangar.place(yHangar, isBlue ? xHangar - 1030 : xHangar - 190);
 			myStructuresCount += 1;
 			myHangarView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 18 : RED_BASE_X_VIEW, 275, isBlue ? 'hangarBlueView' : 'hangarRedView').setScale(0.3);
+			console.log(myHangar.x + " - " + myHangar.y);
 		}
 
 		this.placeMyPlanes();
@@ -1419,6 +1443,46 @@ export class GameScene extends Phaser.Scene {
 	//#endregion
 
 	//#region WebSocket
+
+	updateContext() {
+		this.updatePlanes();
+		this.updateArtilleries();
+		this.updateStructures();
+	}
+	updatePlanes() {
+		context.playerSession.planes[0] = myPlaneOne;
+		context.playerSession.planes[1] = myPlaneTwo;
+		context.playerSession.planes[2] = myPlaneThree;
+		context.playerSession.planes[3] = myPlaneFour;
+
+		context.enemySession.planes[0] = enemyPlaneOne;
+		context.enemySession.planes[1] = enemyPlaneTwo;
+		context.enemySession.planes[2] = enemyPlaneThree;
+		context.enemySession.planes[3] = enemyPlaneFour;
+	}
+
+	updateArtilleries() {
+		context.playerSession.artilleries[0] = myArtilleryOne;
+		context.playerSession.artilleries[1] = myArtilleryTwo;
+		context.playerSession.artilleries[2] = myArtilleryThree;
+		context.playerSession.artilleries[3] = myArtilleryFour;
+
+		context.enemySession.artilleries[0] = enemyArtilleryOne;
+		context.enemySession.artilleries[1] = enemyArtilleryTwo;
+		context.enemySession.artilleries[2] = enemyArtilleryThree;
+		context.enemySession.artilleries[3] = enemyArtilleryFour;
+	}
+
+	updateStructures() {
+		context.playerSession.activeFuel = !myFuel.destroyed;
+		context.playerSession.activeHangar = !myHangar.destroyed;
+		context.playerSession.activeTower = !myTower.destroyed;
+
+		context.enemySession.activeFuel = !enemyFuel.destroyed;
+		context.enemySession.activeHangar = !enemyHangar.destroyed;
+		context.enemySession.activeTower = !enemyTower.destroyed;
+	}
+
 	syncMove(planeViewX) {
 		var planePosition = [Math.round(myPlaneSelected.x), Math.round(myPlaneSelected.y), myPlaneSelected.planeAngle];
 		var message = context.messagesFormat.syncMove(myPlaneSelected.planeIndex, planePosition, planeViewX);
