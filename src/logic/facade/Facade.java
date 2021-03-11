@@ -8,6 +8,7 @@ import controller.PlayerController;
 import exceptions.LogicException;
 import exceptions.PersistenceException;
 import logic.GameStatus;
+import logic.models.Artillery;
 import logic.models.Game;
 import logic.models.Plane;
 import logic.models.Player;
@@ -65,9 +66,9 @@ public class Facade implements IFacade {
         final Player enemySession = gson.fromJson(jsonEnemySession.toString(), Player.class);
         
     	try {
-	    	IDBConnection icon 	= null;
+	    	/*IDBConnection icon 	= null;
 	    	icon = ConnectionsPool.getInstancia().obtenerConexion();
-	    	
+	    	*/
 	    	gameController.saveGame(gameId);//ojo aca tal vez se puede hacer mejor.
 	    	int playerSessionId = playerController.savePlayer(gameId, playerSession);
 	    	int enemySessionId = playerController.savePlayer(gameId, enemySession);
@@ -82,19 +83,19 @@ public class Facade implements IFacade {
 	    	}
 	    	
 	    	//se guardan artillerias de player y enemy session
-	    	/*
+	    	
 	    	for (Artillery artillery : playerSession.getArtilleries()) {
-	    		daoArtillery.saveArtillery(playerSessionId, artillery, icon);
+	    		artilleryController.saveArtillery(playerSessionId, artillery);
 	    	}
 	    	
 	    	for (Artillery artillery : enemySession.getArtilleries()) {
-	    		daoArtillery.saveArtillery(enemySessionId, artillery, icon);
+	    		artilleryController.saveArtillery(enemySessionId, artillery);
 	    	}
-	    	*/
+	    	
 	    	//persistence.connection.ConnectionsPool.getInstancia().liberarConexion(icon, true);
 	    	
     	}
-    	catch (PersistenceException ex)
+    	catch (LogicException ex)
     	{
     		throw new LogicException(ex.getMessage());
     	}

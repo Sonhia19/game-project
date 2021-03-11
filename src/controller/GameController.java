@@ -33,7 +33,7 @@ public class GameController {
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-            Game game = daoGame.buscar(gameId, icon);
+            Game game = daoGame.find(gameId, icon);
 			daoGame.saveGame(game, icon);
 		} catch (PersistenceException ex) {
             throw new LogicException(ex.getMessage());
