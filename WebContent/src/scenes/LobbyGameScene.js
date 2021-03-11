@@ -1,5 +1,10 @@
 import { context } from '../../src/main.js';
 
+let tower;
+let fuel;
+let hangar;
+let area;
+
 export class LobbyGameScene extends Phaser.Scene {
 	
 	constructor() {
@@ -22,6 +27,10 @@ export class LobbyGameScene extends Phaser.Scene {
 
 		this.load.image("joingame_button", "assets/join-game-button.png");
 
+		this.load.image("fuel", "./assets/fuel.png");
+		this.load.image("hangar", "./assets/hangar.png");
+		this.load.image("tower", "./assets/tower.png");
+
 	}
 
 	plane1Type = 1;
@@ -33,8 +42,56 @@ export class LobbyGameScene extends Phaser.Scene {
 	artillery2Type = 1;
 	artillery3Type = 1;
 	artillery4Type = 1;
-	
+
 	create() {
+
+		tower = this.add.sprite(200, 300, 'tower');
+		tower.setInteractive();
+		tower.setScale(0.2);
+		this.input.setDraggable(tower);
+
+		hangar = this.add.sprite(400, 300, 'hangar');
+		hangar.setInteractive();
+		hangar.setScale(0.2);
+		this.input.setDraggable(hangar);
+
+		fuel = this.add.sprite(300, 300, 'fuel');
+		fuel.setInteractive();
+		fuel.setScale(0.2);
+		this.input.setDraggable(fuel);
+
+		this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+
+			gameObject.x = dragX;
+			gameObject.y = dragY;
+
+		});
+
+		area = this.add.rectangle(1100, 300, 200, 600);
+
+		area.setStrokeStyle(2, 0x1a65ac);
+		console.log(area.x);
+		console.log(area.y);
+
+		this.input.on('dragend', function (pointer, gameObject) {
+
+			gameObject.x = Math.round(gameObject.x);
+			gameObject.y = Math.round(gameObject.y);
+			console.log(gameObject.x)
+			console.log(gameObject.y)
+			// console.log(gameObject.x + gameObject.width)
+			// console.log(gameObject.y + gameObject.height)
+			// if (gameObject.x < 1100 || gameObject.x > 1300) {
+			// 	console.log("error");
+			// 	gameObject.x = 200;
+			// 	gameObject.y = 300;
+			// }
+
+		});
+
+
+
+
 		context.currentScene = 'LOBBYGAME';
 		console.log(context.playerSession);
 
@@ -55,9 +112,9 @@ export class LobbyGameScene extends Phaser.Scene {
 								.on('pointerdown', () => this.updatePlane2(this.plane2Type));
 
 		/***   se incorpora boton para tipo avion 3   ***/
-		var plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane3Type)).setDepth(0)
+		var plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getTypeImage(this.plane3Type)).setDepth(0)
 								.setInteractive()
-								.on('pointerdown', () => this.updatePlane3(this.plane3Type));
+								.on('pointerdown', () => this.updatPlane3(this.plane3Type));
 
 
 		/***   se incorpora boton para tipo avion 4  ***/

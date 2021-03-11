@@ -5,7 +5,7 @@ export let BulletArtillery = new Phaser.Class({
 	initialize:
 
 		function Bullet(scene) {
-			Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bulletTorret');
+			Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bulletArtillery');
 
 			this.incX = 0;
 			this.incY = 0;
