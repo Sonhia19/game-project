@@ -70,9 +70,22 @@ public class DAOGame implements IDAOGame {
 		}
 		return nuevoId;
 	}
-	public Game restoreGame(IDBConnection icon) throws PersistenceException{
+	public Game restoreGame(final int idPartida,IDBConnection icon) throws PersistenceException{
 		Game restoredGame = null;
+		Connection con = icon.getConnection();
 		
+		try {
+			PreparedStatement pstmt = con.prepareStatement("select id,estado,id_ganador,fecha,fecha_modificacion from partidas where id = ?");
+			pstmt.setInt(1, idPartida);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				restoredGame = new Game(rs.getInt("id"),rs.getInt("estado"),rs.getInt("id_ganador"),rs.getDate("fecha"),rs.getDate("fecha_modificacion"));
+			}
+			rs.close();
+			pstmt.close();
+		} catch (SQLException e) {
+			throw new PersistenceException("Error SQL: " + e.getMessage());
+		}
 		return restoredGame;
 		
 	}

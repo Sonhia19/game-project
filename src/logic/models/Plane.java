@@ -44,7 +44,7 @@ public class Plane {
 		this.firePower = firePower;
 		
 	}
-
+	
 	public Plane(int id, double positionX, double positionY, int angle, int fuel, int armor, int firePower, Boolean hasBomb, Boolean highFly, int speed, int planeType) {
 
 		this.id = id;
@@ -59,6 +59,7 @@ public class Plane {
 		this.highFly = highFly;
 		this.planeType = planeType;
 	}
+
 
 	public int getId() {
 		return id;

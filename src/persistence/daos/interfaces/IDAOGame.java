@@ -8,7 +8,7 @@ public interface IDAOGame {
 	
 	int getNewGameId( IDBConnection icon) throws PersistenceException;
 	
-	Game restoreGame(IDBConnection icon) throws PersistenceException;
+	Game restoreGame(final int idPartida,IDBConnection icon) throws PersistenceException;
 	
 	void saveGame(Game game,IDBConnection icon) throws PersistenceException;
 	

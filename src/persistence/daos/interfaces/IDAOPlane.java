@@ -1,5 +1,9 @@
 package persistence.daos.interfaces;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import exceptions.PersistenceException;
@@ -9,14 +13,6 @@ import logic.models.*;
 public interface IDAOPlane {
 	
 	void savePlanes (int id_jugador, Plane plane, IDBConnection icon) throws PersistenceException;
+	Plane restorePlane(final int planeId,IDBConnection icon) throws PersistenceException;
 	
-	boolean existe(int idBarco, IDBConnection icon) throws PersistenceException;
-	
-	void insertar(int idPartida, Plane barco, IDBConnection icon) throws PersistenceException;
-	
-	Plane buscar(int idBarco, IDBConnection icon) throws PersistenceException;
-	
-	ArrayList<Plane> listarAvionesPorPartida(int idPartida, IDBConnection icon) throws PersistenceException;
-	
-	void eliminar(int idBarco, IDBConnection icon) throws PersistenceException;
 }
