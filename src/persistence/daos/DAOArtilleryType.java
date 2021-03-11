@@ -12,17 +12,25 @@ import persistence.daos.interfaces.IDAOArtilleryType;
 
 public class DAOArtilleryType implements IDAOArtilleryType {
 
-	public Artillery getArtilleryByType(int artilleryTypeId, IDBConnection icon) throws PersistenceException {
+	public Artillery getArtilleryByType(int artilleryNumber, int artilleryType, int teamSide, IDBConnection icon) throws PersistenceException {
 		
 		Artillery artillery = null;
 		Connection con = icon.getConnection();
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("select id,nombre,cadencia,blindaje,alcance,poder_fuego from ARTILLERIA_CONFIG where id = ?");
-			pstmt.setInt(1, artilleryTypeId);
+			PreparedStatement pstmt = con.prepareStatement("select ta.nombre,ta.cadencia,ta.blindaje,ta.alcance,ta.poder_fuego,avc.posicion_x,avc.posicion_y, avc.angulo "
+					+ "from artilleria_config avc join ARTILLERIA_TIPO ta "
+					+ "where avc.nro_artilleria = ? and avc.bando = ? and ta.id = ?");
+			
+			pstmt.setInt(1, artilleryNumber);
+			pstmt.setInt(2, teamSide);
+			pstmt.setInt(3, artilleryType);
+			
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				artillery = new Artillery(rs.getString("nombre"),rs.getDouble("cadencia"),rs.getDouble("blindaje"),rs.getDouble("alcance"),rs.getDouble("poder_fuego"));
+				artillery = new Artillery(artilleryNumber, rs.getDouble("posicion_x"), rs.getDouble("posicion_y"), 
+						rs.getInt("angulo"), rs.getInt("blindaje"), rs.getInt("cadencia"), rs.getInt("alcance"), rs.getInt("poder_fuego"), 
+						rs.getString("nombre"), artilleryType);
 			}
 			rs.close();
 			pstmt.close();

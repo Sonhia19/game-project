@@ -20,7 +20,7 @@ export class LobbyGameScene extends Phaser.Scene {
         this.load.image("artillery-type3", "assets/artillery-type3.png");
         this.load.image("artillery-type4", "assets/artillery-type4.png");
 
-		this.load.image("joingame_font", "assets/joingame-font.png");
+		this.load.image("joingame_button", "assets/join-game-button.png");
 
 	}
 
@@ -91,7 +91,7 @@ export class LobbyGameScene extends Phaser.Scene {
 
 
 
-		var joinGameButton = this.add.image(context.game.renderer.width * 0.90, context.game.renderer.height * 0.90, "joingame_font").setDepth(0);
+		var joinGameButton = this.add.image(context.game.renderer.width * 0.90, context.game.renderer.height * 0.90, "joingame_button").setDepth(0);
         joinGameButton.setInteractive();
 		
         joinGameButton.on('pointerdown', function () {
@@ -101,17 +101,17 @@ export class LobbyGameScene extends Phaser.Scene {
 				// se cargan tipos de avion
 				var planesType = [this.plane1Type, this.plane2Type, this.plane3Type, this.plane4Type];
 				// se cargan tipos de artilleria
-				var artilleriesType = [this.artilleryType, this.artillery2Type, this.artillery3Type, this.artillery4Type];
+				var artilleriesType = [this.artillery1Type, this.artillery2Type, this.artillery3Type, this.artillery4Type];
 				var message = context.messagesFormat.connectToGame(context.playerSession.name, context.playerSession.teamSide, planesType, artilleriesType, context.playerSession.gameId);
 				context.functions.sendMessage(message);
 
-				this.time.addEvent({
+				/*this.time.addEvent({
 					delay: 1000,
 					callback: ()=>{
 						this.scene.start("GAME", "hello from LOBBY scene");	
 					},
 					loop: false
-				})
+				})*/
 			}
 			
         }, this);

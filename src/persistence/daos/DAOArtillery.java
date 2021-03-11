@@ -13,7 +13,8 @@ import persistence.daos.interfaces.IDAOArtillery;
 
 public class DAOArtillery implements IDAOArtillery {
 
-	public int saveArtillery(int idJugador,Artillery artillery,IDBConnection icon)throws PersistenceException{
+	public int saveArtillery(int idJugador,Artillery artillery,IDBConnection icon) throws PersistenceException {
+		
 		int idArtillery = -1;
 		Connection con = icon.getConnection();
 		try {

@@ -106,19 +106,28 @@ public class WsServer {
 				System.out.println("Connect to game");
 				final String playerName = parameters.getString("playerName");
 				final int teamSide = parameters.getInt("teamSide");
-				final JSONArray jsonArray = parameters.getJSONArray("planesType");
+				final JSONArray planesJsonArray = parameters.getJSONArray("planesType");
+				final JSONArray artilleriesJsonArray = parameters.getJSONArray("artilleriesType");
 				final ArrayList<Integer> planesType = new ArrayList<Integer>();
-				final ArrayList<Integer> artilleryType = new ArrayList<Integer>();
+				final ArrayList<Integer> artilleriesType = new ArrayList<Integer>();
 
 				//cargo tipos de avion
-				if (jsonArray != null) {
-				   int size = jsonArray.length();
+				if (planesJsonArray != null) {
+				   int size = planesJsonArray.length();
 				   for (int i = 0; i < size; i++){
-					   planesType.add(Integer.valueOf(jsonArray.get(i).toString()));
+					   planesType.add(Integer.valueOf(planesJsonArray.get(i).toString()));
+				   }
+				}
+				
+				//cargo tipos de artilleria
+				if (artilleriesJsonArray != null) {
+				   int size = artilleriesJsonArray.length();
+				   for (int i = 0; i < size; i++){
+					   artilleriesType.add(Integer.valueOf(artilleriesJsonArray.get(i).toString()));
 				   }
 				}
 
-				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, teamSide, planesType, artilleryType, session);
+				response = facade.connectGameSession(parameters.getInt("gameId"), playerName, teamSide, planesType, artilleriesType, session);
 				response.setAction(action);
 
 				System.out.println(response);

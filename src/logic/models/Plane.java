@@ -37,12 +37,27 @@ public class Plane {
 		this.angle = angle;
 	}
 
-	public Plane(double speed,double armor,double firePower) {
+	public Plane(double speed,double armor, double firePower) {
 
 		this.speed = speed;
 		this.armor = armor;
 		this.firePower = firePower;
 		
+	}
+
+	public Plane(int id, double positionX, double positionY, int angle, int fuel, int armor, int firePower, Boolean hasBomb, Boolean highFly, int speed, int planeType) {
+
+		this.id = id;
+		this.positionX = positionX;
+		this.positionY = positionY;
+		this.angle = angle;
+		this.fuel = fuel;
+		this.armor = armor;
+		this.speed = speed;
+		this.firePower = firePower;
+		this.hasBomb = hasBomb;
+		this.highFly = highFly;
+		this.planeType = planeType;
 	}
 
 	public int getId() {

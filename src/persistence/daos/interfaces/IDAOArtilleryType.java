@@ -6,5 +6,5 @@ import logic.models.Artillery;
 
 public interface IDAOArtilleryType {
 	
-	Artillery getArtilleryByType(int artillerytypeId, IDBConnection icon) throws PersistenceException;
+	Artillery getArtilleryByType(int artilleryNumber, int artilleryType, int teamSide, IDBConnection icon) throws PersistenceException;
 }

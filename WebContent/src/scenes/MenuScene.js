@@ -15,8 +15,8 @@ export class MenuScene extends Phaser.Scene {
         console.log('FROM MENU');
         this.load.image("background_menu", "assets/background-menu.jpg");
         this.load.image("play_font", "assets/play-font.png");
-        this.load.image("newgame_font", "assets/newgame-font.png");
-        this.load.image("joingame_font", "assets/joingame-font.png");
+        this.load.image("newgame_button", "assets/new-game-button.png");
+        this.load.image("joingame_button", "assets/join-game-button.png");
     }
 
     create() {
@@ -25,9 +25,9 @@ export class MenuScene extends Phaser.Scene {
         this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.20, "play_font").setDepth(0);
 
         //se incorporan botones
-        var newGameButton = this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.45, "newgame_font").setDepth(0);
+        var newGameButton = this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.45, "newgame_button").setDepth(0);
         newGameButton.setInteractive();
-        var joinGameButton = this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.60, "joingame_font").setDepth(0);
+        var joinGameButton = this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.60, "joingame_button").setDepth(0);
         joinGameButton.setInteractive();
 
         newGameButton.on('pointerdown', function () {

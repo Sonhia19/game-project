@@ -6,5 +6,5 @@ import persistence.connection.IDBConnection;
 
 public interface IDAOPlaneType {
 	
-	Plane getPlaneByType(int planetypeId, IDBConnection icon) throws PersistenceException;
+	Plane getPlaneByType(int planeNumber, int planeType, int teamSide, IDBConnection icon) throws PersistenceException;
 }

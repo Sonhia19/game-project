@@ -173,7 +173,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image('PlaneRightRedView', 'assets/view/plane_red_right_view.png');
 		this.load.image('PlaneLeftRedView', 'assets/view/plane_red_left_view.png');
 
-		this.load.image("savegame_font", "assets/savegame-font.png");
+		this.load.image("savegame_button", "assets/save-game-button.png");
 	}
 
 	create() {
@@ -188,7 +188,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.captureKeys();
 
-		var saveGameButton = this.add.image(context.game.renderer.width * 0.85, context.game.renderer.height * 0.94, "savegame_font").setDepth(0);
+		var saveGameButton = this.add.image(context.game.renderer.width * 0.85, context.game.renderer.height * 0.94, "savegame_button").setDepth(0);
         saveGameButton.setInteractive();
 
         saveGameButton.on('pointerdown', function () {

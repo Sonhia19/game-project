@@ -15,7 +15,9 @@ public class Artillery {
 	private double firePower;
 
 	private double reach;
+
 	private String name;
+
 	private int artilleryType;
 
 	public Artillery() {
@@ -31,8 +33,22 @@ public class Artillery {
 		this.firePower = 10;
 		this.positionX = positionX;
 		this.positionY = positionY;
+	}
+	
+	public Artillery(int id, double positionX, double positionY, int angle,  int armor, int cadency, int reach, int firePower, String name, int artilleryType) {
+
+		this.id = id;
+		this.armor = armor;
+		this.cadency = cadency;
+		this.reach = reach;
+		this.firePower = firePower;
+		this.positionX = positionX;
+		this.positionY = positionY;
+		this.name = name;
+		this.artilleryType = artilleryType;
 
 	}
+	
 	public Artillery(String name,double cadency,double armor,double reach,double firePower) {
 
 		this.name = name;
@@ -83,5 +99,5 @@ public class Artillery {
 	public void setPositionY(double y) {
 		positionY = y;
 	}
-
+	
 }

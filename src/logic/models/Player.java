@@ -115,58 +115,6 @@ public class Player {
 	public void setArtilleries(final List<Artillery> artilleries) {
 		this.artilleries = artilleries;
 	}
-//
-//	public void preloadPlanes (final List<Integer> planesType) {
-//
-//		List<Plane> planes = new ArrayList();
-//		int planeId = 1;
-//		int positionY = 200;
-//		for (Integer type : planesType) {
-//			if (type.equals(1) ) {
-//				planes.add(new PlaneType1(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			else if (type.equals(2) ) {
-//				planes.add(new PlaneType2(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			else if (type.equals(3) ) {
-//				planes.add(new PlaneType3(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			else if (type.equals(4) ) {
-//				planes.add(new PlaneType4(planeId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			planeId = planeId + 1;
-//			// los 4 aviones se colocarian en posicionY = 200, 300, 400, 500
-//			positionY += 100;
-//		}
-//
-//		this.planes = planes;
-//	}
-//
-//	public void preloadArtilleries(final List<Integer> artilleriesType) {
-//
-//		List<Artillery> artilleries = new ArrayList();
-//		int artilleryId = 1;
-//		int positionY = 200;
-//		for (Integer type : artilleriesType) {
-//			if (type.equals(1) ) {
-//				artilleries.add(new ArtilleryType1(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			else if (type.equals(2) ) {
-//				artilleries.add(new ArtilleryType2(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			else if (type.equals(3) ) {
-//				artilleries.add(new ArtilleryType3(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			else if (type.equals(4) ) {
-//				artilleries.add(new ArtilleryType4(artilleryId, this.teamSide == 1? 150 : 850, positionY, this.teamSide == 1? 90:270));
-//			}
-//			artilleryId = artilleryId + 1;
-//			// las 4 artillerias se colocarian en posicionY = 200, 300, 400, 500
-//			positionY += 100;
-//		}
-//
-//		this.artilleries = artilleries;
-//	}
 	
 	public Player preparePlayerToSend() {
 		

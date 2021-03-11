@@ -12,16 +12,24 @@ import java.sql.SQLException;
 import exceptions.*;
 public class DAOPlaneType implements IDAOPlaneType {
 	
-	public Plane getPlaneByType(int planetypeId, IDBConnection icon) throws PersistenceException {
+	public Plane getPlaneByType(int planeNumber, int planeType, int teamSide, IDBConnection icon) throws PersistenceException {
 		Plane plane = null;
 		Connection con = icon.getConnection();
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("select id,nombre,velocidad,consumo_combustible,blindaje,poder_fuego from AVIONES_CONFIG where id = ?");
-			pstmt.setInt(1, planetypeId);
+			PreparedStatement pstmt = con.prepareStatement("select AVT.NOMBRE,AVT.VELOCIDAD,AVT.COMBUSTIBLE,AVT.BLINDAJE,AVT.PODER_FUEGO, AVC.VUELO_ALTO,AVC.TIENE_BOMBA, AVC.POSICION_X,AVC.POSICION_Y,AVC.ANGULO "
+					+ "from aviones_config avc join aviones_Tipo avt "
+					+ "where avc.bando = ? and avc.NRO_AVION = ? and AVT.ID = ?");
+			
+			pstmt.setInt(1, teamSide);
+			pstmt.setInt(2, planeNumber);
+			pstmt.setInt(3, planeType);
+			
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				plane = new Plane(rs.getDouble("velocidad"),rs.getDouble("blindaje"),rs.getDouble("poder_fuego"));
+				plane = new Plane(planeNumber, rs.getDouble("posicion_x"), rs.getDouble("posicion_y"), rs.getInt("angulo"), 
+						rs.getInt("combustible"), rs.getInt("blindaje"), rs.getInt("poder_fuego"), rs.getBoolean("tiene_bomba"), 
+						rs.getBoolean("vuelo_alto"), rs.getInt("velocidad"), planeType);
 			}
 			rs.close();
 			pstmt.close();

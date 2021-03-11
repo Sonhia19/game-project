@@ -90,6 +90,8 @@ var functions = {
                 console.log("CONNECT player session");
                 console.log(context.playerSession);
                 console.log(context.gameStatus);
+
+                context.functions.changeScene("LOBBYGAME", "GAME");
             }
             if (response.action.name == 'disconnectSession') {
                 context.gameStatus = JSON.parse(response.responses[0].value);
