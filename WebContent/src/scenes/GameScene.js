@@ -267,9 +267,8 @@ export class GameScene extends Phaser.Scene {
 	}
 	update(time, delta) {
 
-		if (gameOver) {
-			//this.input.on('pointerdown', () => this.scene.start('MENU'));
-			//return;
+		if (Phaser.Input.Keyboard.JustDown(keyOne)) {
+			this.scene.start("FINISHGAME", "hello from GAME scene");
 		}
 
 		if (this.existsEnemySession()) {

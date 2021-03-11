@@ -102,12 +102,36 @@ public class Player {
 		return activeTower;
 	}
 	
+	public double getPositionXTower() {
+		return positionXTower;
+	}
+	
+	public double getPositionYTower() {
+		return positionYTower;
+	}
+	
 	public boolean getActiveHangar() {
 		return activeHangar;
 	}
 	
+	public double getPositionXHangar() {
+		return positionXHangar;
+	}
+	
+	public double getPositionYHangar() {
+		return positionYHangar;
+	}
+	
 	public boolean getActiveFuel() {
 		return activeFuel;
+	}
+	
+	public double getPositionXFuel() {
+		return positionXFuel;
+	}
+	
+	public double getPositionYFuel() {
+		return positionYFuel;
 	}
 	
 	public List<Plane> getPlanes() {

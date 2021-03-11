@@ -5,6 +5,7 @@ import { LobbyGameScene } from '../src/scenes/LobbyGameScene.js';
 import { MenuScene } from '../src/scenes/MenuScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { JoinGameScene } from '../src/scenes/JoinGameScene.js';
+import { FinishGameScene } from '../src/scenes/FinishGameScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 import { MESSAGES_FORMAT } from '../src/constants/MessagesFormatConstants.js';
 
@@ -27,7 +28,7 @@ var config = {
         createContainer: true
     },
     scene: [
-        LoadScene, MenuScene, NewGameScene, JoinGameScene, LobbyGameScene, GameScene
+        LoadScene, MenuScene, NewGameScene, JoinGameScene, LobbyGameScene, GameScene, FinishGameScene
     ]
 };
 

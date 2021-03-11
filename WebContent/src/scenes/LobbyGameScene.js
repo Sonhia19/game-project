@@ -161,14 +161,6 @@ export class LobbyGameScene extends Phaser.Scene {
 				var artilleriesType = [this.artillery1Type, this.artillery2Type, this.artillery3Type, this.artillery4Type];
 				var message = context.messagesFormat.connectToGame(context.playerSession.name, context.playerSession.teamSide, planesType, artilleriesType, context.playerSession.gameId);
 				context.functions.sendMessage(message);
-
-				/*this.time.addEvent({
-					delay: 1000,
-					callback: ()=>{
-						this.scene.start("GAME", "hello from LOBBY scene");	
-					},
-					loop: false
-				})*/
 			}
 			
         }, this);
