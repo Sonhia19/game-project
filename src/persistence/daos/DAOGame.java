@@ -27,7 +27,7 @@ public class DAOGame implements IDAOGame {
 	 * @return boolean
 	 */
 	@Override
-	public boolean existe(int idPartida, IDBConnection icon) throws PersistenceException {
+	public boolean exists(int idPartida, IDBConnection icon) throws PersistenceException {
 		boolean existe = false;
 		Connection con = icon.getConnection();
 		
@@ -57,7 +57,7 @@ public class DAOGame implements IDAOGame {
 		int nuevoId = -1;
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("insert into partidas (estado,id_ganador,fecha,fecha_modificacion) values(0,0,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pstmt = con.prepareStatement("insert into partidas (estado,id_ganador,fecha,fecha_modificacion) values(0,0,now(),now())",Statement.RETURN_GENERATED_KEYS);
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 		    rs.next();
@@ -80,11 +80,13 @@ public class DAOGame implements IDAOGame {
 		Connection con = icon.getConnection();
 		
 		try {
-			
-			PreparedStatement pstmt = con.prepareStatement("insert into partidas (estado,id_ganador,fecha,fecha_modificacion) values(?,?,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
+			//este deberia ser un update de la partida existente al crear partida
+			//PreparedStatement pstmt = con.prepareStatement("insert into partidas (estado,id_ganador,fecha,fecha_modificacion) values(?,?,curdate(),curdate())",Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pstmt = con.prepareStatement("update partidas set estado = ? , id_ganador = ? , fecha_modificacion = now() where id = ?",Statement.RETURN_GENERATED_KEYS);
 //agregue state y winnerid al model el constructor y el get
 			pstmt.setInt(1, game.getState());
 			pstmt.setInt(2,game.getWinnerId());
+			pstmt.setInt(3,game.getId());
 			
 
 			pstmt.executeUpdate();
@@ -106,7 +108,7 @@ public class DAOGame implements IDAOGame {
 	 * @param icon
 	 */
 	@Override
-	public Game buscar(int idPartida, IDBConnection icon) throws PersistenceException {
+	public Game find(int idPartida, IDBConnection icon) throws PersistenceException {
 		Game game = null;
 		Connection con = icon.getConnection();
 		
@@ -129,8 +131,8 @@ public class DAOGame implements IDAOGame {
 	/**
 	 * Elimina una partida.
 	 */
-	@Override
-	public void eliminar(int idPartida, IDBConnection icon) throws PersistenceException {
+	/*@Override
+	public void delete(int idPartida, IDBConnection icon) throws PersistenceException {
 		Connection con = icon.getConnection();
 		
 		try {
@@ -141,29 +143,7 @@ public class DAOGame implements IDAOGame {
 		} catch (SQLException e) {
 			throw new PersistenceException("Error SQL: " + e.getMessage());
 		}
-	}
+	}*/
 
-	/**
-	 * Devuelve el m�ximo id que existe.
-	 * 
-	 * @return int
-	 */
-	@Override
-	public int maximoId(IDBConnection icon) throws PersistenceException {
-		Connection con = icon.getConnection();
-		int max = 0;
-		
-		try {
-			PreparedStatement pstmt = con.prepareStatement("Consultas.maximoIdPartida()");
-			ResultSet rs = pstmt.executeQuery();		
-			if (rs.next())
-				max = rs.getInt("maximoId");
-			rs.close();
-			pstmt.close();
-		} catch (SQLException e) {
-			throw new PersistenceException("Error SQL: " + e.getMessage());
-		}
-		
-		return max;
-	}
+	
 }

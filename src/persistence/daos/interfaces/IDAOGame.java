@@ -12,11 +12,11 @@ public interface IDAOGame {
 	
 	void saveGame(Game game,IDBConnection icon) throws PersistenceException;
 	
-	boolean existe(int idGame, IDBConnection icon) throws PersistenceException;
+	boolean exists(int idGame, IDBConnection icon) throws PersistenceException;
 	
-	Game buscar(int idGame, IDBConnection icon) throws PersistenceException;
+	Game find(int idGame, IDBConnection icon) throws PersistenceException;
 	
-	void eliminar(int idGame, IDBConnection icon) throws PersistenceException;
+	//void delete(int idGame, IDBConnection icon) throws PersistenceException;
 	
-	int maximoId(IDBConnection icon) throws PersistenceException;
+	
 }

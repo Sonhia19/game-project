@@ -18,7 +18,7 @@ public class DAOArtillery implements IDAOArtillery {
 		int idArtillery = -1;
 		Connection con = icon.getConnection();
 		try {
-			PreparedStatement pstmt = con.prepareStatement("insert into artilleria (id_jugador,id_artilleria,blindaje,posicion_x,posicion_y) values(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pstmt = con.prepareStatement("insert into artilleria (id_jugador,artilleria_tipo,blindaje,posicion_x,posicion_y) values(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1,idJugador );
 			pstmt.setInt(2,artillery.getArtilleryType());
 			pstmt.setDouble(3,artillery.getArmor());
