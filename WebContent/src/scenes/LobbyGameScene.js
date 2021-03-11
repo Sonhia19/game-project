@@ -112,7 +112,7 @@ export class LobbyGameScene extends Phaser.Scene {
 								.on('pointerdown', () => this.updatePlane2(this.plane2Type));
 
 		/***   se incorpora boton para tipo avion 3   ***/
-		var plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getTypeImage(this.plane3Type)).setDepth(0)
+		var plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane3Type)).setDepth(0)
 								.setInteractive()
 								.on('pointerdown', () => this.updatPlane3(this.plane3Type));
 
