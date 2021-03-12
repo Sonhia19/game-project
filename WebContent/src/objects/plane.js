@@ -181,9 +181,7 @@ export let Plane = new Phaser.Class({
 
         //Velocidad
         this.speed = this.highFly ? this.speed / 2 : this.speed * 2;
-
         if (sync) {
-            console.log("entra");
             let json = JSON.stringify({
                 action: {
                     name: 'syncHighFly',

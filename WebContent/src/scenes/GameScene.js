@@ -275,7 +275,7 @@ export class GameScene extends Phaser.Scene {
 			if (this.existsEnemySession()) {
 				this.checkEnemyAction(time);
 			}
-	
+
 			//Selección de avión
 			if (Phaser.Input.Keyboard.JustDown(keyOne)) {
 				if (myPlaneOne.scene) {
@@ -297,7 +297,7 @@ export class GameScene extends Phaser.Scene {
 					this.selectPlane(myPlaneFour);
 				}
 			}
-	
+
 			if (myPlaneSelected != null) {
 				if (myPlaneSelected.scene) {
 					//Aterrizar / Despegar
@@ -341,7 +341,7 @@ export class GameScene extends Phaser.Scene {
 							highFlyPlaneText.setText('Vuelo Bajo');
 						}
 					}
-	
+
 					// Vuelto alto / vuelo bajo
 					if (Phaser.Input.Keyboard.JustDown(keyAlt)) {
 						if (myPlaneSelected.flying) {
@@ -361,9 +361,9 @@ export class GameScene extends Phaser.Scene {
 								highFlyPlaneText.setText('No puede volar alto en base enemiga');
 							}
 						}
-	
+
 					}
-	
+
 					//Si el avion se encuentra dentro de su zona, limpia todo el mapa
 					if (myPlaneSelected.x < isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X) {
 						myPlaneSelected.gray = null;
@@ -384,26 +384,26 @@ export class GameScene extends Phaser.Scene {
 						this.fuelControl();
 						myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
 						this.syncMove();
-	
+
 					} else if (cursors.down.isDown) {
 						this.fuelControl();
 						myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
 						this.syncMove();
-	
+
 					}
 					if (cursors.left.isDown && cursors.up.isDown) {
 						this.fuelControl();
 						myPlaneSelected.fly(false, ANGLE_315, null, null);
 						this.changeFlyXPlaneView(false, false, null, null);
 						this.syncMove();
-	
+
 					}
 					if (cursors.left.isDown && cursors.down.isDown) {
 						this.fuelControl();
 						myPlaneSelected.fly(false, ANGLE_225, null, null);
 						this.changeFlyXPlaneView(false, false, null, null);
 						this.syncMove();
-	
+
 					}
 					if (cursors.right.isDown && cursors.down.isDown) {
 						this.fuelControl();
@@ -417,9 +417,9 @@ export class GameScene extends Phaser.Scene {
 						this.changeFlyXPlaneView(false, true, null, null);
 						this.syncMove();
 					}
-	
-	
-	
+
+
+
 					//Disparo de avión
 					if (cursors.space.isDown && time > myPlaneSelected.cadency && myPlaneSelected.scene) {
 						if (myPlaneSelected.flying) {
@@ -437,7 +437,7 @@ export class GameScene extends Phaser.Scene {
 							infoGameText.setText("Avión en tierra. No puede disparar");
 						}
 					}
-	
+
 					//Disparo de bomba
 					if (Phaser.Input.Keyboard.JustDown(keyCtrl)) {
 						if (myPlaneSelected.flying) {
@@ -450,12 +450,12 @@ export class GameScene extends Phaser.Scene {
 									this.syncBomb();
 									this.checkBomb();
 								}
-	
+
 							}
 							else {
 								infoGameText.setText("Retorne a la base para recargar bomba");
 							}
-	
+
 						}
 						else {
 							infoGameText.setText("Avión en tierra. No puede disparar bomba");
@@ -766,7 +766,8 @@ export class GameScene extends Phaser.Scene {
 		// 	context.enemySession.damage = -1;
 		// }
 		this.checkAllArtilleryFire(time);
-		this.checkTowersFire(time);
+		this.checkMyTowersFire(time);
+		this.checkEnemyTowerFire(time);
 	}
 
 	moveEnemyPlanes() {
@@ -936,11 +937,11 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	checkTowersFire(time) {
+	checkMyTowersFire(time) {
 		let angle;
 		if (enemyPlaneSelected != null && enemyPlaneSelected.armor > 0) {
 			if (time > myTower.nextTic && !myTower.destroyed) {
-				if (Phaser.Math.Distance.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y) < 200) {
+				if (Phaser.Math.Distance.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y) < 300) {
 					angle = Phaser.Math.Angle.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y);
 					if (!enemyPlaneSelected.highFly) {
 						myTower.fire(time, angle, myBulletsArtillery);
@@ -949,7 +950,9 @@ export class GameScene extends Phaser.Scene {
 				}
 			}
 		}
-
+	}
+	checkEnemyTowerFire(time) {
+		let angle;
 		if (myPlaneSelected != null && myPlaneSelected.armor > 0) {
 			if (time > enemyTower.nextTic && !enemyTower.destroyed) {
 				if (Phaser.Math.Distance.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y) < 300) {
@@ -987,7 +990,7 @@ export class GameScene extends Phaser.Scene {
 
 	damageMyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
-			if (bullet.frame.texture.key == 'bullet' || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+			if ((bullet.frame.texture.key == 'bullet' && plane.flying) || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
 				let message;
 				let color;
 				if (plane.receiveDamage(bullet.damage)) {
@@ -1014,7 +1017,7 @@ export class GameScene extends Phaser.Scene {
 
 	damageEnemyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
-			if (bullet.frame.texture.key == 'bullet' || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+			if ((bullet.frame.texture.key == 'bullet' && plane.flying) || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
 				if (plane.receiveDamage(bullet.damage)) {
 					scene.createMessage("Avión enemigo destruido", COLOR_SUCCESS);
 					let planeView = scene.checkPlaneView(true, plane.planeIndex);
@@ -1270,7 +1273,7 @@ export class GameScene extends Phaser.Scene {
 			myFuel.place(yFuel, isBlue ? xFuel - 1030 : xFuel - 190);
 			myStructuresCount += 1;
 			myFuelView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 8 : RED_BASE_X_VIEW + 10, 270, isBlue ? 'fuelBlueView' : 'fuelRedView').setScale(0.25);
-			console.log(myFuel.x + " - " + myFuel.y);
+
 		}
 
 		if (context.playerSession.activeTower) {
@@ -1280,7 +1283,7 @@ export class GameScene extends Phaser.Scene {
 			myTower.place(yTower, isBlue ? xTower - 1030 : xTower - 190);
 			myStructuresCount += 1;
 			myTowerView = this.add.image(isBlue ? BLUE_BASE_X_VIEW : RED_BASE_X_VIEW + 18, 268, isBlue ? 'towerBlueView' : 'towerRedView').setScale(0.4);
-			console.log(myTower.x + " - " + myTower.y);
+
 		}
 
 		if (context.playerSession.activeHangar) {
@@ -1290,7 +1293,7 @@ export class GameScene extends Phaser.Scene {
 			myHangar.place(yHangar, isBlue ? xHangar - 1030 : xHangar - 190);
 			myStructuresCount += 1;
 			myHangarView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 18 : RED_BASE_X_VIEW, 275, isBlue ? 'hangarBlueView' : 'hangarRedView').setScale(0.3);
-			console.log(myHangar.x + " - " + myHangar.y);
+
 		}
 
 		this.placeMyPlanes();

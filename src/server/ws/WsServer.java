@@ -214,7 +214,7 @@ public class WsServer {
 			}
 			if (action.getString("name").equalsIgnoreCase("syncHighFly")) {
 
-				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
+				response = facade.getJsonHighFlyEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
