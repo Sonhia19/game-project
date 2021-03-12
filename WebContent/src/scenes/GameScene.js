@@ -29,7 +29,7 @@ let enemyStructuresCount, enemyPlanesCount;
 let gameOver = false;
 
 //Teclas a capturar
-let keyCtrl, keyOne, keyTwo, keyThree, keyFour, keyF, keyAlt;
+let keyA, keyOne, keyTwo, keyThree, keyFour, keyD, keyS;
 let cursors;
 
 //Constantes de colores para mensajes
@@ -301,7 +301,7 @@ export class GameScene extends Phaser.Scene {
 			if (myPlaneSelected != null) {
 				if (myPlaneSelected.scene) {
 					//Aterrizar / Despegar
-					if (Phaser.Input.Keyboard.JustDown(keyF)) {
+					if (Phaser.Input.Keyboard.JustDown(keyD)) {
 						if (myPlaneSelected.flying) {
 							myPlaneSelected.land(isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X);
 							if (!myPlaneSelected.flying) {
@@ -343,7 +343,7 @@ export class GameScene extends Phaser.Scene {
 					}
 
 					// Vuelto alto / vuelo bajo
-					if (Phaser.Input.Keyboard.JustDown(keyAlt)) {
+					if (Phaser.Input.Keyboard.JustDown(keyS)) {
 						if (myPlaneSelected.flying) {
 							if ((isBlue && myPlaneSelected.x < RED_SAFE_ZONE_X) || (!isBlue && myPlaneSelected.x > BLUE_SAFE_ZONE_X)) {
 								myPlaneSelected.highFlyPlane(true);
@@ -370,52 +370,93 @@ export class GameScene extends Phaser.Scene {
 					}
 					//Movimiento de avión
 					if (cursors.left.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
-						this.changeFlyXPlaneView(false, false, myPlaneSelected, delta);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(true, ANGLE_270, MINUS_X, delta);
+							this.changeFlyXPlaneView(false, false, myPlaneSelected, delta);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
+
 					} else if (cursors.right.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
-						this.changeFlyXPlaneView(false, true, myPlaneSelected, delta);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(true, ANGLE_90, MORE_X, delta);
+							this.changeFlyXPlaneView(false, true, myPlaneSelected, delta);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 					}
 					if (cursors.up.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 
 					} else if (cursors.down.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 
 					}
 					if (cursors.left.isDown && cursors.up.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_315, null, null);
-						this.changeFlyXPlaneView(false, false, null, null);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(false, ANGLE_315, null, null);
+							this.changeFlyXPlaneView(false, false, null, null);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 
 					}
 					if (cursors.left.isDown && cursors.down.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_225, null, null);
-						this.changeFlyXPlaneView(false, false, null, null);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(false, ANGLE_225, null, null);
+							this.changeFlyXPlaneView(false, false, null, null);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 
 					}
 					if (cursors.right.isDown && cursors.down.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_135, null, null);
-						this.changeFlyXPlaneView(false, true, null, null);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(false, ANGLE_135, null, null);
+							this.changeFlyXPlaneView(false, true, null, null);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 					}
 					if (cursors.right.isDown && cursors.up.isDown) {
-						this.fuelControl();
-						myPlaneSelected.fly(false, ANGLE_45, null, null);
-						this.changeFlyXPlaneView(false, true, null, null);
-						this.syncMove();
+						if (myPlaneSelected.flying) {
+							this.fuelControl();
+							myPlaneSelected.fly(false, ANGLE_45, null, null);
+							this.changeFlyXPlaneView(false, true, null, null);
+							this.syncMove();
+						}
+						else {
+							infoGameText.setText("Tiene que despegar (D)");
+						}
 					}
 
 
@@ -439,7 +480,7 @@ export class GameScene extends Phaser.Scene {
 					}
 
 					//Disparo de bomba
-					if (Phaser.Input.Keyboard.JustDown(keyCtrl)) {
+					if (Phaser.Input.Keyboard.JustDown(keyA)) {
 						if (myPlaneSelected.flying) {
 							if (myPlaneSelected.withBomb) {
 								if (myPlaneSelected.highFly) {
@@ -849,13 +890,13 @@ export class GameScene extends Phaser.Scene {
 
 	captureKeys() {
 		//capturar tecla control
-		keyCtrl = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+		keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 		keyOne = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
 		keyTwo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
 		keyThree = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 		keyFour = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
-		keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-		keyAlt = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
+		keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+		keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
 	}
 
 	selectPlane(p) {

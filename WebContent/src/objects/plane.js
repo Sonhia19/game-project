@@ -165,6 +165,9 @@ export let Plane = new Phaser.Class({
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
+            let height = 50;
+            this.displayWidth = height;
+            this.displayHeight = this.displayWidth * (this.height / this.width);
             this.setTexture('sprites', 'plane_landed');
         } else {
             console.log("vuelva a la base para aterrizar");
@@ -199,30 +202,26 @@ export let Plane = new Phaser.Class({
 
     },
     fly(move, angle, orientation, delta) {
-        if (this.flying) {
-            if (move) {
-                switch (orientation) {
-                    case MINUS_X:
-                        this.x -= this.speed * delta;
-                        break;
-                    case MINUS_Y:
-                        this.y -= this.speed * delta;
-                        break;
-                    case MORE_X:
-                        this.x += this.speed * delta;
-                        break;
-                    case MORE_Y:
-                        this.y += this.speed * delta;
-                        break;
-                }
+
+        if (move) {
+            switch (orientation) {
+                case MINUS_X:
+                    this.x -= this.speed * delta;
+                    break;
+                case MINUS_Y:
+                    this.y -= this.speed * delta;
+                    break;
+                case MORE_X:
+                    this.x += this.speed * delta;
+                    break;
+                case MORE_Y:
+                    this.y += this.speed * delta;
+                    break;
             }
-            this.angle = angle;
-            this.planeAngle = angle;
-            this.consumeFuel();
         }
-        else {
-            console.log("tiene que despegar");
-        }
+        this.angle = angle;
+        this.planeAngle = angle;
+        this.consumeFuel();
 
     }
 
