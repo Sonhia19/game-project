@@ -11,7 +11,7 @@ export let Plane = new Phaser.Class({
     initialize:
 
         function Plane(scene) {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'plane');
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesPlanes', 'reconocimiento_azul_default');
             this.planeIndex = 0;
             this.fuel = 0;
             this.firePower = 0;
@@ -21,17 +21,15 @@ export let Plane = new Phaser.Class({
             this.highFly = false;
             this.flying = false;
             this.planeAngle = ANGLE_90;
-            this.speed = 0;//Phaser.Math.GetSpeed(100, 1);
+            this.speed = 0;
             this.cadency = 0;
             this.type = null;
-
         },
 
 
     emptyTank(sync) {
         this.armor = 0;
         this.flying = false;
-        this.startCrash();
         this.destroy()
         if (sync) {
             let json = JSON.stringify({
@@ -46,7 +44,6 @@ export let Plane = new Phaser.Class({
             })
             context.functions.sendMessage(json);
         }
-
     },
     startCrash() {
         this.displayWidth = this.displayWidth * 0.95;
@@ -58,20 +55,19 @@ export let Plane = new Phaser.Class({
         if (bullet) {
             switch (this.planeAngle) {
                 case ANGLE_90:
-                    reach = (this.x + this.height)
+                    reach = (this.x + this.displayHeight)
                     break;
                 case ANGLE_270:
-                    reach = (this.x - this.height)
+                    reach = (this.x - this.displayHeight)
                     break;
                 case ANGLE_180:
-                    reach = (this.y + this.height)
+                    reach = (this.y + this.displayHeight)
                     break;
                 case ANGLE_0:
-                    reach = (this.y - this.height)
+                    reach = (this.y - this.displayHeight)
                     break;
             }
             bullet.fire(this.x, this.y, this.planeAngle, reach, this.firePower, this.highFly);
-
             this.cadency = time + 150;
         }
     },
@@ -81,8 +77,8 @@ export let Plane = new Phaser.Class({
         if (this.armor <= 0) {
             this.flying = false;
             //this.setTexture('explosion');     
-            this.destroy();
             destroy = true;
+            this.destroy();
         }
         return destroy;
     },
@@ -93,23 +89,23 @@ export let Plane = new Phaser.Class({
         if (bomb) {
             switch (this.planeAngle) {
                 case ANGLE_90:
-                    reach = (this.x + this.height)
+                    reach = (this.x + this.displayHeight)
                     break;
                 case ANGLE_270:
-                    reach = (this.x - this.height)
+                    reach = (this.x - this.displayHeight)
                     break;
                 case ANGLE_180:
-                    reach = (this.y + this.height)
+                    reach = (this.y + this.displayHeight)
                     break;
                 case ANGLE_0:
-                    reach = (this.y - this.height)
+                    reach = (this.y - this.displayHeight)
                     break;
             }
             bomb.fire(this.x, this.y, this.planeAngle, reach);
             this.withBomb = false;
         }
     },
-    place: function (i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type) {
+    place: function (i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type, isEnemy) {
         this.planeIndex = planeIndex;
         this.armor = armor;
         this.fuel = fuel;
@@ -118,18 +114,18 @@ export let Plane = new Phaser.Class({
         this.firePower = firePower;
         this.y = i;
         this.x = j;
-        let height = 50;
-        let width = height * this.height / this.width;
-        this.displayWidth = height;
-        this.displayHeight = width;
+
         this.angle = angle;
         this.body.collideWorldBounds = true;
         this.planeAngle = angle;
         this.type = type;
-        this.setTexture(this.getImage(UNSELECT));
-
-        // world.physics.add.overlap(bulletsTurret, this, torretPlane);
-
+        this.setTexture('spritesPlanes', this.getImage(UNSELECT, isEnemy));
+        let height = 60;
+        let width = height * this.height / this.width;
+        this.displayWidth = height;
+        this.displayHeight = width;
+        console.log(this);
+        console.log(isEnemy);
         return this;
     },
     update: function (time, delta) {
@@ -150,7 +146,7 @@ export let Plane = new Phaser.Class({
     takeOff() {
         this.flying = true;
         this.setDepth(1);
-        this.setTexture(this.getImage(FLYING));
+        this.setTexture('spritesPlanes', this.getImage(FLYING, false));
     },
     land() {
         var isBlue = context.playerSession.teamSide == 1;
@@ -166,14 +162,17 @@ export let Plane = new Phaser.Class({
         }
         if (landed) {
             this.setDepth(0);
-            this.highFly = false;
+
             this.flying = false;
             this.fuel = 100;
             this.withBomb = true;
-            let height = 50;
-            this.displayWidth = height;
-            this.displayHeight = this.displayWidth * (this.height / this.width);
-            this.setTexture(this.getImage(LANDED));
+            if (this.highFly) {
+                let height = 60;
+                this.displayWidth = height;
+                this.displayHeight = this.displayWidth * (this.height / this.width);
+            }
+            this.highFly = false;
+            this.setTexture('spritesPlanes', this.getImage(LANDED, false));
         } else {
             console.log("vuelva a la base para aterrizar");
         }
@@ -183,7 +182,7 @@ export let Plane = new Phaser.Class({
         this.highFly = !this.highFly;
         this.setDepth(this.highFly ? 2 : 1);
         //Tamaño
-        let height = 50;
+        let height = 60;
         this.displayWidth = this.highFly ? height * 1.2 : height;
         this.displayHeight = this.displayWidth * (this.height / this.width);
 
@@ -229,14 +228,14 @@ export let Plane = new Phaser.Class({
         this.consumeFuel();
 
     },
-    getImage(status) {
+    getImage(status, isEnemy) {
         let plane;
         let side = context.playerSession.teamSide;
-        let color = side == 1 ? "azul" : "rojo";
+        let color = parseInt(side) == 1 ? isEnemy ? "rojo" : "azul" : isEnemy ? "azul" : "rojo";
         let situation;
         switch (status) {
             case UNSELECT:
-                sitation = "default";
+                situation = "default";
                 break;
             case FLYING:
                 situation = "volando";

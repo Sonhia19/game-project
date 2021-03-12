@@ -21,7 +21,7 @@ export class LobbyGameScene extends Phaser.Scene {
 
 		this.load.scenePlugin({
 			key: 'rexuiplugin',
-			url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+			url: 'src/rexuiplugin.min.js',
 			sceneKey: 'rexUI'
 		});
 
@@ -154,7 +154,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		/***   se incorpora boton para tipo avion 3   ***/
 		let plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane3Type)).setDepth(0)
 			.setInteractive()
-			.on('pointerdown', () => this.updatPlane3(this.plane3Type));
+			.on('pointerdown', () => this.updatePlane3(this.plane3Type));
 
 
 		/***   se incorpora boton para tipo avion 4  ***/

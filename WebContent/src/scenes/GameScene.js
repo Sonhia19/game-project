@@ -10,7 +10,7 @@ import { Bomb } from '../objects/bomb.js';
 import { Black } from '../objects/shadow.js';
 import { Gray } from '../objects/shadow.js';
 import { context } from '../../src/main.js';
-import { BLUE_BASE_X_VIEW, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_BASE_X_VIEW, RED_SAFE_ZONE_X, RED_BASE_X, BLUE_PLANE_HIGH_VIEW_Y, BLUE_PLANE_LOW_VIEW_Y, RED_PLANE_HIGH_VIEW_Y, RED_PLANE_LOW_VIEW_Y, BLUE_PLANE_LAND_VIEW_Y, RED_PLANE_LAND_VIEW_Y, LANDED, UNSELECT } from '../constants/GameConstants.js'
+import { BLUE_BASE_X_VIEW, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_BASE_X_VIEW, RED_SAFE_ZONE_X, RED_BASE_X, BLUE_PLANE_HIGH_VIEW_Y, BLUE_PLANE_LOW_VIEW_Y, RED_PLANE_HIGH_VIEW_Y, RED_PLANE_LOW_VIEW_Y, BLUE_PLANE_LAND_VIEW_Y, RED_PLANE_LAND_VIEW_Y, LANDED, UNSELECT, FLYING, ELIMINATED } from '../constants/GameConstants.js'
 import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
 import { BLUE_SAFE_ZONE_X, BLUE_PLANE_X, BLUE_BASE_X, BLUE_ARTILLERY_X_VIEW } from '../constants/GameConstants.js';
 
@@ -130,7 +130,7 @@ export class GameScene extends Phaser.Scene {
 	preload() {
 		this.load.scenePlugin({
 			key: 'rexuiplugin',
-			url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+			url: 'src/rexuiplugin.min.js',
 			sceneKey: 'rexUI'
 		});
 
@@ -138,9 +138,11 @@ export class GameScene extends Phaser.Scene {
 		this.load.image('field', 'assets/field.jpg');
 		this.load.image('black', 'assets/black.png');
 		this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
+		this.load.atlas('spritesPlanes', 'assets/planes/spritesheet.png', 'assets/planes/sprites.json');
 		this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
 		this.load.image('bullet', './assets/Bullet3.png');
 		this.load.image("fuel", "./assets/fuel.png");
+		this.load.image("plane", "./assets/plane.png");
 		this.load.image("hangar", "./assets/hangar.png");
 		this.load.image("tower", "./assets/tower.png");
 		this.load.image("artillery", "./assets/artillery.png");
@@ -152,43 +154,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("ledGreen", "./assets/led_green.png");
 		this.load.image("view", "./assets/view.png");
 		this.load.image("dashboard", "./assets/dashboard.png");
-
-		this.load.image("bombardero_azul_aterrizado", "./assets/planes/bombardero_azul_aterrizado.png");
-		this.load.image("bombardero_azul_default", "./assets/planes/bombardero_azul_default.png");
-		this.load.image("bombardero_azul_eliminado", "./assets/planes/bombardero_azul_eliminado.png");
-		this.load.image("bombardero_azul_volando", "./assets/planes/bombardero_azul_volando.png");
-		this.load.image("bombardero_rojo_aterrizado", "./assets/planes/bombardero_rojo_aterrizado.png");
-		this.load.image("bombardero_rojo_eliminado", "./assets/planes/bombardero_rojo_eliminado.png");
-		this.load.image("bombardero_rojol_default", "./assets/planes/bombardero_rojol_default.png");
-		this.load.image("bombardero_rojol_volando", "./assets/planes/bombardero_rojol_volando.png");
-		this.load.image("caza_azul_aterrizado", "./assets/planes/caza_azul_aterrizado.png");
-		this.load.image("caza_azul_default", "./assets/planes/caza_azul_default.png");
-		this.load.image("caza_azul_eliminado", "./assets/planes/caza_azul_eliminado.png");
-		this.load.image("caza_azul_volando", "./assets/planes/caza_azul_volando.png");
-		this.load.image("caza_rojo_aterrizado", "./assets/planes/caza_rojo_aterrizado.png");
-		this.load.image("caza_rojo_default", "./assets/planes/caza_rojo_default.png");
-		this.load.image("caza_rojo_eliminado", "./assets/planes/caza_rojo_eliminado.png");
-		this.load.image("caza_rojo_volando", "./assets/planes/caza_rojo_volando.png");
-		this.load.image("patrulla_azul_default", "./assets/planes/patrulla_azul_default.png");
-		this.load.image("patrulla_azul_eliminado", "./assets/planes/patrulla_azul_eliminado.png");
-		this.load.image("patrulla_rojo_default", "./assets/planes/patrulla_rojo_default.png");
-		this.load.image("patrulla_rojo_eliminado", "./assets/planes/patrulla_rojo_eliminado.png");
-		this.load.image("patrullero_azul_aterrizado", "./assets/planes/patrullero_azul_aterrizado.png");
-		this.load.image("patrullero_azul_volando", "./assets/planes/patrullero_azul_volando.png");
-		this.load.image("patrullero_rojo_aterrizado", "./assets/planes/patrullero_rojo_aterrizado.png");
-		this.load.image("patrullero_rojo_volando", "./assets/planes/patrullero_rojo_volando.png");
-		this.load.image("reconocimiento_azul_aterrizado", "./assets/planes/reconocimiento_azul_aterrizado.png");
-		this.load.image("reconocimiento_azul_default", "./assets/planes/reconocimiento_azul_default.png");
-		this.load.image("reconocimiento_azul_eliminado", "./assets/planes/reconocimiento_azul_eliminado.png");
-		this.load.image("reconocimiento_azul_volando", "./assets/planes/reconocimiento_azul_volando.png");
-		this.load.image("reconocimiento_rojo_aterrizado", "./assets/planes/reconocimiento_rojo_aterrizado.png");
-		this.load.image("reconocimiento_rojo_default", "./assets/planes/reconocimiento_rojo_default.png");
-		this.load.image("reconocimiento_rojo_eliminado", "./assets/planes/reconocimiento_rojo_eliminado.png");
-		this.load.image("reconocimiento_rojo_volando", "./assets/planes/reconocimiento_rojo_volando.png");
-
-
-
-
 
 		//Vista lateral
 		this.load.image('fieldView', 'assets/view/field_view.png');
@@ -603,20 +568,16 @@ export class GameScene extends Phaser.Scene {
 
 
 		//Aviones Consola
-		consolePlane1 = this.add.image(1040, 520, 'plane');
-		consolePlane1.setScale(0.3);
+		consolePlane1 = this.add.image(1040, 520, 'spritesPlanes', myPlaneOne.getImage(UNSELECT, false));
 		plane1ArmorText = this.add.text(1025, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
-		consolePlane2 = this.add.image(1120, 520, 'plane');
-		consolePlane2.setScale(0.3);
+		consolePlane2 = this.add.image(1120, 520, 'spritesPlanes', myPlaneTwo.getImage(UNSELECT, false));
 		plane2ArmorText = this.add.text(1105, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
-		consolePlane3 = this.add.image(1200, 520, 'plane');
-		consolePlane3.setScale(0.3);
+		consolePlane3 = this.add.image(1200, 520, 'spritesPlanes', myPlaneThree.getImage(UNSELECT, false));
 		plane3ArmorText = this.add.text(1185, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
-		consolePlane4 = this.add.image(1280, 520, 'plane');
-		consolePlane4.setScale(0.3);
+		consolePlane4 = this.add.image(1280, 520, 'spritesPlanes', myPlaneFour.getImage(UNSELECT, false));
 		plane4ArmorText = this.add.text(1265, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
 
 		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '11px', fill: '#FFFFFF', });
@@ -636,6 +597,23 @@ export class GameScene extends Phaser.Scene {
 		towerEnemyText = this.add.text(1190, 430, 'Torre', { fontSize: '11px', fill: '#FFFFFF' });
 		hangarEnemyText = this.add.text(1190, 445, 'Hangar', { fontSize: '11px', fill: '#FFFFFF' });
 		fuelsEnemyText = this.add.text(1190, 460, 'Tanque', { fontSize: '11px', fill: '#FFFFFF' });
+		this.resizeConsolePlanes();
+
+	}
+
+	resizeConsolePlanes() {
+		let height = 60;
+		consolePlane1.displayWidth = height;
+		consolePlane1.displayHeight = consolePlane1.displayWidth * (consolePlane1.height / consolePlane1.width);
+
+		consolePlane2.displayWidth = height;
+		consolePlane2.displayHeight = consolePlane2.displayWidth * (consolePlane2.height / consolePlane2.width);
+
+		consolePlane3.displayWidth = height;
+		consolePlane3.displayHeight = consolePlane3.displayWidth * (consolePlane3.height / consolePlane3.width);
+
+		consolePlane4.displayWidth = height;
+		consolePlane4.displayHeight = consolePlane4.displayWidth * (consolePlane4.height / consolePlane4.width);
 	}
 
 	checkBomb() {
@@ -671,53 +649,34 @@ export class GameScene extends Phaser.Scene {
 
 	checkPlanesArmor() {
 		if (myPlaneOne.armor <= 0) {
-			consolePlane1.setVisible(false);
+			consolePlane1.setTexture('spritesPlanes', myPlaneOne.getImage(ELIMINATED, false));
 			plane1ArmorText.setText('');
 		} else {
 			plane1ArmorText.setText(myPlaneOne.armor);
 		}
 		if (myPlaneTwo.armor <= 0) {
-			consolePlane2.setVisible(false);
+			consolePlane2.setTexture('spritesPlanes', myPlaneTwo.getImage(ELIMINATED, false));
 			plane2ArmorText.setText('');
 		} else {
 			plane2ArmorText.setText(myPlaneTwo.armor);
 		}
 		if (myPlaneThree.armor <= 0) {
-			consolePlane3.setVisible(false);
+			consolePlane3.setTexture('spritesPlanes', myPlaneThree.getImage(ELIMINATED, false));
 			plane3ArmorText.setText('');
 		} else {
 			plane3ArmorText.setText(myPlaneThree.armor);
 		}
 		if (myPlaneFour.armor <= 0) {
-			consolePlane4.setVisible(false);
+			consolePlane4.setTexture('spritesPlanes', myPlaneFour.getImage(ELIMINATED, false));
 			plane4ArmorText.setText('');
 		} else {
 			plane4ArmorText.setText(myPlaneFour.armor);
 		}
+		this.resizeConsolePlanes();
 
 	}
 
 	loadConsole() {
-		if (myPlaneSelected == myPlaneOne) {
-			consolePlane1.setTexture(myPlaneOne.getImage(LANDED));
-		} else {
-			consolePlane1.setTexture(myPlaneOne.getImage(UNSELECT));
-		}
-		if (myPlaneSelected == myPlaneTwo) {
-			consolePlane2.setTexture(myPlaneTwo.getImage(LANDED));
-		} else {
-			consolePlane2.setTexture(myPlaneTwo.getImage(UNSELECT));
-		}
-		if (myPlaneSelected == myPlaneThree) {
-			consolePlane3.setTexture(myPlaneThree.getImage(LANDED));
-		} else {
-			consolePlane3.setTexture(myPlaneThree.getImage(UNSELECT));
-		}
-		if (myPlaneSelected == myPlaneFour) {
-			consolePlane4.setTexture(myPlaneFour.getImage(LANDED));
-		} else {
-			consolePlane4.setTexture(myPlaneFour.getImage(UNSELECT));
-		}
 		infoGameText.setText("Presione (F) para despegar avión");
 		fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
 		this.checkBomb();
@@ -805,7 +764,9 @@ export class GameScene extends Phaser.Scene {
 			context.enemySession.isTakeOff = false;
 			context.enemySession.planeTakeOff = -1;
 			if (p != null) {
+				p.setDepth(1);
 				enemyPlaneSelected = p;
+				enemyPlaneSelected.flying = takeOff == "true";
 				let planeView = this.checkPlaneView(true, enemyPlaneSelected.planeIndex);
 				if (planeView != null) {
 					let position = takeOff == 'true' ? isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y : isBlue ? RED_PLANE_LAND_VIEW_Y : BLUE_PLANE_LAND_VIEW_Y;
@@ -819,8 +780,8 @@ export class GameScene extends Phaser.Scene {
 			context.enemySession.isHighFlying = false;
 			context.enemySession.planeHighFly = -1;
 			if (p != null) {
-				p.highFlyPlane(false);
 				enemyPlaneSelected = p;
+				enemyPlaneSelected.highFlyPlane(false);
 				let planeView = this.checkPlaneView(true, enemyPlaneSelected.planeIndex);
 				if (planeView) {
 					this.changeFlyYPlaneView(planeView.y, enemyPlaneSelected.highFly ? isBlue ? RED_PLANE_HIGH_VIEW_Y : BLUE_PLANE_HIGH_VIEW_Y : isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y, planeView);
@@ -945,7 +906,7 @@ export class GameScene extends Phaser.Scene {
 					myPlaneSelected.angle = angle;
 					myPlaneSelected.planeAngle = angle;
 					myPlaneSelected.flying = false;
-					myPlaneSelected.setTexture(myPlaneSelected.getImage(LANDED));
+					myPlaneSelected.setTexture('spritesPlanes', myPlaneSelected.getImage(LANDED, false));
 					myPlaneSelectedText.setText('Avión #' + p.planeIndex);
 					//Info en Consola
 					this.loadConsole();
@@ -959,7 +920,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	unselectPlane(p) {
-		p.setTexture(p.getImage(UNSELECT));
+		p.setTexture('spritesPlanes', p.getImage(UNSELECT, false));
 		p.flying = false;
 	}
 
@@ -1090,8 +1051,12 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	damageEnemyPlane(bullet, plane) {
+
 		if (plane.active === true && bullet.active === true) {
+			console.log(plane);
+			console.log(bullet);
 			if ((bullet.frame.texture.key == 'bullet' && plane.flying) || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+				console.log("entra");
 				if (plane.receiveDamage(bullet.damage)) {
 					scene.createMessage("Avión enemigo destruido", COLOR_SUCCESS);
 					let planeView = scene.checkPlaneView(true, plane.planeIndex);
@@ -1410,7 +1375,7 @@ export class GameScene extends Phaser.Scene {
 	placeMyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type) {
 		let plane = myPlanes.get();
 		if (plane) {
-			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type);
+			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type, false);
 		}
 	}
 
@@ -1437,6 +1402,7 @@ export class GameScene extends Phaser.Scene {
 				enemyPlanesCount += 1;
 				enemyPlaneFourView = this.add.image(isBlue ? enemyPlaneFour.x + 415 : enemyPlaneFour.x + 935, 280, isBlue ? enemyPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
+			console.log(enemyPlaneOne);
 			this.physics.add.overlap(myBullets, enemyPlanes, this.damageEnemyPlane);
 		}
 	}
@@ -1444,7 +1410,7 @@ export class GameScene extends Phaser.Scene {
 	placeEnemyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type) {
 		let plane = enemyPlanes.get();
 		if (plane) {
-			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type);
+			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type, true);
 		}
 	}
 	placeMyArtilleries() {
