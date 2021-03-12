@@ -1,6 +1,8 @@
 import { BLUE_SAFE_ZONE_X, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_SAFE_ZONE_X } from '../constants/GameConstants.js'
 import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
 import { context } from '../../src/main.js';
+import { LANDED, FLYING, UNSELECT, ELIMINATED } from '../constants/GameConstants.js';
+import { BOMBARDERO, CAZA, PATRULLA, RECONOCIMIENTO } from '../constants/GameConstants.js';
 
 export let Plane = new Phaser.Class({
 
@@ -21,6 +23,7 @@ export let Plane = new Phaser.Class({
             this.planeAngle = ANGLE_90;
             this.speed = 0;//Phaser.Math.GetSpeed(100, 1);
             this.cadency = 0;
+            this.type = null;
 
         },
 
@@ -106,7 +109,7 @@ export let Plane = new Phaser.Class({
             this.withBomb = false;
         }
     },
-    place: function (i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
+    place: function (i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type) {
         this.planeIndex = planeIndex;
         this.armor = armor;
         this.fuel = fuel;
@@ -122,6 +125,8 @@ export let Plane = new Phaser.Class({
         this.angle = angle;
         this.body.collideWorldBounds = true;
         this.planeAngle = angle;
+        this.type = type;
+        this.setTexture(this.getImage(UNSELECT));
 
         // world.physics.add.overlap(bulletsTurret, this, torretPlane);
 
@@ -145,7 +150,7 @@ export let Plane = new Phaser.Class({
     takeOff() {
         this.flying = true;
         this.setDepth(1);
-        this.setTexture('sprites', 'plane_flying');
+        this.setTexture(this.getImage(FLYING));
     },
     land() {
         var isBlue = context.playerSession.teamSide == 1;
@@ -168,7 +173,7 @@ export let Plane = new Phaser.Class({
             let height = 50;
             this.displayWidth = height;
             this.displayHeight = this.displayWidth * (this.height / this.width);
-            this.setTexture('sprites', 'plane_landed');
+            this.setTexture(this.getImage(LANDED));
         } else {
             console.log("vuelva a la base para aterrizar");
         }
@@ -223,6 +228,42 @@ export let Plane = new Phaser.Class({
         this.planeAngle = angle;
         this.consumeFuel();
 
+    },
+    getImage(status) {
+        let plane;
+        let side = context.playerSession.teamSide;
+        let color = side == 1 ? "azul" : "rojo";
+        let situation;
+        switch (status) {
+            case UNSELECT:
+                sitation = "default";
+                break;
+            case FLYING:
+                situation = "volando";
+                break;
+            case LANDED:
+                situation = "aterrizado";
+                break;
+            case ELIMINATED:
+                situation = "eliminado";
+                break;
+        }
+        switch (this.type) {
+            case BOMBARDERO:
+                plane = "bombardero";
+                break;
+            case CAZA:
+                plane = "caza";
+                break;
+            case PATRULLA:
+                plane = "patrulla";
+                break;
+            case RECONOCIMIENTO:
+                plane = "reconocimiento";
+                break;
+
+        }
+        return plane + "_" + color + "_" + situation;
     }
 
 });

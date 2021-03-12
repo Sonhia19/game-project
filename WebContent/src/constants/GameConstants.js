@@ -37,3 +37,13 @@ export const RED_ARTILLERY_X_VIEW = 1289;
 export const RED_PLANE_LOW_VIEW_Y = 175;
 export const RED_PLANE_HIGH_VIEW_Y = 40;
 export const RED_PLANE_LAND_VIEW_Y = 280;
+
+export const UNSELECT = 0;
+export const LANDED = 1;
+export const FLYING = 2;
+export const ELIMINATED = 3;
+
+export const BOMBARDERO = 1;
+export const CAZA = 2;
+export const PATRULLA = 3;
+export const RECONOCIMIENTO = 4;

@@ -10,7 +10,7 @@ import { Bomb } from '../objects/bomb.js';
 import { Black } from '../objects/shadow.js';
 import { Gray } from '../objects/shadow.js';
 import { context } from '../../src/main.js';
-import { BLUE_BASE_X_VIEW, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_BASE_X_VIEW, RED_SAFE_ZONE_X, RED_BASE_X, BLUE_PLANE_HIGH_VIEW_Y, BLUE_PLANE_LOW_VIEW_Y, RED_PLANE_HIGH_VIEW_Y, RED_PLANE_LOW_VIEW_Y, BLUE_PLANE_LAND_VIEW_Y, RED_PLANE_LAND_VIEW_Y } from '../constants/GameConstants.js'
+import { BLUE_BASE_X_VIEW, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_BASE_X_VIEW, RED_SAFE_ZONE_X, RED_BASE_X, BLUE_PLANE_HIGH_VIEW_Y, BLUE_PLANE_LOW_VIEW_Y, RED_PLANE_HIGH_VIEW_Y, RED_PLANE_LOW_VIEW_Y, BLUE_PLANE_LAND_VIEW_Y, RED_PLANE_LAND_VIEW_Y, LANDED, UNSELECT } from '../constants/GameConstants.js'
 import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
 import { BLUE_SAFE_ZONE_X, BLUE_PLANE_X, BLUE_BASE_X, BLUE_ARTILLERY_X_VIEW } from '../constants/GameConstants.js';
 
@@ -140,9 +140,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
 		this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
 		this.load.image('bullet', './assets/Bullet3.png');
-		this.load.image("plane", "./assets/plane.png");
-		this.load.image("plane_flying", "./assets/plane_flying.png");
-		this.load.image("plane_landed", "./assets/plane_landed.png");
 		this.load.image("fuel", "./assets/fuel.png");
 		this.load.image("hangar", "./assets/hangar.png");
 		this.load.image("tower", "./assets/tower.png");
@@ -155,6 +152,42 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("ledGreen", "./assets/led_green.png");
 		this.load.image("view", "./assets/view.png");
 		this.load.image("dashboard", "./assets/dashboard.png");
+
+		this.load.image("bombardero_azul_aterrizado", "./assets/planes/bombardero_azul_aterrizado.png");
+		this.load.image("bombardero_azul_default", "./assets/planes/bombardero_azul_default.png");
+		this.load.image("bombardero_azul_eliminado", "./assets/planes/bombardero_azul_eliminado.png");
+		this.load.image("bombardero_azul_volando", "./assets/planes/bombardero_azul_volando.png");
+		this.load.image("bombardero_rojo_aterrizado", "./assets/planes/bombardero_rojo_aterrizado.png");
+		this.load.image("bombardero_rojo_eliminado", "./assets/planes/bombardero_rojo_eliminado.png");
+		this.load.image("bombardero_rojol_default", "./assets/planes/bombardero_rojol_default.png");
+		this.load.image("bombardero_rojol_volando", "./assets/planes/bombardero_rojol_volando.png");
+		this.load.image("caza_azul_aterrizado", "./assets/planes/caza_azul_aterrizado.png");
+		this.load.image("caza_azul_default", "./assets/planes/caza_azul_default.png");
+		this.load.image("caza_azul_eliminado", "./assets/planes/caza_azul_eliminado.png");
+		this.load.image("caza_azul_volando", "./assets/planes/caza_azul_volando.png");
+		this.load.image("caza_rojo_aterrizado", "./assets/planes/caza_rojo_aterrizado.png");
+		this.load.image("caza_rojo_default", "./assets/planes/caza_rojo_default.png");
+		this.load.image("caza_rojo_eliminado", "./assets/planes/caza_rojo_eliminado.png");
+		this.load.image("caza_rojo_volando", "./assets/planes/caza_rojo_volando.png");
+		this.load.image("patrulla_azul_default", "./assets/planes/patrulla_azul_default.png");
+		this.load.image("patrulla_azul_eliminado", "./assets/planes/patrulla_azul_eliminado.png");
+		this.load.image("patrulla_rojo_default", "./assets/planes/patrulla_rojo_default.png");
+		this.load.image("patrulla_rojo_eliminado", "./assets/planes/patrulla_rojo_eliminado.png");
+		this.load.image("patrullero_azul_aterrizado", "./assets/planes/patrullero_azul_aterrizado.png");
+		this.load.image("patrullero_azul_volando", "./assets/planes/patrullero_azul_volando.png");
+		this.load.image("patrullero_rojo_aterrizado", "./assets/planes/patrullero_rojo_aterrizado.png");
+		this.load.image("patrullero_rojo_volando", "./assets/planes/patrullero_rojo_volando.png");
+		this.load.image("reconocimiento_azul_aterrizado", "./assets/planes/reconocimiento_azul_aterrizado.png");
+		this.load.image("reconocimiento_azul_default", "./assets/planes/reconocimiento_azul_default.png");
+		this.load.image("reconocimiento_azul_eliminado", "./assets/planes/reconocimiento_azul_eliminado.png");
+		this.load.image("reconocimiento_azul_volando", "./assets/planes/reconocimiento_azul_volando.png");
+		this.load.image("reconocimiento_rojo_aterrizado", "./assets/planes/reconocimiento_rojo_aterrizado.png");
+		this.load.image("reconocimiento_rojo_default", "./assets/planes/reconocimiento_rojo_default.png");
+		this.load.image("reconocimiento_rojo_eliminado", "./assets/planes/reconocimiento_rojo_eliminado.png");
+		this.load.image("reconocimiento_rojo_volando", "./assets/planes/reconocimiento_rojo_volando.png");
+
+
+
 
 
 		//Vista lateral
@@ -666,24 +699,24 @@ export class GameScene extends Phaser.Scene {
 
 	loadConsole() {
 		if (myPlaneSelected == myPlaneOne) {
-			consolePlane1.setTexture('sprites', 'plane_landed');
+			consolePlane1.setTexture(myPlaneOne.getImage(LANDED));
 		} else {
-			consolePlane1.setTexture('sprites', 'plane');
+			consolePlane1.setTexture(myPlaneOne.getImage(UNSELECT));
 		}
 		if (myPlaneSelected == myPlaneTwo) {
-			consolePlane2.setTexture('sprites', 'plane_landed');
+			consolePlane2.setTexture(myPlaneTwo.getImage(LANDED));
 		} else {
-			consolePlane2.setTexture('sprites', 'plane');
+			consolePlane2.setTexture(myPlaneTwo.getImage(UNSELECT));
 		}
 		if (myPlaneSelected == myPlaneThree) {
-			consolePlane3.setTexture('sprites', 'plane_landed');
+			consolePlane3.setTexture(myPlaneThree.getImage(LANDED));
 		} else {
-			consolePlane3.setTexture('sprites', 'plane');
+			consolePlane3.setTexture(myPlaneThree.getImage(UNSELECT));
 		}
 		if (myPlaneSelected == myPlaneFour) {
-			consolePlane4.setTexture('sprites', 'plane_landed');
+			consolePlane4.setTexture(myPlaneFour.getImage(LANDED));
 		} else {
-			consolePlane4.setTexture('sprites', 'plane');
+			consolePlane4.setTexture(myPlaneFour.getImage(UNSELECT));
 		}
 		infoGameText.setText("Presione (F) para despegar avión");
 		fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
@@ -912,7 +945,7 @@ export class GameScene extends Phaser.Scene {
 					myPlaneSelected.angle = angle;
 					myPlaneSelected.planeAngle = angle;
 					myPlaneSelected.flying = false;
-					myPlaneSelected.setTexture('plane_landed');
+					myPlaneSelected.setTexture(myPlaneSelected.getImage(LANDED));
 					myPlaneSelectedText.setText('Avión #' + p.planeIndex);
 					//Info en Consola
 					this.loadConsole();
@@ -926,7 +959,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	unselectPlane(p) {
-		p.setTexture('plane');
+		p.setTexture(p.getImage(UNSELECT));
 		p.flying = false;
 	}
 
@@ -1348,22 +1381,22 @@ export class GameScene extends Phaser.Scene {
 		if (context.playerSession.planes != undefined) {
 			let planesServer = context.playerSession.planes;
 			if (planesServer[0].armor > 0) {
-				myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, planesServer[0].speed, planesServer[0].hasBomb, planesServer[0].firePower, 1);
+				myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, planesServer[0].speed, planesServer[0].hasBomb, planesServer[0].firePower, 1, planesServer[0].planeType);
 				myPlanesCount += 1;
 				myPlaneOneView = this.add.image(isBlue ? myPlaneOne.x + 929 : myPlaneOne.x + 421, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 			}
 			if (planesServer[1].armor > 0) {
-				myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2);
+				myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2, planesServer[1].planeType);
 				myPlanesCount += 1;
 				myPlaneTwoView = this.add.image(isBlue ? myPlaneTwo.x + 931 : myPlaneTwo.x + 419, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 			}
 			if (planesServer[2].armor > 0) {
-				myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, planesServer[2].speed, planesServer[2].hasBomb, planesServer[2].firePower, 3);
+				myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, planesServer[2].speed, planesServer[2].hasBomb, planesServer[2].firePower, 3, planesServer[2].planeType);
 				myPlanesCount += 1;
 				myPlaneThreeView = this.add.image(isBlue ? myPlaneThree.x + 933 : myPlaneThree.x + 417, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 			}
 			if (planesServer[3].armor > 0) {
-				myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4);
+				myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4, planesServer[3].planeType);
 				myPlanesCount += 1;
 				myPlaneFourView = this.add.image(isBlue ? myPlaneFour.x + 935 : myPlaneFour.x + 415, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 			}
@@ -1374,10 +1407,10 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	placeMyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
+	placeMyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type) {
 		let plane = myPlanes.get();
 		if (plane) {
-			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex);
+			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type);
 		}
 	}
 
@@ -1385,22 +1418,22 @@ export class GameScene extends Phaser.Scene {
 		if (context.enemySession.planes != undefined) {
 			let planeEnemyServer = context.enemySession.planes;
 			if (planeEnemyServer[0].armor > 0) {
-				enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, planeEnemyServer[0].speed, planeEnemyServer[0].hasBomb, planeEnemyServer[0].firePower, 1);
+				enemyPlaneOne = this.placeEnemyPlane(planeEnemyServer[0].positionY, planeEnemyServer[0].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[0].fuel, planeEnemyServer[0].armor, planeEnemyServer[0].speed, planeEnemyServer[0].hasBomb, planeEnemyServer[0].firePower, 1, planeEnemyServer[0].planeType);
 				enemyPlanesCount += 1;
 				enemyPlaneOneView = this.add.image(isBlue ? enemyPlaneOne.x + 421 : enemyPlaneOne.x + 929, 280, isBlue ? enemyPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
 			if (planeEnemyServer[1].armor > 0) {
-				enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, planeEnemyServer[1].speed, planeEnemyServer[1].hasBomb, planeEnemyServer[1].firePower, 2);
+				enemyPlaneTwo = this.placeEnemyPlane(planeEnemyServer[1].positionY, planeEnemyServer[1].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[1].fuel, planeEnemyServer[1].armor, planeEnemyServer[1].speed, planeEnemyServer[1].hasBomb, planeEnemyServer[1].firePower, 2, planeEnemyServer[1].planeType);
 				enemyPlanesCount += 1;
 				enemyPlaneTwoView = this.add.image(isBlue ? enemyPlaneTwo.x + 419 : enemyPlaneTwo.x + 931, 280, isBlue ? enemyPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
 			if (planeEnemyServer[2].armor > 0) {
-				enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, planeEnemyServer[2].speed, planeEnemyServer[2].hasBomb, planeEnemyServer[2].firePower, 3);
+				enemyPlaneThree = this.placeEnemyPlane(planeEnemyServer[2].positionY, planeEnemyServer[2].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[2].fuel, planeEnemyServer[2].armor, planeEnemyServer[2].speed, planeEnemyServer[2].hasBomb, planeEnemyServer[2].firePower, 3, planeEnemyServer[2].planeType);
 				enemyPlanesCount += 1;
 				enemyPlaneThreeView = this.add.image(isBlue ? enemyPlaneThree.x + 417 : enemyPlaneThree.x + 933, 280, isBlue ? enemyPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
 			if (planeEnemyServer[3].armor > 0) {
-				enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, planeEnemyServer[3].speed, planeEnemyServer[3].hasBomb, planeEnemyServer[3].firePower, 4);
+				enemyPlaneFour = this.placeEnemyPlane(planeEnemyServer[3].positionY, planeEnemyServer[3].positionX, isBlue ? ANGLE_270 : ANGLE_90, planeEnemyServer[3].fuel, planeEnemyServer[3].armor, planeEnemyServer[3].speed, planeEnemyServer[3].hasBomb, planeEnemyServer[3].firePower, 4, planeEnemyServer[3].planeType);
 				enemyPlanesCount += 1;
 				enemyPlaneFourView = this.add.image(isBlue ? enemyPlaneFour.x + 415 : enemyPlaneFour.x + 935, 280, isBlue ? enemyPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
@@ -1408,10 +1441,10 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	placeEnemyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex) {
+	placeEnemyPlane(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type) {
 		let plane = enemyPlanes.get();
 		if (plane) {
-			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex);
+			return plane.place(i, j, angle, fuel, armor, speed, bomb, firePower, planeIndex, type);
 		}
 	}
 	placeMyArtilleries() {
