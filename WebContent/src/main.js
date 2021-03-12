@@ -144,7 +144,7 @@ var functions = {
                 context.enemySession.planeTakeOff = JSON.parse(response.responses[1].value);
                 context.enemySession.takeOff = JSON.parse(response.responses[2].value);
             }
-            if (response.action.name == "syncPlaneViewEnemy") {
+            if (response.action.name == "syncPlaneViewXEnemy") {
                 context.enemySession.isPlaneView = true;
                 context.enemySession.planeViewPlane = JSON.parse(response.responses[1].value);
                 context.enemySession.planeViewCoord = JSON.parse(response.responses[2].value);
