@@ -214,7 +214,7 @@ public class WsServer {
 			}
 			if (action.getString("name").equalsIgnoreCase("syncHighFly")) {
 
-				response = facade.getJsonEmptyTankEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
+				response = facade.getJsonHighFlyEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
@@ -228,13 +228,13 @@ public class WsServer {
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncTakeOffEnemy");
 			}
-			if (action.getString("name").equalsIgnoreCase("syncPlaneView")) {
+			if (action.getString("name").equalsIgnoreCase("syncPlaneViewX")) {
 
 				response = facade.getJsonPlaneViewEnemy(parameters.getInt("gameId"), parameters.getString("playerName"),
 						parameters);
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
-						response, "syncPlaneViewEnemy");
+						response, "syncPlaneViewXEnemy");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

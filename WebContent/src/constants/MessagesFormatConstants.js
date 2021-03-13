@@ -131,10 +131,10 @@ export const MESSAGES_FORMAT = {
         })
     },
 
-    syncPlaneView(selectedPlaneIndex, x) {
+    syncPlaneViewX(selectedPlaneIndex, x) {
         return JSON.stringify({
             action: {
-                name: 'syncPlaneView',
+                name: 'syncPlaneViewX',
                 parameters: {
                     gameId: context.gameId,
                     playerName: context.playerSession.name,
