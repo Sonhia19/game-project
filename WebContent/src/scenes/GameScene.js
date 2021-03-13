@@ -306,7 +306,7 @@ export class GameScene extends Phaser.Scene {
 							if (!myPlaneSelected.flying) {
 								let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
 								if (planeView != null) {
-									this.changeFlyYPlaneView(planeView.y, isBlue ? BLUE_PLANE_LAND_VIEW_Y : RED_PLANE_LAND_VIEW_Y, planeView);
+									this.changeHighFlyPlaneView(planeView.y, isBlue ? BLUE_PLANE_LAND_VIEW_Y : RED_PLANE_LAND_VIEW_Y, planeView);
 									this.syncTakeOff(false);
 								}
 							}
@@ -332,7 +332,7 @@ export class GameScene extends Phaser.Scene {
 						} else {
 							let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
 							if (planeView != null) {
-								this.changeFlyYPlaneView(planeView.y, isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
+								this.changeHighFlyPlaneView(planeView.y, isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
 							}
 							myPlaneSelected.takeOff();
 							this.syncTakeOff(true);
@@ -348,7 +348,7 @@ export class GameScene extends Phaser.Scene {
 								myPlaneSelected.highFlyPlane(true);
 								let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
 								if (planeView != null) {
-									this.changeFlyYPlaneView(planeView.y, myPlaneSelected.highFly ? isBlue ? BLUE_PLANE_HIGH_VIEW_Y : RED_PLANE_HIGH_VIEW_Y : isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
+									this.changeHighFlyPlaneView(planeView.y, myPlaneSelected.highFly ? isBlue ? BLUE_PLANE_HIGH_VIEW_Y : RED_PLANE_HIGH_VIEW_Y : isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
 								}
 								if (myPlaneSelected.highFly) {
 									highFlyPlaneText.setText('Vuelo Alto');
@@ -394,6 +394,7 @@ export class GameScene extends Phaser.Scene {
 						if (myPlaneSelected.flying) {
 							this.fuelControl();
 							myPlaneSelected.fly(true, ANGLE_0, MINUS_Y, delta);
+							this.changeFlyYPlaneView(myPlaneSelected, false);
 							this.syncMove();
 						}
 						else {
@@ -404,6 +405,7 @@ export class GameScene extends Phaser.Scene {
 						if (myPlaneSelected.flying) {
 							this.fuelControl();
 							myPlaneSelected.fly(true, ANGLE_180, MORE_Y, delta);
+							this.changeFlyYPlaneView(myPlaneSelected, false);
 							this.syncMove();
 						}
 						else {
@@ -416,6 +418,7 @@ export class GameScene extends Phaser.Scene {
 							this.fuelControl();
 							myPlaneSelected.fly(false, ANGLE_315, null, null);
 							this.changeFlyXPlaneView(false, false, null, null);
+							this.changeFlyYPlaneView(myPlaneSelected, false);
 							this.syncMove();
 						}
 						else {
@@ -428,6 +431,7 @@ export class GameScene extends Phaser.Scene {
 							this.fuelControl();
 							myPlaneSelected.fly(false, ANGLE_225, null, null);
 							this.changeFlyXPlaneView(false, false, null, null);
+							this.changeFlyYPlaneView(myPlaneSelected, false);
 							this.syncMove();
 						}
 						else {
@@ -439,6 +443,7 @@ export class GameScene extends Phaser.Scene {
 						if (myPlaneSelected.flying) {
 							this.fuelControl();
 							myPlaneSelected.fly(false, ANGLE_135, null, null);
+							this.changeFlyYPlaneView(myPlaneSelected, false);
 							this.changeFlyXPlaneView(false, true, null, null);
 							this.syncMove();
 						}
@@ -451,6 +456,7 @@ export class GameScene extends Phaser.Scene {
 							this.fuelControl();
 							myPlaneSelected.fly(false, ANGLE_45, null, null);
 							this.changeFlyXPlaneView(false, true, null, null);
+							this.changeFlyYPlaneView(myPlaneSelected, false);
 							this.syncMove();
 						}
 						else {
@@ -771,7 +777,7 @@ export class GameScene extends Phaser.Scene {
 				let planeView = this.checkPlaneView(true, enemyPlaneSelected.planeIndex);
 				if (planeView != null) {
 					let position = takeOff == 'true' ? isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y : isBlue ? RED_PLANE_LAND_VIEW_Y : BLUE_PLANE_LAND_VIEW_Y;
-					this.changeFlyYPlaneView(planeView.y, position, planeView);
+					this.changeHighFlyPlaneView(planeView.y, position, planeView);
 				}
 			}
 		}
@@ -785,7 +791,7 @@ export class GameScene extends Phaser.Scene {
 				enemyPlaneSelected.highFlyPlane(false);
 				let planeView = this.checkPlaneView(true, enemyPlaneSelected.planeIndex);
 				if (planeView) {
-					this.changeFlyYPlaneView(planeView.y, enemyPlaneSelected.highFly ? isBlue ? RED_PLANE_HIGH_VIEW_Y : BLUE_PLANE_HIGH_VIEW_Y : isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y, planeView);
+					this.changeHighFlyPlaneView(planeView.y, enemyPlaneSelected.highFly ? isBlue ? RED_PLANE_HIGH_VIEW_Y : BLUE_PLANE_HIGH_VIEW_Y : isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y, planeView);
 				}
 			}
 		}
@@ -831,6 +837,7 @@ export class GameScene extends Phaser.Scene {
 		enemyPlaneSelected.x = coord[0];
 		enemyPlaneSelected.planeAngle = coord[2];
 		enemyPlaneSelected.angle = coord[2];
+		this.changeFlyYPlaneView(enemyPlaneSelected, true);
 	}
 
 	existsEnemySession() {
@@ -1054,10 +1061,7 @@ export class GameScene extends Phaser.Scene {
 	damageEnemyPlane(bullet, plane) {
 
 		if (plane.active === true && bullet.active === true) {
-			console.log(plane);
-			console.log(bullet);
 			if ((bullet.frame.texture.key == 'bullet' && plane.flying) || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
-				console.log("entra");
 				if (plane.receiveDamage(bullet.damage)) {
 					scene.createMessage("Avión enemigo destruido", COLOR_SUCCESS);
 					let planeView = scene.checkPlaneView(true, plane.planeIndex);
@@ -1344,27 +1348,32 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.overlap(enemyBombs, myFuels, this.damageMyStructure);
 	}
 	placeMyPlanes() {
+
 		if (context.playerSession.planes != undefined) {
 			let planesServer = context.playerSession.planes;
 			if (planesServer[0].armor > 0) {
 				myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, planesServer[0].speed, planesServer[0].hasBomb, planesServer[0].firePower, 1, planesServer[0].planeType);
 				myPlanesCount += 1;
-				myPlaneOneView = this.add.image(isBlue ? myPlaneOne.x + 929 : myPlaneOne.x + 421, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				myPlaneOneView = this.add.image(isBlue ? myPlaneOne.x + 929 : myPlaneOne.x + 421, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
+				this.resizePlaneView(myPlaneOneView, 40);
 			}
 			if (planesServer[1].armor > 0) {
 				myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2, planesServer[1].planeType);
 				myPlanesCount += 1;
 				myPlaneTwoView = this.add.image(isBlue ? myPlaneTwo.x + 931 : myPlaneTwo.x + 419, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				this.resizePlaneView(myPlaneTwoView, 40);
 			}
 			if (planesServer[2].armor > 0) {
 				myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, planesServer[2].speed, planesServer[2].hasBomb, planesServer[2].firePower, 3, planesServer[2].planeType);
 				myPlanesCount += 1;
 				myPlaneThreeView = this.add.image(isBlue ? myPlaneThree.x + 933 : myPlaneThree.x + 417, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				this.resizePlaneView(myPlaneThreeView, 40);
 			}
 			if (planesServer[3].armor > 0) {
 				myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4, planesServer[3].planeType);
 				myPlanesCount += 1;
 				myPlaneFourView = this.add.image(isBlue ? myPlaneFour.x + 935 : myPlaneFour.x + 415, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				this.resizePlaneView(myPlaneFourView, 40);
 			}
 
 			this.physics.add.collider(myPlanes, borders, this.borderPlane);
@@ -1403,7 +1412,6 @@ export class GameScene extends Phaser.Scene {
 				enemyPlanesCount += 1;
 				enemyPlaneFourView = this.add.image(isBlue ? enemyPlaneFour.x + 415 : enemyPlaneFour.x + 935, 280, isBlue ? enemyPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
-			console.log(enemyPlaneOne);
 			this.physics.add.overlap(myBullets, enemyPlanes, this.damageEnemyPlane);
 		}
 	}
@@ -1589,7 +1597,7 @@ export class GameScene extends Phaser.Scene {
 		var message = context.messagesFormat.syncTakeOff(myPlaneSelected.planeIndex, takeOff);
 		context.functions.sendMessage(message);
 	}
-
+	
 	syncPlaneViewX(index, x) {
 		var message = context.messagesFormat.syncPlaneViewX(index, x);
 		context.functions.sendMessage(message);
@@ -1597,6 +1605,12 @@ export class GameScene extends Phaser.Scene {
 	//#endregion
 
 	//#region Vista lateral
+
+	resizePlaneView(p, width) {
+		p.displayHeight = p.displayHeight * width / p.displayWidth;
+		p.displayWidth = width;
+	}
+
 	checkPlaneView(enemy, planeIndex) {
 		let planeView = null;
 		switch (planeIndex) {
@@ -1616,11 +1630,26 @@ export class GameScene extends Phaser.Scene {
 		return planeView;
 	}
 
-	changeFlyYPlaneView(from, to, plane) {
+	changeHighFlyPlaneView(from, to, plane) {
 		let i = from < to ? from : to;
 		let j = from < to ? to : from;
 		for (i; i <= to; i++) {
 			plane.y = i;
+		}
+
+	}
+	changeFlyYPlaneView(plane, isEnemy) {
+		let planeView = this.checkPlaneView(isEnemy, plane.planeIndex);
+		if (planeView != null) {
+			if (plane.y > 200 && plane.y < 400 && planeView.displayWidth != 40) {
+				this.resizePlaneView(planeView, 40);
+			}
+			else if (plane.y < 200 && planeView.displayWidth >= 40) {
+				this.resizePlaneView(planeView, 25);
+			}
+			else if (plane.y > 400 && planeView.displayWidth <= 40) {
+				this.resizePlaneView(planeView, 55);
+			}
 		}
 	}
 	changeFlyXPlaneView(enemy, isRight, plane, delta) {
