@@ -28,7 +28,7 @@ public class main {
 		suca = daogames.find(1, icon);
 		
 		System.out.print("\n");
-		System.out.print(String.valueOf(suca.getId()) +""+ suca.getUserId()+suca.getFecha());
+		System.out.print(String.valueOf(suca.getId()) +""+ suca.getUserId());
 		
 		//// prueba de guardar player
 		Player player = new Player("nombre32",1,1);

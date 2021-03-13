@@ -20,7 +20,7 @@ public class DAOPlane implements IDAOPlane {
 		
 		try {
 			
-			PreparedStatement pstmt = con.prepareStatement("insert into aviones (ID_JUGADOR,AVION_TIPO,COMBUSTIBLE,BLINDAJE,TIENE_BOMBA,VUELO_ALTO,POSICION_X, POSIXION_Y) values(?,?,?,?,?,?,?, ?)",Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pstmt = con.prepareStatement("insert into aviones (ID_JUGADOR,AVION_TIPO,COMBUSTIBLE,BLINDAJE,TIENE_BOMBA,VUELO_ALTO,POSICION_X, POSIXION_Y,PODER_FUEGO,VELOCIDAD,ANGULO) values(?,?,?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, idJugador);
 			pstmt.setInt(2, plane.getPlaneType());
 			pstmt.setDouble(3, plane.getFuel());
@@ -29,6 +29,10 @@ public class DAOPlane implements IDAOPlane {
 			pstmt.setBoolean(6,plane.getHighFly());
 			pstmt.setDouble(7,plane.getPositionX());
 			pstmt.setDouble(8,plane.getPositionY());
+			pstmt.setDouble(9,plane.getFirePower());
+			pstmt.setDouble(10,plane.getSpeed());
+			pstmt.setInt(11,plane.getAngle());
+			
 			pstmt.executeUpdate();
 			
 				
