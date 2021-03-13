@@ -22,6 +22,7 @@ public class DAOArtillery implements IDAOArtillery {
 			pstmt.setInt(1,idJugador );
 			pstmt.setInt(2,artillery.getArtilleryType());
 			pstmt.setDouble(3,artillery.getArmor());
+			
 			pstmt.setDouble(4,artillery.getPositionX());
 			pstmt.setDouble(5,artillery.getPositionY());
 			

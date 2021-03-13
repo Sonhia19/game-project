@@ -1555,43 +1555,43 @@ export class GameScene extends Phaser.Scene {
 
 	updateArtilleries() {
 		context.playerSession.artilleries[0].armor = myArtilleryOne.fuel;
-		context.playerSession.artilleries[1].angle = myArtilleryOne.artilleryAngle;
-		context.playerSession.artilleries[2].positionX = Math.round(myArtilleryOne.x);
-		context.playerSession.artilleries[3].positionY = Math.round(myArtilleryOne.y);
+		context.playerSession.artilleries[0].angle = myArtilleryOne.artilleryAngle;
+		context.playerSession.artilleries[0].positionX = Math.round(myArtilleryOne.x);
+		context.playerSession.artilleries[0].positionY = Math.round(myArtilleryOne.y);
 
-		context.playerSession.artilleries[0].armor = myArtilleryTwo.fuel;
+		context.playerSession.artilleries[1].armor = myArtilleryTwo.fuel;
 		context.playerSession.artilleries[1].angle = myArtilleryTwo.artilleryAngle;
-		context.playerSession.artilleries[2].positionX = Math.round(myArtilleryTwo.x);
-		context.playerSession.artilleries[3].positionY = Math.round(myArtilleryTwo.y);
+		context.playerSession.artilleries[1].positionX = Math.round(myArtilleryTwo.x);
+		context.playerSession.artilleries[1].positionY = Math.round(myArtilleryTwo.y);
 
-		context.playerSession.artilleries[0].armor = myArtilleryThree.fuel;
-		context.playerSession.artilleries[1].angle = myArtilleryThree.artilleryAngle;
+		context.playerSession.artilleries[2].armor = myArtilleryThree.fuel;
+		context.playerSession.artilleries[2].angle = myArtilleryThree.artilleryAngle;
 		context.playerSession.artilleries[2].positionX = Math.round(myArtilleryThree.x);
-		context.playerSession.artilleries[3].positionY = Math.round(myArtilleryThree.y);
+		context.playerSession.artilleries[2].positionY = Math.round(myArtilleryThree.y);
 
-		context.playerSession.artilleries[0].armor = myArtilleryFour.fuel;
-		context.playerSession.artilleries[1].angle = myArtilleryFour.artilleryAngle;
-		context.playerSession.artilleries[2].positionX = Math.round(myArtilleryFour.x);
+		context.playerSession.artilleries[3].armor = myArtilleryFour.fuel;
+		context.playerSession.artilleries[3].angle = myArtilleryFour.artilleryAngle;
+		context.playerSession.artilleries[3].positionX = Math.round(myArtilleryFour.x);
 		context.playerSession.artilleries[3].positionY = Math.round(myArtilleryFour.y);
 
 		context.enemySession.artilleries[0].armor = myArtilleryOne.fuel;
-		context.enemySession.artilleries[1].angle = myArtilleryOne.artilleryAngle;
-		context.enemySession.artilleries[2].positionX = Math.round(myArtilleryOne.x);
-		context.enemySession.artilleries[3].positionY = Math.round(myArtilleryOne.y);
+		context.enemySession.artilleries[0].angle = myArtilleryOne.artilleryAngle;
+		context.enemySession.artilleries[0].positionX = Math.round(myArtilleryOne.x);
+		context.enemySession.artilleries[0].positionY = Math.round(myArtilleryOne.y);
 
-		context.enemySession.artilleries[0].armor = myArtilleryTwo.fuel;
+		context.enemySession.artilleries[1].armor = myArtilleryTwo.fuel;
 		context.enemySession.artilleries[1].angle = myArtilleryTwo.artilleryAngle;
-		context.enemySession.artilleries[2].positionX = Math.round(myArtilleryTwo.x);
-		context.enemySession.artilleries[3].positionY = Math.round(myArtilleryTwo.y);
+		context.enemySession.artilleries[1].positionX = Math.round(myArtilleryTwo.x);
+		context.enemySession.artilleries[1].positionY = Math.round(myArtilleryTwo.y);
 
-		context.enemySession.artilleries[0].armor = myArtilleryThree.fuel;
-		context.enemySession.artilleries[1].angle = myArtilleryThree.artilleryAngle;
+		context.enemySession.artilleries[2].armor = myArtilleryThree.fuel;
+		context.enemySession.artilleries[2].angle = myArtilleryThree.artilleryAngle;
 		context.enemySession.artilleries[2].positionX = Math.round(myArtilleryThree.x);
-		context.enemySession.artilleries[3].positionY = Math.round(myArtilleryThree.y);
+		context.enemySession.artilleries[2].positionY = Math.round(myArtilleryThree.y);
 
-		context.enemySession.artilleries[0].armor = myArtilleryFour.fuel;
-		context.enemySession.artilleries[1].angle = myArtilleryFour.artilleryAngle;
-		context.enemySession.artilleries[2].positionX = Math.round(myArtilleryFour.x);
+		context.enemySession.artilleries[3].armor = myArtilleryFour.fuel;
+		context.enemySession.artilleries[3].angle = myArtilleryFour.artilleryAngle;
+		context.enemySession.artilleries[3].positionX = Math.round(myArtilleryFour.x);
 		context.enemySession.artilleries[3].positionY = Math.round(myArtilleryFour.y);
 	}
 

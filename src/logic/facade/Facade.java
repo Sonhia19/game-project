@@ -64,6 +64,8 @@ public class Facade implements IFacade {
     	//cargamos datos que vienen desde servidor a objetos player
         final Player playerSession = gson.fromJson(jsonPlayerSession.toString(), Player.class);
         final Player enemySession = gson.fromJson(jsonEnemySession.toString(), Player.class);
+        System.out.print("1"+jsonPlayerSession.toString());
+        System.out.print("1"+jsonEnemySession.toString());
         
     	try {
 	    	gameController.saveGame(gameId);//ojo aca tal vez se puede hacer mejor.
