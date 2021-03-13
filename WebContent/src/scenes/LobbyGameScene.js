@@ -35,7 +35,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.load.image("artillery-type1", "assets/artillery-type1.png");
 		this.load.image("artillery-type2", "assets/artillery-type2.png");
 		this.load.image("artillery-type3", "assets/artillery-type3.png");
-		this.load.image("artillery-type4", "assets/artillery-type4.png");
 
 		this.load.image("joingame_button", "assets/join-game-button.png");
 
@@ -277,8 +276,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 2) {
 			this.artillery1Type = 3;
 		} else if (type == 3) {
-			this.artillery1Type = 4;
-		} else if (type == 4) {
 			this.artillery1Type = 1;
 		}
 	}
@@ -289,8 +286,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 2) {
 			this.artillery2Type = 3;
 		} else if (type == 3) {
-			this.artillery2Type = 4;
-		} else if (type == 4) {
 			this.artillery2Type = 1;
 		}
 	}
@@ -301,8 +296,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 2) {
 			this.artillery3Type = 3;
 		} else if (type == 3) {
-			this.artillery3Type = 4;
-		} else if (type == 4) {
 			this.artillery3Type = 1;
 		}
 	}
@@ -313,8 +306,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 2) {
 			this.artillery4Type = 3;
 		} else if (type == 3) {
-			this.artillery4Type = 4;
-		} else if (type == 4) {
 			this.artillery4Type = 1;
 		}
 	}
@@ -344,8 +335,6 @@ export class LobbyGameScene extends Phaser.Scene {
 			imageName = "artillery-type2";
 		} else if (artilleryNumber == 3) {
 			imageName = "artillery-type3";
-		} else if (artilleryNumber == 4) {
-			imageName = "artillery-type4";
 		}
 
 		return imageName;
