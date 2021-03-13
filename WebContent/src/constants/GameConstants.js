@@ -47,3 +47,7 @@ export const BOMBARDERO = 1;
 export const CAZA = 2;
 export const PATRULLA = 3;
 export const RECONOCIMIENTO = 4;
+
+export const CANON_CAMPANA = 1;
+export const MORTERO = 2;
+export const ARTILLERIA_COHETE = 3;

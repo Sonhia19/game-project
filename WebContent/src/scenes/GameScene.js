@@ -139,6 +139,7 @@ export class GameScene extends Phaser.Scene {
 		this.load.image('black', 'assets/black.png');
 		this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
 		this.load.atlas('spritesPlanes', 'assets/planes/spritesheet.png', 'assets/planes/sprites.json');
+		this.load.atlas('spritesArtilleries', 'assets/artilleries/spritesheet.png', 'assets/artilleries/sprites.json');
 		this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
 		this.load.image('bullet', './assets/Bullet3.png');
 		this.load.image("fuel", "./assets/fuel.png");
@@ -1283,19 +1284,19 @@ export class GameScene extends Phaser.Scene {
 		if (context.enemySession.artilleries != undefined) {
 			let artilleryServer = context.enemySession.artilleries;
 			if (artilleryServer[0].armor > 0) {
-				enemyArtilleryOne = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, 1);
+				enemyArtilleryOne = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, 1, artilleryServer[0].artilleryType);
 				enemyArtilleryOneView = this.add.image(isBlue ? enemyArtilleryOne.x + 425 : enemyArtilleryOne.x + 925, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 			if (artilleryServer[1].armor > 0) {
-				enemyArtilleryTwo = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, 2);
+				enemyArtilleryTwo = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, 2, artilleryServer[1].artilleryType);
 				enemyArtilleryTwoView = this.add.image(isBlue ? enemyArtilleryTwo.x + 423 : enemyArtilleryTwo.x + 927, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 			if (artilleryServer[2].armor > 0) {
-				enemyArtilleryThree = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, 3);
+				enemyArtilleryThree = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, 3, artilleryServer[2].artilleryType);
 				enemyArtilleryThreeView = this.add.image(isBlue ? enemyArtilleryThree.x + 421 : enemyArtilleryThree.x + 929, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 			if (artilleryServer[3].armor > 0) {
-				enemyArtilleryFour = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, 4);
+				enemyArtilleryFour = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, 4, artilleryServer[3].artilleryType);
 				enemyArtilleryFourView = this.add.image(isBlue ? enemyArtilleryFour.x + 419 : enemyArtilleryFour.x + 931, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 		}
@@ -1417,19 +1418,19 @@ export class GameScene extends Phaser.Scene {
 		if (context.playerSession.artilleries != undefined) {
 			let artilleryServer = context.playerSession.artilleries;
 			if (artilleryServer[0].armor > 0) {
-				myArtilleryOne = this.placeMyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, 1);
+				myArtilleryOne = this.placeMyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, 1, artilleryServer[0].artilleryType);
 				myArtilleryOneView = this.add.image(isBlue ? myArtilleryOne.x + 925 : myArtilleryOne.x + 425, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			if (artilleryServer[1].armor > 0) {
-				myArtilleryTwo = this.placeMyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[0].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, 2);
+				myArtilleryTwo = this.placeMyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[0].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, 2, artilleryServer[1].artilleryType);
 				myArtilleryTwoView = this.add.image(isBlue ? myArtilleryTwo.x + 927 : myArtilleryTwo.x + 423, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			if (artilleryServer[2].armor > 0) {
-				myArtilleryThree = this.placeMyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[0].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, 3);
+				myArtilleryThree = this.placeMyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[0].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, 3, artilleryServer[2].artilleryType);
 				myArtilleryThreeView = this.add.image(isBlue ? myArtilleryThree.x + 929 : myArtilleryThree.x + 421, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			if (artilleryServer[3].armor > 0) {
-				myArtilleryFour = this.placeMyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[0].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, 4);
+				myArtilleryFour = this.placeMyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[0].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, 4, artilleryServer[3].artilleryType);
 				myArtilleryFourView = this.add.image(isBlue ? myArtilleryFour.x + 931 : myArtilleryFour.x + 419, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			this.physics.add.overlap(enemyBulletsArtillery, myPlanes, this.damageMyPlane);
@@ -1437,19 +1438,19 @@ export class GameScene extends Phaser.Scene {
 		}
 	}
 
-	placeMyArtillery(i, j, cadency, reach, armor, firePower, artilleryIndex) {
+	placeMyArtillery(i, j, cadency, reach, armor, firePower, artilleryIndex, type) {
 		let artillery = myArtilleries.get();
 		if (artillery) {
 			artilleryCount++;
-			return artillery.place(i, j, cadency, reach, armor, firePower, false, artilleryIndex);
+			return artillery.place(i, j, cadency, reach, armor, firePower, false, artilleryIndex, type);
 		}
 	}
 
-	placeEnemyArtillery(i, j, cadency, reach, armor, firePower, artilleryIndex) {
+	placeEnemyArtillery(i, j, cadency, reach, armor, firePower, artilleryIndex, type) {
 		let artillery = enemyArtilleries.get();
 		if (artillery) {
 			artilleryEnemyCount++;
-			return artillery.place(i, j, cadency, reach, armor, firePower, true, artilleryIndex);
+			return artillery.place(i, j, cadency, reach, armor, firePower, true, artilleryIndex, type);
 		}
 	}
 

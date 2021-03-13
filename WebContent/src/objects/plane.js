@@ -11,7 +11,7 @@ export let Plane = new Phaser.Class({
     initialize:
 
         function Plane(scene) {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesPlanes', 'reconocimiento_azul_default');
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesPlanes', 'patrulla_azul_default');
             this.planeIndex = 0;
             this.fuel = 0;
             this.firePower = 0;
@@ -55,16 +55,16 @@ export let Plane = new Phaser.Class({
         if (bullet) {
             switch (this.planeAngle) {
                 case ANGLE_90:
-                    reach = (this.x + this.displayHeight)
+                    reach = (this.x + this.displayWidth)
                     break;
                 case ANGLE_270:
-                    reach = (this.x - this.displayHeight)
+                    reach = (this.x - this.displayWidth)
                     break;
                 case ANGLE_180:
-                    reach = (this.y + this.displayHeight)
+                    reach = (this.y + this.displayWidth)
                     break;
                 case ANGLE_0:
-                    reach = (this.y - this.displayHeight)
+                    reach = (this.y - this.displayWidth)
                     break;
             }
             bullet.fire(this.x, this.y, this.planeAngle, reach, this.firePower, this.highFly);
@@ -89,16 +89,16 @@ export let Plane = new Phaser.Class({
         if (bomb) {
             switch (this.planeAngle) {
                 case ANGLE_90:
-                    reach = (this.x + this.displayHeight)
+                    reach = (this.x + this.displayWidth)
                     break;
                 case ANGLE_270:
-                    reach = (this.x - this.displayHeight)
+                    reach = (this.x - this.displayWidth)
                     break;
                 case ANGLE_180:
-                    reach = (this.y + this.displayHeight)
+                    reach = (this.y + this.displayWidth)
                     break;
                 case ANGLE_0:
-                    reach = (this.y - this.displayHeight)
+                    reach = (this.y - this.displayWidth)
                     break;
             }
             bomb.fire(this.x, this.y, this.planeAngle, reach);
