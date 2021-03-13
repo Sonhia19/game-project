@@ -3,6 +3,6 @@ package logic;
 public enum GameStatus {
 
 	INICIADA,
-    ABANDONADA,
+	ENEMIGO_ABANDONO,
     FINALIZADA;
 }

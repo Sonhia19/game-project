@@ -96,11 +96,14 @@ var functions = {
                 context.functions.navigateScene("LOBBYGAME", "GAME");
             }
             if (response.action.name == 'disconnectSession') {
-                context.gameStatus = JSON.parse(response.responses[0].value);
+
+                console.log(response.responses[0].value);
+                context.gameStatus = response.responses[0].value;
                 
-                if (gameStatus == "ABANDONADA") {
+                if (context.gameStatus == "ENEMIGO_ABANDONO") {
                     console.log("DISCONNECT player session");
                     context.enemySession.id = null;
+                    context.functions.navigateScene("GAME", "FINISHGAME");
                 }
             }
             if (response.action.name == 'syncGame') {

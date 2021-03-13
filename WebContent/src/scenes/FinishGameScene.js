@@ -29,8 +29,7 @@ export class FinishGameScene extends Phaser.Scene {
 
             console.log(context.teamSideWin);
             console.log(context.playerSession.teamSide);
-            if ( (context.teamSideWin == 1 && context.playerSession.teamSide == 1) ||
-                (context.teamSideWin == 2 && context.playerSession.teamSide == 2)) {
+            if ( (context.teamSideWin == context.playerSession.teamSide)) {
                 this.add.image(context.game.renderer.width * 0.40, context.game.renderer.height * 0.30, 'finishGameWin1_font').setOrigin(0);
             } else {
                 this.add.image(context.game.renderer.width * 0.40, context.game.renderer.height * 0.30, 'finishGameLose_font').setOrigin(0);

@@ -219,11 +219,12 @@ public class Facade implements IFacade {
 
         int gameId = removeSession(session);
         final WsResponse response = new WsResponse();
+        response.setAction(null);
 
         if (gameId != -1) {
 
         	//final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-        	response.generateResponse("gameStatus", String.valueOf(GameStatus.ABANDONADA), "String");
+        	response.generateResponse("gameStatus", String.valueOf(GameStatus.ENEMIGO_ABANDONO), "String");
         	response.generateResponse("gameId", String.valueOf(gameId), "int");
         } else {
         	response.generateResponse("gameStatus", String.valueOf(GameStatus.INICIADA), "String");
