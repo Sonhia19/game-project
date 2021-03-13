@@ -198,6 +198,7 @@ export class GameScene extends Phaser.Scene {
 		saveGameButton.on('pointerdown', function () {
 
 			console.log("SAVING");
+			this.updateContext();
 			var message = context.messagesFormat.saveGame(context.playerSession, context.enemySession);
 			context.functions.sendMessage(message);
 
