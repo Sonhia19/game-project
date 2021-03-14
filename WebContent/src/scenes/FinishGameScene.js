@@ -23,7 +23,7 @@ export class FinishGameScene extends Phaser.Scene {
 
         this.add.image(0, 0, 'background_menu').setOrigin(0);
 
-        if (context.gameStatus == "ENEMIGO_ABANDONO") {
+        if (context.gameStatus == "ENEMY_FINISHED") {
             this.add.image(context.game.renderer.width * 0.40, context.game.renderer.height * 0.30, 'finishGameWin2_font').setOrigin(0);
         } else if (context.teamSideWin != 0) {
 
@@ -40,6 +40,7 @@ export class FinishGameScene extends Phaser.Scene {
         gotoMenuButton.setInteractive();
 
         gotoMenuButton.on('pointerdown', function () {
+
             context.functions.navigateScene("FINISHGAME", "MENU");
     
         }, this);

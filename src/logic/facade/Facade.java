@@ -209,7 +209,7 @@ public class Facade implements IFacade {
 
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
-        response.generateResponse("gameStatus", String.valueOf(GameStatus.INICIADA), "String");
+        response.generateResponse("gameStatus", String.valueOf(GameStatus.STARTED), "String");
         
 		return response;
     }
@@ -222,16 +222,19 @@ public class Facade implements IFacade {
         response.setAction(null);
 
         if (gameId != -1) {
-
-        	//final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-        	response.generateResponse("gameStatus", String.valueOf(GameStatus.ENEMIGO_ABANDONO), "String");
+        	response.generateResponse("gameStatus", String.valueOf(GameStatus.ENEMY_FINISHED), "String");
         	response.generateResponse("gameId", String.valueOf(gameId), "int");
         } else {
-        	response.generateResponse("gameStatus", String.valueOf(GameStatus.INICIADA), "String");
+        	response.generateResponse("gameStatus", String.valueOf(GameStatus.STARTED), "String");
         }
 
         return response;
 
+    }
+    
+    public void finishGame(final int gameId) {
+
+    	gamePlayersMap.remove(gameId);
     }
     
 	public WsResponse getJsonGameSession(final int gameId, final String playerName) {

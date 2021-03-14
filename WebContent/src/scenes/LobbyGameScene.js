@@ -4,7 +4,6 @@ let tower;
 let fuel;
 let hangar;
 let area;
-
 let scene;
 
 //Constantes de colores para mensajes
@@ -44,18 +43,28 @@ export class LobbyGameScene extends Phaser.Scene {
 
 	}
 
-	plane1Type = 1;
-	plane2Type = 1;
-	plane3Type = 1;
-	plane4Type = 1;
+	plane1Type;
+	plane2Type;
+	plane3Type;
+	plane4Type;
 
-	artillery1Type = 1;
-	artillery2Type = 1;
-	artillery3Type = 1;
-	artillery4Type = 1;
+	artillery1Type;
+	artillery2Type;
+	artillery3Type;
+	artillery4Type;
 
 	create() {
 
+		this.plane1Type = 1;
+		this.plane2Type = 1;
+		this.plane3Type = 1;
+		this.plane4Type = 1;
+
+		this.artillery1Type = 1;
+		this.artillery2Type = 1;
+		this.artillery3Type = 1;
+		this.artillery4Type = 1;
+		
 		scene = this;
 		tower = this.add.sprite(1100, 325, 'tower');
 		tower.setInteractive();

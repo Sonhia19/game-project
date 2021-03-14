@@ -39,7 +39,19 @@ var functions = {
     },
 
     navigateScene: (last, next) => {
+        
+
+        //  if (last == "GAME" || last == "LOBBYGAME") {
+        //  	 console.log("FROM " + last);
+        //       var theOtherScene = this.scene.get('theOtherSceneBeingRestarted');
+
+        //     this.registry.destroy();
+        //     this.events.off();
+        //     this.scene.restart();
+        //      context.game.scene.restart(last);
+        //  } else {
         context.game.scene.stop(last);
+        // context.game.scene.add(next);
         context.game.scene.start(next);
     },
 
@@ -96,13 +108,20 @@ var functions = {
                 context.functions.navigateScene("LOBBYGAME", "GAME");
             }
             if (response.action.name == 'disconnectSession') {
+                context.gameStatus = response.responses[0].value;
+                
+                if (context.gameStatus == "ENEMY_FINISHED") {
+                    console.log("DISCONNECT player session");
+                    context.enemySession.id = null;
+                    context.functions.navigateScene("GAME", "FINISHGAME");
+                }
+            }
+            if (response.action.name == 'finishGame') {
 
                 console.log(response.responses[0].value);
                 context.gameStatus = response.responses[0].value;
                 
-                if (context.gameStatus == "ENEMIGO_ABANDONO") {
-                    console.log("DISCONNECT player session");
-                    context.enemySession.id = null;
+                if (context.gameStatus == "FINISHED") {
                     context.functions.navigateScene("GAME", "FINISHGAME");
                 }
             }
@@ -130,7 +149,6 @@ var functions = {
                 context.enemySession.isMoving = true;
                 context.enemySession.planeMoving = JSON.parse(response.responses[1].value);
                 context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
-                // context.enemySession.planeBombing = JSON.parse(response.responses[1].value);
             }
             if (response.action.name == "syncEmptyTankEnemy") {
 
@@ -152,11 +170,6 @@ var functions = {
                 context.enemySession.planeViewPlane = JSON.parse(response.responses[1].value);
                 context.enemySession.planeViewCoord = JSON.parse(response.responses[2].value);
             }
-            
-
-            
-
-
 
             // if (response.action.name == "syncDamagePlaneEnemy") {
             //     context.enemySession.isDamaging = true;
@@ -174,7 +187,7 @@ export const context = {
     functions: functions,
     messagesFormat: MESSAGES_FORMAT,
     gameId: null,
-    gameStatus: null, // INICIADA, GANO, ENEMY_ABANDONO, FINALIZADA
+    gameStatus: null, // STARTED, FINISHED, ENEMY_FINISHED
     playersConnected: 0,
     playerSession: {},
     enemySession: {},

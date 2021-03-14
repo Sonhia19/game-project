@@ -2,7 +2,7 @@ package logic;
 
 public enum GameStatus {
 
-	INICIADA,
-	ENEMIGO_ABANDONO,
-    FINALIZADA;
+	STARTED,
+	ENEMY_FINISHED,
+    FINISHED;
 }

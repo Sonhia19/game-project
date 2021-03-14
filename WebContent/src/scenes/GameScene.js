@@ -180,6 +180,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	create() {
+		gameOver = false;
 		scene = this;
 		enemyPlanesCount = 0; enemyStructuresCount = 0;
 		myPlanesCount = 0; myStructuresCount = 0;
@@ -268,8 +269,16 @@ export class GameScene extends Phaser.Scene {
 	update(time, delta) {
 
 		if (gameOver) {
-			context.teamSideWin = 1; //cambiar segun quien gano
-			context.gameStatus = "FINALIZADA";
+
+			console.log("GAMEOVER");
+			if (myStructuresCount == 0 || myPlanesCount == 0) {
+				context.teamSideWin = isBlue ? 2 : 1;
+			} else if (enemyStructuresCount == 0 || enemyPlanesCount == 0) {
+				context.teamSideWin = isBlue ? 1 : 2;
+			}
+			
+			console.log(context.teamSideWin);
+			context.gameStatus = "FINISHED";
 			context.functions.navigateScene("GAME", "FINISHGAME");
 		} else {
 			if (this.existsEnemySession()) {
