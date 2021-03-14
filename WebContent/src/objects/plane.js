@@ -263,6 +263,25 @@ export let Plane = new Phaser.Class({
 
         }
         return plane + "_" + color + "_" + situation;
+    },
+
+    getType(){
+        let plane;
+        switch (this.type) {
+            case BOMBARDERO:
+                plane = "Bombardero";
+                break;
+            case CAZA:
+                plane = "Caza";
+                break;
+            case PATRULLA:
+                plane = "Patrulla";
+                break;
+            case RECONOCIMIENTO:
+                plane = "Reconocimiento";
+                break;
+        }
+        return plane;
     }
 
 });
