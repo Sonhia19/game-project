@@ -1291,7 +1291,7 @@ export class GameScene extends Phaser.Scene {
 
 		this.placeEnemyPlanes();
 		this.placeEnemyArtilleries();
-		
+
 
 		this.physics.add.overlap(myBombs, enemyHangars, this.damageEnemyStructure);
 		this.physics.add.overlap(myBombs, enemyTowers, this.damageEnemyStructure);
@@ -1324,8 +1324,8 @@ export class GameScene extends Phaser.Scene {
 
 	placeMyElements() {
 
-		let yFuel = 0, yTower = 0, yHangar = 0;
-		let xFuel = 0, xTower = 0, xHangar = 0;
+		let yFuel = -1, yTower = -1, yHangar = -1;
+		let xFuel = -1, xTower = -1, xHangar = -1;
 		if (context.playerSession.activeFuel) {
 			yFuel = context.playerSession.positionYFuel;
 			xFuel = context.playerSession.positionXFuel;
@@ -1354,6 +1354,38 @@ export class GameScene extends Phaser.Scene {
 			myStructuresCount += 1;
 			myHangarView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 18 : RED_BASE_X_VIEW, 275, isBlue ? 'hangarBlueView' : 'hangarRedView').setScale(0.3);
 
+		}
+
+		if (yFuel >= yHangar && yFuel >= yTower) {
+			myFuelView.setDepth(3);
+			if (yHangar >= yTower) {
+				myHangarView.setDepth(2);
+				myTowerView.setDepth(1);
+			}
+			else {
+				myHangarView.setDepth(1);
+				myTowerView.setDepth(2);
+			}
+		}
+		else if (yFuel >= yHangar) {
+			myFuelView.setDepth(2);
+			myHangarView.setDepth(1);
+			myTowerView.setDepth(3);
+		}
+		else if (yFuel >= yTower) {
+			myFuelView.setDepth(2);
+			myHangarView.setDepth(3);
+			myTowerView.setDepth(1);
+		}
+		else if (yTower >= yHangar) {
+			myFuelView.setDepth(1);
+			myHangarView.setDepth(2);
+			myTowerView.setDepth(3);
+		}
+		else {
+			myFuelView.setDepth(1);
+			myHangarView.setDepth(3);
+			myTowerView.setDepth(2);
 		}
 
 		this.placeMyPlanes();
