@@ -151,7 +151,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.image("bomb", "./assets/bomb.png");
 		this.load.image("border", "./assets/new_border.png");
 		this.load.image("external_border", "./assets/border.png");
-		this.load.image("borderView", "./assets/border2.png");
 		this.load.image("ledRed", "./assets/led.png");
 		this.load.image("ledGreen", "./assets/led_green.png");
 		this.load.image("view", "./assets/view.png");
