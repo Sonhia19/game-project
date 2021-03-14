@@ -37,6 +37,18 @@ export const MESSAGES_FORMAT = {
         })
     },
 
+    recoverGame: (playerName, gameId) => {
+        return JSON.stringify({
+            action: {
+                name: 'recoverGame',
+                parameters: {
+                    gameId: gameId,
+                    playerName: playerName
+                }
+            }
+        })
+    },
+
     connectToGame: (playerName, teamSide, planesType, artilleriesType, gameId, structurePositions) => {
         return JSON.stringify({
             action: {

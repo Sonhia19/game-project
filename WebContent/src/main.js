@@ -95,6 +95,18 @@ var functions = {
 
                 context.functions.navigateScene("LOBBYGAME", "GAME");
             }
+            if (response.action.name == 'recoverGame') {
+
+                context.gameId = parseInt(response.responses[0].value);
+                context.playerSession = JSON.parse(response.responses[1].value);
+                context.enemySession = JSON.parse(response.responses[2].value);
+
+                console.log("RECOVER player session");
+                console.log(context.playerSession);
+                console.log(context.enemySession);
+
+                context.functions.navigateScene("JOINGAME", "GAME");
+            }
             if (response.action.name == 'disconnectSession') {
 
                 console.log(response.responses[0].value);
@@ -178,5 +190,6 @@ export const context = {
     playersConnected: 0,
     playerSession: {},
     enemySession: {},
-    teamSideWin: 0
+    teamSideWin: 0,
+    fromScene: "MENU"
 };

@@ -58,12 +58,12 @@ public class ArtilleryController {
     
     
     
-    public void saveArtillery (final int playerId, final Artillery artillery) throws LogicException {
+    public void saveArtillery (final int playerId, final Artillery artillery,final int artilleryCode) throws LogicException {
     	
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			daoArtillery.saveArtillery(playerId, artillery, icon);
+			daoArtillery.saveArtillery(playerId, artillery, icon,artilleryCode);
 		} catch (PersistenceException ex) {
 			throw new LogicException(ex.getMessage());
 		}

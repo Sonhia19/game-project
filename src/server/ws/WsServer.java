@@ -160,6 +160,26 @@ public class WsServer {
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 			}
+			if (action.getString("name").equalsIgnoreCase("recoverGame")) {
+
+				System.out.println("Recover game ");
+				final int gameId = parameters.getInt("gameId");
+				final String playerName = parameters.getString("playerName");
+				try{response = facade.recoverGame(gameId, playerName, session);}
+				catch (LogicException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				response.setAction(action);
+				
+				// envia msj al servidor que lo invoco
+				session.getBasicRemote().sendText(response.toParsedString());
+				
+				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updateRecover*");
+				
+				
+			}
 			if (action.getString("name").equalsIgnoreCase("syncGame")) {
 
 				System.out.println("Sync game");
