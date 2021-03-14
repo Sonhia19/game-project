@@ -135,25 +135,23 @@ export class GameScene extends Phaser.Scene {
 		});
 
 		//Carga de imagenes
-		this.load.image('field', 'assets/field.jpg');
+		this.load.image('field', 'assets/structures/new_field.jpg');
 		this.load.image('black', 'assets/black.png');
-		this.load.atlas('sprites', 'assets/spritesheet.png', 'assets/spritesheet.json');
 		this.load.atlas('spritesPlanes', 'assets/planes/spritesheet.png', 'assets/planes/sprites.json');
 		this.load.atlas('spritesArtilleries', 'assets/artilleries/spritesheet.png', 'assets/artilleries/sprites.json');
-		this.load.atlas('spritesBase', 'assets/base.png', 'assets/base.json');
 		this.load.image('bullet', './assets/Bullet3.png');
-		this.load.image("fuel", "./assets/fuel.png");
+		this.load.image("fuel", "./assets/structures/fuel.png");
 		this.load.image("plane", "./assets/plane.png");
 		this.load.image("hangar", "./assets/hangar.png");
-		this.load.image("tower", "./assets/tower.png");
-		this.load.image("artillery", "./assets/artillery.png");
+		this.load.image("hangar_blue", "./assets/structures/hangar_blue.png");
+		this.load.image("hangar_red", "./assets/structures/hangar_red.png");
+		this.load.image("tower", "./assets/structures/tower.png");
 		this.load.image("bulletArtillery", "./assets/bullet.png");
 		this.load.image("bomb", "./assets/bomb.png");
 		this.load.image("border", "./assets/new_border.png");
 		this.load.image("external_border", "./assets/border.png");
 		this.load.image("ledRed", "./assets/led.png");
 		this.load.image("ledGreen", "./assets/led_green.png");
-		this.load.image("view", "./assets/view.png");
 		this.load.image("dashboard", "./assets/dashboard.png");
 
 		//Vista lateral
@@ -185,7 +183,9 @@ export class GameScene extends Phaser.Scene {
 		myPlanesCount = 0; myStructuresCount = 0;
 		this.add.image(1180, 140, 'fieldView').setScale(0.4);
 		this.add.image(1178, 460, 'dashboard').setScale(0.27);
-		this.add.image(500, 300, 'field');
+		let imageField = this.add.image(500, 300, 'field');
+		imageField.displayHeight = 600;
+		imageField.displayWidth = 1000;
 
 		isBlue = context.playerSession.teamSide == 1
 
@@ -198,7 +198,6 @@ export class GameScene extends Phaser.Scene {
 
 		saveGameButton.on('pointerdown', function () {
 
-			console.log("SAVING");
 			let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession);
 			context.functions.sendMessage(message);
 
@@ -237,7 +236,7 @@ export class GameScene extends Phaser.Scene {
 
 
 		//this.placeGrays();
-		this.placeBlacks();
+		//this.placeBlacks();
 
 
 
@@ -504,6 +503,7 @@ export class GameScene extends Phaser.Scene {
 									infoGameText.setText("El vuelo alto no permite disparar la bomba");
 								}
 								else {
+									infoGameText.setText("");
 									myPlaneSelected.fireBomb(myBombs);
 									this.syncBomb();
 									this.checkBomb();
@@ -528,10 +528,10 @@ export class GameScene extends Phaser.Scene {
 	//#region Tablero
 	createText() {
 		//Led indicadores Bomba
-		ledRedBomb = this.add.image(1065, 338, 'ledRed');
+		ledRedBomb = this.add.image(1075, 338, 'ledRed');
 		ledRedBomb.setScale(0.05);
 		ledRedBomb.setVisible(false);
-		ledGreenBomb = this.add.image(1065, 338, 'ledGreen');
+		ledGreenBomb = this.add.image(1075, 338, 'ledGreen');
 		ledGreenBomb.setScale(0.025);
 		ledGreenBomb.setVisible(false);
 
@@ -588,34 +588,34 @@ export class GameScene extends Phaser.Scene {
 
 		//Aviones Consola
 		consolePlane1 = this.add.image(1050, 520, 'spritesPlanes', myPlaneOne.getImage(UNSELECT, false));
-		plane1ArmorText = this.add.text(1035, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane1ArmorText = this.add.text(1035, 540, '', { fontSize: '15px', color: '#FFFFFF',backgroundColor: '#108C05' });
 
 		consolePlane2 = this.add.image(1130, 520, 'spritesPlanes', myPlaneTwo.getImage(UNSELECT, false));
-		plane2ArmorText = this.add.text(1115, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane2ArmorText = this.add.text(1115, 540, '', { fontSize: '15px', color: '#FFFFFF',backgroundColor: '#108C05' });
 
 		consolePlane3 = this.add.image(1210, 520, 'spritesPlanes', myPlaneThree.getImage(UNSELECT, false));
-		plane3ArmorText = this.add.text(1195, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane3ArmorText = this.add.text(1195, 540, '', { fontSize: '15px', color: '#FFFFFF',backgroundColor: '#108C05' });
 
 		consolePlane4 = this.add.image(1290, 520, 'spritesPlanes', myPlaneFour.getImage(UNSELECT, false));
-		plane4ArmorText = this.add.text(1275, 535, '', { fontSize: '15px', fill: '#FFFFFF' });
+		plane4ArmorText = this.add.text(1275, 540, '', { fontSize: '15px', color: '#FFFFFF',backgroundColor: '#108C05' });
 
-		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '15px', fill: '#FFFFFF', });
-		fuelText = this.add.text(1010, 316, '', { fontSize: '15px', fill: '#FFFFFF' });
-		bombText = this.add.text(1010, 331, '', { fontSize: '15px', fill: '#FFFFFF' });
-		highFlyPlaneText = this.add.text(1010, 346, '', { fontSize: '15px', fill: '#FFFF00' });
-		infoGameText = this.add.text(1010, 361, 'Presione (1) (2) (3) (4) para seleccionar avión', { fontSize: '12px', fill: '#FF0000' });
+		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		fuelText = this.add.text(1010, 316, '', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		bombText = this.add.text(1010, 331, '', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		highFlyPlaneText = this.add.text(1010, 346, '', { fontSize: '15px', color: '#000000',backgroundColor: '#F8FF00' });
+		infoGameText = this.add.text(1010, 361, 'Presione (1) (2) (3) (4) para seleccionar avión', { fontSize: '12px', color: '#fff', backgroundColor: '#F60303' });
 
-		myBaseText = this.add.text(1010, 400, 'Base Aliada', { fontSize: '13px', fill: '#009025' });
-		artilleryText = this.add.text(1010, 415, '', { fontSize: '15px', fill: '#FFFFFF' });
-		towerText = this.add.text(1010, 430, 'Torre', { fontSize: '15px', fill: '#FFFFFF' });
-		hangarText = this.add.text(1010, 445, 'Hangar', { fontSize: '15px', fill: '#FFFFFF' });
-		fuelsText = this.add.text(1010, 460, 'Tanque', { fontSize: '15px', fill: '#FFFFFF' });
+		myBaseText = this.add.text(1010, 400, 'Base Aliada', { fontSize: '13px', color: '#FFFFFF',backgroundColor: '#108C05' });
+		artilleryText = this.add.text(1010, 415, '', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		towerText = this.add.text(1010, 430, 'Torre', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		hangarText = this.add.text(1010, 445, 'Hangar', { fontSize: '15px',color: '#fff',backgroundColor: '#000000'});
+		fuelsText = this.add.text(1010, 460, 'Tanque', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
 
-		enemyBaseText = this.add.text(1190, 400, 'Base Enemiga', { fontSize: '13px', fill: '#009025' });
-		artilleryEnemyText = this.add.text(1190, 415, '', { fontSize: '15px', fill: '#FFFFFF' });
-		towerEnemyText = this.add.text(1190, 430, 'Torre', { fontSize: '15px', fill: '#FFFFFF' });
-		hangarEnemyText = this.add.text(1190, 445, 'Hangar', { fontSize: '15px', fill: '#FFFFFF' });
-		fuelsEnemyText = this.add.text(1190, 460, 'Tanque', { fontSize: '15px', fill: '#FFFFFF' });
+		enemyBaseText = this.add.text(1190, 400, 'Base Enemiga', { fontSize: '13px', color: '#FFFFFF',backgroundColor: '#F60303' });
+		artilleryEnemyText = this.add.text(1190, 415, '', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		towerEnemyText = this.add.text(1190, 430, 'Torre', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		hangarEnemyText = this.add.text(1190, 445, 'Hangar', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
+		fuelsEnemyText = this.add.text(1190, 460, 'Tanque', { fontSize: '15px', color: '#fff',backgroundColor: '#000000'});
 		this.resizeConsolePlanes();
 
 	}
@@ -1039,7 +1039,6 @@ export class GameScene extends Phaser.Scene {
 		if (plane.active === true && gray.active === true && gray.visible) {
 			plane.setVisible(false);
 		} else if (plane.active === true && gray.active === true && !gray.visible) {
-			console.log(plane);
 			plane.setVisible(true);
 		}
 	}
@@ -1116,7 +1115,7 @@ export class GameScene extends Phaser.Scene {
 				ledRedFuel.setVisible(true);
 				message = "Tanque aliado destruido";
 				myFuelView.destroy();
-			} else if (structure.frame.texture.key == 'hangar') {
+			} else {
 				ledGreenHangar.setVisible(false);
 				ledRedHangar.setVisible(true);
 				message = "Hangar aliado destruido";
@@ -1147,7 +1146,7 @@ export class GameScene extends Phaser.Scene {
 				ledRedFuelEnemy.setVisible(true);
 				message = "Tanque enemigo destruido";
 				enemyFuelView.destroy();
-			} else if (structure.frame.texture.key == 'hangar') {
+			} else {
 				ledGreenHangarEnemy.setVisible(false);
 				ledRedHangarEnemy.setVisible(true);
 				message = "Hangar enemigo destruido";
@@ -1263,7 +1262,7 @@ export class GameScene extends Phaser.Scene {
 			xFuel = context.enemySession.positionXFuel;
 
 			enemyFuel = enemyFuels.get();
-			enemyFuel.place(yFuel, isBlue ? xFuel - 190 : xFuel - 1030);
+			enemyFuel.place(yFuel, isBlue ? xFuel - 175 : xFuel - 1030);
 			enemyStructuresCount += 1;
 			enemyFuelView = this.add.image(isBlue ? RED_BASE_X_VIEW + 10 : BLUE_BASE_X_VIEW + 8, 270, isBlue ? 'fuelRedView' : 'fuelBlueView').setScale(0.25);
 		}
@@ -1273,7 +1272,7 @@ export class GameScene extends Phaser.Scene {
 			xTower = context.enemySession.positionXTower;
 
 			enemyTower = enemyTowers.get();
-			enemyTower.place(yTower, isBlue ? xTower - 190 : xTower - 1030);
+			enemyTower.place(yTower, isBlue ? xTower - 175 : xTower - 1030);
 			enemyStructuresCount += 1;
 			enemyTowerView = this.add.image(isBlue ? RED_BASE_X_VIEW + 18 : BLUE_BASE_X_VIEW, 268, isBlue ? 'towerRedView' : 'towerBlueView').setScale(0.4);
 		}
@@ -1283,7 +1282,7 @@ export class GameScene extends Phaser.Scene {
 			xHangar = context.enemySession.positionXHangar;
 
 			enemyHangar = enemyHangars.get();
-			enemyHangar.place(yHangar, isBlue ? xHangar - 190 : xHangar - 1030);
+			enemyHangar.place(yHangar, isBlue ? xHangar - 175 : xHangar - 1030, true);
 			enemyStructuresCount += 1;
 			enemyHangarView = this.add.image(isBlue ? RED_BASE_X_VIEW : BLUE_BASE_X_VIEW + 18, 275, isBlue ? 'hangarRedView' : 'hangarBlueView').setScale(0.3);
 		}
@@ -1329,17 +1328,19 @@ export class GameScene extends Phaser.Scene {
 			yFuel = context.playerSession.positionYFuel;
 			xFuel = context.playerSession.positionXFuel;
 			myFuel = myFuels.get();
-			myFuel.place(yFuel, isBlue ? xFuel - 1030 : xFuel - 190);
+			myFuel.place(yFuel, isBlue ? xFuel - 1030 : xFuel - 175);
 			myStructuresCount += 1;
 			myFuelView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 8 : RED_BASE_X_VIEW + 10, 270, isBlue ? 'fuelBlueView' : 'fuelRedView').setScale(0.25);
 
 		}
 
 		if (context.playerSession.activeTower) {
+			
 			myTower = myTowers.get();
 			yTower = context.playerSession.positionYTower;
 			xTower = context.playerSession.positionXTower;
-			myTower.place(yTower, isBlue ? xTower - 1030 : xTower - 190);
+			console.log(yTower);
+			myTower.place(yTower, isBlue ? xTower - 1030 : xTower - 175);
 			myStructuresCount += 1;
 			myTowerView = this.add.image(isBlue ? BLUE_BASE_X_VIEW : RED_BASE_X_VIEW + 18, 268, isBlue ? 'towerBlueView' : 'towerRedView').setScale(0.4);
 
@@ -1349,7 +1350,8 @@ export class GameScene extends Phaser.Scene {
 			myHangar = myHangars.get();
 			xHangar = context.playerSession.positionXHangar;
 			yHangar = context.playerSession.positionYHangar;
-			myHangar.place(yHangar, isBlue ? xHangar - 1030 : xHangar - 190);
+			console.log(yHangar);
+			myHangar.place(yHangar, isBlue ? xHangar - 1030 : xHangar - 175, false);
 			myStructuresCount += 1;
 			myHangarView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 18 : RED_BASE_X_VIEW, 275, isBlue ? 'hangarBlueView' : 'hangarRedView').setScale(0.3);
 

@@ -124,8 +124,6 @@ export let Plane = new Phaser.Class({
         let width = height * this.height / this.width;
         this.displayWidth = height;
         this.displayHeight = width;
-        console.log(this);
-        console.log(isEnemy);
         return this;
     },
     update: function (time, delta) {
@@ -167,14 +165,13 @@ export let Plane = new Phaser.Class({
             this.fuel = 100;
             this.withBomb = true;
             if (this.highFly) {
+                this.speed = this.speed * 2;
                 let height = 60;
                 this.displayWidth = height;
                 this.displayHeight = this.displayWidth * (this.height / this.width);
             }
             this.highFly = false;
             this.setTexture('spritesPlanes', this.getImage(LANDED, false));
-        } else {
-            console.log("vuelva a la base para aterrizar");
         }
     },
     highFlyPlane(sync) {
@@ -265,7 +262,7 @@ export let Plane = new Phaser.Class({
         return plane + "_" + color + "_" + situation;
     },
 
-    getType(){
+    getType() {
         let plane;
         switch (this.type) {
             case BOMBARDERO:

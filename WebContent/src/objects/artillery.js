@@ -71,7 +71,6 @@ export let Artillery = new Phaser.Class({
                 artillery = "cohete";
                 break;
         }
-        console.log(artillery + "_" + color)
         return artillery + "_" + color;
     }
 

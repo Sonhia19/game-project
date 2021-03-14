@@ -5,7 +5,7 @@ export let Tower = new Phaser.Class({
     initialize:
 
         function Tower(scene) {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesBase', 'tower');
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'tower');
             this.nextTic = 0;
             this.destroyed = false;
         },
@@ -14,7 +14,7 @@ export let Tower = new Phaser.Class({
         this.x = j;
         this.setActive(true);
         this.setVisible(true);
-        this.setScale(0.3);
+        this.setScale(0.2);
         this.setDepth(0);
     },
     fire: function (time, angle, bullets) {
