@@ -233,8 +233,11 @@ export class GameScene extends Phaser.Scene {
 
 		cursors = this.input.keyboard.createCursorKeys();
 
+
 		//this.placeGrays();
-		//this.placeBlacks();
+		this.placeBlacks();
+
+
 
 
 		let graphics = this.add.graphics();
@@ -364,8 +367,15 @@ export class GameScene extends Phaser.Scene {
 					}
 
 					//Si el avion se encuentra dentro de su zona, limpia todo el mapa
-					if (myPlaneSelected.x < isBlue ? BLUE_SAFE_ZONE_X : RED_SAFE_ZONE_X) {
-						myPlaneSelected.gray = null;
+					if (isBlue) {
+						if (myPlaneSelected.x < BLUE_SAFE_ZONE_X) {
+							myPlaneSelected.gray = null;
+						}
+					}
+					else {
+						if (myPlaneSelected.x > RED_SAFE_ZONE_X) {
+							myPlaneSelected.gray = null;
+						}
 					}
 					//Movimiento de avión
 					if (cursors.left.isDown) {
@@ -1023,13 +1033,14 @@ export class GameScene extends Phaser.Scene {
 			gray.setVisible(false);
 		}
 	}
-
 	hiddenEnemies(plane, gray) {
 		if (plane.active === true && gray.active === true && gray.visible) {
 			plane.setVisible(false);
+		} else if (plane.active === true && gray.active === true && !gray.visible) {
+			console.log(plane);
+			plane.setVisible(true);
 		}
 	}
-
 
 	damageMyPlane(bullet, plane) {
 		if (plane.active === true && bullet.active === true) {
@@ -1155,7 +1166,7 @@ export class GameScene extends Phaser.Scene {
 	borderPlane(plane, borders) {
 		if (plane.active === true && borders.active === true) {
 			if (!borders.internal) {
-				plane.x = 965;
+				plane.x = 960;
 			}
 			else if (borders.enemy && plane.highFly) {
 				plane.highFlyPlane(true);
@@ -1238,6 +1249,7 @@ export class GameScene extends Phaser.Scene {
 				out: 200,
 			},
 		});
+		toast.setDepth(4);
 		toast.show(message);
 	}
 	placeEnemyElements() {
@@ -1378,6 +1390,7 @@ export class GameScene extends Phaser.Scene {
 
 			this.physics.add.collider(myPlanes, borders, this.borderPlane);
 			this.physics.add.overlap(myPlanes, blacks, this.exploreBlackMap);
+			//this.physics.add.overlap(myPlanes, grays, this.exploreGrayMap);
 			this.physics.add.overlap(enemyBullets, myPlanes, this.damageMyPlane);
 		}
 	}
@@ -1413,6 +1426,7 @@ export class GameScene extends Phaser.Scene {
 				enemyPlaneFourView = this.add.image(isBlue ? enemyPlaneFour.x + 415 : enemyPlaneFour.x + 935, 280, isBlue ? enemyPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView' : enemyPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView').setScale(0.08);
 			}
 			this.physics.add.overlap(myBullets, enemyPlanes, this.damageEnemyPlane);
+			//this.physics.add.overlap(enemyPlanes, grays, this.hiddenEnemies);
 		}
 	}
 
@@ -1464,7 +1478,7 @@ export class GameScene extends Phaser.Scene {
 
 	placeBlacks() {
 		let black;
-		let x = 225, y = 0;
+		let x = isBlue ? 225 : 25, y = 0;
 		for (let i = 0; i < 16; i++) {
 			y = 25;
 			for (let j = 0; j < 12; j++) {
@@ -1480,17 +1494,17 @@ export class GameScene extends Phaser.Scene {
 
 	placeGrays() {
 		let gray;
-		let x = 250, y = 50;
-		for (let i = 0; i < 8; i++) {
-			y = 50;
-			for (let j = 0; j < 6; j++) {
+		let x = 225, y = 0;
+		for (let i = 0; i < 16; i++) {
+			y = 25;
+			for (let j = 0; j < 12; j++) {
 				gray = grays.get();
-				gray.displayHeight = 102;
-				gray.displayWidth = 102;
+				gray.displayHeight = 50;
+				gray.displayWidth = 50;
 				gray.place(y, x);
-				y += 100;
+				y += 50;
 			}
-			x += 100;
+			x += 50;
 		}
 	}
 	//#endregion
@@ -1597,7 +1611,7 @@ export class GameScene extends Phaser.Scene {
 		var message = context.messagesFormat.syncTakeOff(myPlaneSelected.planeIndex, takeOff);
 		context.functions.sendMessage(message);
 	}
-	
+
 	syncPlaneViewX(index, x) {
 		var message = context.messagesFormat.syncPlaneViewX(index, x);
 		context.functions.sendMessage(message);
