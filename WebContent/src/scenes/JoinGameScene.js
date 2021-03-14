@@ -39,8 +39,13 @@ export class JoinGameScene extends Phaser.Scene {
                 if (inputUsername.value != undefined && inputUsername.value != ''
                     && gameToken.value != undefined && gameToken.value != '') {
                 
-                    //envio msj al servidor con nombre de usuario
                     var message = context.messagesFormat.joinGame(inputUsername.value, gameToken.value);
+                    //envio msj al servidor con nombre de usuario
+                    console.log("desde"+context.fromScene);
+                    if (context.fromScene == "RECOVERGAME") {
+                        message = context.messagesFormat.recoverGame(inputUsername.value, gameToken.value);
+                    }
+                     
                     context.functions.sendMessage(message);
                 }
             }

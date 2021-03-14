@@ -40,5 +40,17 @@ public class PlayerController {
 		}
 		return playerId;
     }
+    public Player recoverPlayer(final int gameId,final int teamSide) throws LogicException{
+    	Player player = null;
+    	IDBConnection icon = null;
+		try {
+			icon = ConnectionsPool.getInstancia().obtenerConexion();
+			player = daoPlayer.recoverPlayer(gameId, teamSide, icon);
+		} catch (PersistenceException ex) {
+			throw new LogicException(ex.getMessage());
+		}
+    	return player;
+    	
+    }
 
 }

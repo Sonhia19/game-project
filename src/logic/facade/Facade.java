@@ -19,6 +19,8 @@ import persistence.connection.IDBConnection;
 import server.utils.WsResponse;
 
 import javax.websocket.Session;
+
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,6 +66,9 @@ public class Facade implements IFacade {
     	//cargamos datos que vienen desde servidor a objetos player
         final Player playerSession = gson.fromJson(jsonPlayerSession.toString(), Player.class);
         final Player enemySession = gson.fromJson(jsonEnemySession.toString(), Player.class);
+        System.out.print("1: "+jsonPlayerSession.toString());
+        
+        System.out.print("2: "+jsonEnemySession.toString());
         
     	try {
 	    	gameController.saveGame(gameId);//ojo aca tal vez se puede hacer mejor.
@@ -71,22 +76,27 @@ public class Facade implements IFacade {
 	    	int enemySessionId = playerController.savePlayer(gameId, enemySession);
 	    	
 	    	//se guardan aviones de player y enemy session
+	    	int playerSessionPlaneCode = 0;
 	    	for (Plane plane : playerSession.getPlanes()) {
-	    		planeController.savePlane(playerSessionId, plane);
+	    		planeController.savePlane(playerSessionId, plane,playerSessionPlaneCode);
+	    		playerSessionPlaneCode++;
 	    	}
-	    	
+	    	int enemySessionPlaneCode=0;
 	    	for (Plane plane : enemySession.getPlanes()) {
-				planeController.savePlane(enemySessionId, plane);
+				planeController.savePlane(enemySessionId, plane,enemySessionPlaneCode);
+				enemySessionPlaneCode ++;
 	    	}
 	    	
 	    	//se guardan artillerias de player y enemy session
-	    	
+	    	int playerSessionArtilleryCode=0;
 	    	for (Artillery artillery : playerSession.getArtilleries()) {
-	    		artilleryController.saveArtillery(playerSessionId, artillery);
+	    		artilleryController.saveArtillery(playerSessionId, artillery,playerSessionArtilleryCode);
+	    		playerSessionArtilleryCode++;
 	    	}
-	    	
+	    	int enemySessionArtilleryCode=0;
 	    	for (Artillery artillery : enemySession.getArtilleries()) {
-	    		artilleryController.saveArtillery(enemySessionId, artillery);
+	    		artilleryController.saveArtillery(enemySessionId, artillery,enemySessionArtilleryCode);
+	    		enemySessionArtilleryCode++;
 	    	}
 	    	
     	}
@@ -98,16 +108,32 @@ public class Facade implements IFacade {
     	return response;
     }
     
-   /* public WsResponse recoverGame(final int gameId) throws LogicException {
+    public WsResponse recoverGame(final int gameId,final String playerName,final Session session) throws LogicException {
     	
     	//hacer que venga una partida entera desde el cliente con gameid, estado y si hay ganador quien
     	final WsResponse response = new WsResponse();
     	final Gson gson = new Gson();
         
     	try {
-	    	Game game = gameController.recoverGame(gameId);//ojo aca tal vez se puede hacer mejor.
+    		//chequiar si existe primero y si esta "guardado" (fechaupdate > a fecha)
+	    	Game game = gameController.recoverGame(gameId);
 	    	Player playerSession = playerController.recoverPlayer(gameId, TEAM_SIDE_BLUE);
 	    	Player enemySession = playerController.recoverPlayer(gameId, TEAM_SIDE_RED);
+	    	
+	    	List<Plane> planesTeamSideBlue = null;
+	    	List<Plane> planesTeamSideRed = null;
+	    	planesTeamSideBlue = planeController.recoverPlanesByPlayerId(gameId,TEAM_SIDE_BLUE);
+	    	planesTeamSideRed = planeController.recoverPlanesByPlayerId(gameId,TEAM_SIDE_RED);
+	    	
+	    	playerSession.setPlanes(planesTeamSideBlue);
+	    	enemySession.setPlanes(planesTeamSideRed);
+
+			final String result = gson.toJson(playerSession.preparePlayerToSend());
+			
+			response.generateResponse("gameId", String.valueOf(gameId), "int");
+			response.generateResponse("playerSession", result, "String");
+
+	    	
     	}
     	catch (LogicException ex)
     	{
@@ -115,7 +141,7 @@ public class Facade implements IFacade {
     	}
 
     	return response;
-    }*/
+    }
 
     public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	

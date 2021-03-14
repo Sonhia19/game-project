@@ -38,10 +38,12 @@ export class MenuScene extends Phaser.Scene {
         }, this);
 
         joinGameButton.on('pointerdown', function () {
+            context.fromScene = "JOINGAME";
             context.functions.navigateScene("MENU", "JOINGAME");
         }, this);
 
         recoverGameButton.on('pointerdown', function () {
+            context.fromScene = "RECOVERGAME";
             context.functions.navigateScene("MENU", "JOINGAME");
         }, this);
     }

@@ -52,5 +52,17 @@ public class GameController {
         }
         return gameId;
     }
+    public Game recoverGame(final int gameId) throws LogicException {
+
+        IDBConnection icon = null;
+        Game game = null;
+        try {
+            icon = ConnectionsPool.getInstancia().obtenerConexion();
+            game = daoGame.restoreGame(gameId,icon);
+        } catch (PersistenceException ex) {
+            throw new LogicException(ex.getMessage());
+        }
+        return game;
+    }
 
 }

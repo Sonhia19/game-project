@@ -175,6 +175,15 @@ public class Player {
 	public void setArtilleries(final List<Artillery> artilleries) {
 		this.artilleries = artilleries;
 	}
+	public Player (final int id,final String name,final int gameId,final int teamSide,final boolean activeTower,final boolean activeFuelTank,final boolean activeHangar ) {
+		this.id = id;
+		this.name = name;
+		this.gameId = gameId;
+		this.teamSide = teamSide;
+		this.activeTower = activeTower;
+		this.activeFuel = activeFuelTank;
+		this.activeHangar = activeHangar;
+	}
 	
 	public Player preparePlayerToSend() {
 
@@ -214,6 +223,7 @@ public class Player {
 		
 		return returnPlayer;
 	}
+	
 
 
 }
