@@ -198,8 +198,8 @@ public class Player {
 	public Player preparePlayerToSend() {
 
 		return new Player(this.name, this.gameId, this.teamSide, this.planes, this.artilleries, this.positionXFuel,
-				this.positionYFuel, this.positionXHangar, this.positionYHangar, this.positionXTower,
-				this.positionYTower);
+				this.positionYFuel, this.positionXTower, this.positionYTower, this.positionXHangar,
+				this.positionYHangar);
 	}
 	
 	public Player preparePlayerToSendMove(final Player player, final int[][] coordinates) {

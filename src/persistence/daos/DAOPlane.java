@@ -74,7 +74,7 @@ public class DAOPlane implements IDAOPlane {
 			pstmt.setDouble(10,plane.getSpeed());
 			pstmt.setInt(11,plane.getAngle());
 			pstmt.setInt(12, plane.getPlaneCode());
-			pstmt.setInt(13, plane.getPlaneCode());
+			pstmt.setBoolean(13, plane.getFlying());
 			}
 			
 			pstmt.executeUpdate();

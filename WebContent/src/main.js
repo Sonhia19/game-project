@@ -165,6 +165,7 @@ var functions = {
             }
             if (response.action.name == "syncEmptyTankEnemy") {
 
+                console.log(JSON.parse(response.responses[1].value));
                 context.enemySession.isEmptyTank = true;
                 context.enemySession.planeEmptyTank = JSON.parse(response.responses[1].value);
             }
