@@ -29,8 +29,7 @@ public class DAOArtilleryType implements IDAOArtilleryType {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				artillery = new Artillery(artilleryNumber, rs.getDouble("posicion_x"), rs.getDouble("posicion_y"), 
-						rs.getInt("angulo"), rs.getInt("blindaje"), rs.getInt("cadencia"), rs.getInt("alcance"), rs.getInt("poder_fuego"), 
-						rs.getString("nombre"), artilleryType);
+						rs.getInt("blindaje"), rs.getInt("cadencia"), rs.getInt("alcance"), rs.getInt("poder_fuego"), artilleryType);
 			}
 			rs.close();
 			pstmt.close();

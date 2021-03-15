@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import exceptions.LogicException;
 import exceptions.PersistenceException;
@@ -58,14 +59,30 @@ public class ArtilleryController {
     
     
     
-    public void saveArtillery (final int playerId, final Artillery artillery,final int artilleryCode) throws LogicException {
+    public void saveArtillery (final int playerId, final Artillery artillery) throws LogicException {
     	
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			daoArtillery.saveArtillery(playerId, artillery, icon,artilleryCode);
+			daoArtillery.saveArtillery(playerId, artillery, icon);
 		} catch (PersistenceException ex) {
 			throw new LogicException(ex.getMessage());
 		}
+    }
+    
+
+    public List<Artillery> recoverArtilleriesByPlayerId(final int playerId) throws LogicException{
+    	
+    	List<Artillery> artilleries = null;
+    	IDBConnection icon = null;
+		try {
+			icon = ConnectionsPool.getInstancia().obtenerConexion();
+			artilleries = daoArtillery.recoverArtilleriesByPlayerId(playerId, icon);
+    	
+		} catch (PersistenceException ex) {
+			throw new LogicException(ex.getMessage());
+		}
+		
+    	return artilleries;
     }
 }

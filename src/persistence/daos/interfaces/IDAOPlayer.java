@@ -1,16 +1,18 @@
 package persistence.daos.interfaces;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import exceptions.PersistenceException;
 import persistence.connection.*;
 import logic.models.*;
 
 public interface IDAOPlayer {
-	int savePlayer(int idPartida,Player player,IDBConnection icon)throws PersistenceException;
-	
-	boolean exists(final int idPartida,final String playerName,IDBConnection icon) throws PersistenceException;
-	Player find(int idPartida, String playerName,IDBConnection icon) throws PersistenceException ;
-	int getPlayerId(int idPartida, String playerName,IDBConnection icon) throws PersistenceException;
-	Player recoverPlayer(int gameId, int teamSide,IDBConnection icon ) throws PersistenceException;
+
+	int savePlayer(int gameId,Player player,IDBConnection icon) throws PersistenceException;
+
+	boolean exists(final int gameId,final String playerName,IDBConnection icon) throws PersistenceException;
+
+	int getPlayerId(int gameId, String playerName,IDBConnection icon) throws PersistenceException;
+
+	List<Player> recoverPlayers(int gameId, IDBConnection icon ) throws PersistenceException;
 }

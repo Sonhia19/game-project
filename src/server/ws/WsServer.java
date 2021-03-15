@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 
 import exceptions.LogicException;
+import logic.GameStatus;
 import logic.facade.Facade;
 import logic.models.Player;
 import server.utils.WsResponse;
@@ -159,13 +160,28 @@ public class WsServer {
 				response.setAction(action);
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
+				
+			} if (action.getString("name").equalsIgnoreCase("finishGame")) {
+
+				System.out.println("Finish game ");
+				final int gameId = parameters.getInt("gameId");
+				final int teamSideWin = parameters.getInt("teamSideWin");
+
+				response = new WsResponse();
+		    	response.generateResponse("gameStatus", String.valueOf(GameStatus.FINISHED), "String");
+		    	response.generateResponse("teamSideWin", String.valueOf(teamSideWin), "String");
+		    	response.setAction(action);
+		    	
+				WsSynchronization.syncWithEnemy(facade, gameId, response, "finishGame");
+				facade.finishGame(gameId);
 			}
 			if (action.getString("name").equalsIgnoreCase("recoverGame")) {
 
 				System.out.println("Recover game ");
 				final int gameId = parameters.getInt("gameId");
 				final String playerName = parameters.getString("playerName");
-				try{response = facade.recoverGame(gameId, playerName, session);}
+				try {
+					response = facade.recoverGame(gameId, playerName, session);}
 				catch (LogicException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -176,7 +192,7 @@ public class WsServer {
 				session.getBasicRemote().sendText(response.toParsedString());
 				
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updateRecover*");
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
 				
 				
 			}

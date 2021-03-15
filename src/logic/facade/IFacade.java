@@ -25,8 +25,26 @@ public interface IFacade {
 										 final ArrayList<Integer> artilleriesType, JSONArray structurePositionsJsonArray, final Session session);
 
 	WsResponse disconnectGameSession(final Session session);
+	
+	void finishGame(final int gameId);
     
     WsResponse getJsonGameSession(final int gameId, final String userId);
+    
+    WsResponse getJsonShootEnemy(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonBombEnemy(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonHighFlyEnemy(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonDamagePlane(final int gameId, final String playerName, final JSONObject parameters);
+    
+    WsResponse getJsonMoveEnemy(final int gameId, final String playerName, final JSONObject parameters);
 
     HashMap<String, Player> getGamePlayers(final int gameId);
 

@@ -5,7 +5,7 @@ export let Border = new Phaser.Class({
     initialize:
 
         function Border(scene) {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'border');
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'external_border');
             this.internal = false;
             this.enemy = false;
         },
@@ -18,7 +18,13 @@ export let Border = new Phaser.Class({
         this.enemy = enemy;
         this.setActive(true);
         this.setVisible(true);
-        this.displayHeight = 1100;
+        if (internal) {
+            this.setTexture('border');
+        }
+        else {
+            this.displayHeight = 1100;
+        }
+        this.displayWidth = 30;
     }
 
 });

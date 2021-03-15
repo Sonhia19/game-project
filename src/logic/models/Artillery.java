@@ -20,12 +20,14 @@ public class Artillery {
 
 	private int artilleryType;
 
+	private int artilleryCode;
+
 	public Artillery() {
 
 	}
-	public Artillery(int id, double positionX, double positionY, int angle) {
+	public Artillery(int artilleryCode, double positionX, double positionY) {
 
-		this.id = id;
+		this.artilleryCode = artilleryCode;
 		this.armor = 100;
 		this.cadency = 1500;
 		this.reach = 200;
@@ -35,16 +37,15 @@ public class Artillery {
 		this.positionY = positionY;
 	}
 	
-	public Artillery(int id, double positionX, double positionY, int angle,  int armor, int cadency, int reach, int firePower, String name, int artilleryType) {
+	public Artillery(int artilleryCode, double positionX, double positionY, int armor, int cadency, int reach, int firePower, int artilleryType) {
 
-		this.id = id;
+		this.artilleryCode = artilleryCode;
 		this.armor = armor;
 		this.cadency = cadency;
 		this.reach = reach;
 		this.firePower = firePower;
 		this.positionX = positionX;
 		this.positionY = positionY;
-		this.name = name;
 		this.artilleryType = artilleryType;
 
 	}
@@ -72,7 +73,7 @@ public class Artillery {
 		return positionX;
 	}
 
-	public double getSpeed() {
+	public double getCadency() {
 		return cadency;
 	}
 
@@ -86,6 +87,10 @@ public class Artillery {
 
 	public int getArtilleryType() {
 		return artilleryType;
+	}
+
+	public int getArtilleryCode() {
+		return artilleryCode;
 	}
 
 	public double getPositionY() {

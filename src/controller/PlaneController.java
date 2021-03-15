@@ -60,25 +60,24 @@ public class PlaneController {
     	return planes;
     }
     
-    public void savePlane (final int playerId, final Plane plane,final int planeCode) throws LogicException {
+    public void savePlane (final int playerId, final Plane plane) throws LogicException {
     	
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			daoPlanes.savePlanes(playerId, plane, icon,planeCode);
+			daoPlanes.savePlanes(playerId, plane, icon);
 		} catch (PersistenceException ex) {
 			throw new LogicException(ex.getMessage());
 		}
     }
     
-    public List<Plane> recoverPlanesByPlayerId(final int playerId,final int teamSide) throws LogicException{
+    public List<Plane> recoverPlanesByPlayerId(final int playerId) throws LogicException{
     	
     	List<Plane> planes = null;
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-	
-			planes = daoPlanes.recoverPlanesByPlayerId(playerId, teamSide, icon);
+			planes = daoPlanes.recoverPlanesByPlayerId(playerId, icon);
     	
 		} catch (PersistenceException ex) {
 			throw new LogicException(ex.getMessage());

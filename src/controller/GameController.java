@@ -58,7 +58,7 @@ public class GameController {
         Game game = null;
         try {
             icon = ConnectionsPool.getInstancia().obtenerConexion();
-            game = daoGame.restoreGame(gameId,icon);
+            game = daoGame.recoverGame(gameId,icon);
         } catch (PersistenceException ex) {
             throw new LogicException(ex.getMessage());
         }

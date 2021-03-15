@@ -24,14 +24,18 @@ public class Plane {
 	double firePower;
 
 	int planeType;
+	
+	int planeCode;
+	
+	boolean flying;
 
 	public Plane() {
 		
 	}
 	
-	public Plane(int id, double positionX, double positionY, int angle) {
+	public Plane(int planeCode, double positionX, double positionY, int angle) {
 
-		this.id = id;
+		this.planeCode = planeCode;
 		this.positionX = positionX;
 		this.positionY = positionY;
 		this.angle = angle;
@@ -45,9 +49,9 @@ public class Plane {
 		
 	}
 	
-	public Plane(int id, double positionX, double positionY, int angle, int fuel, int armor, int firePower, Boolean hasBomb, Boolean highFly, int speed, int planeType) {
+	public Plane(int planeCode, double positionX, double positionY, int angle, int fuel, int armor, int firePower, Boolean hasBomb, Boolean highFly, int speed, int planeType, boolean flying) {
 
-		this.id = id;
+		this.planeCode = planeCode;
 		this.positionX = positionX;
 		this.positionY = positionY;
 		this.angle = angle;
@@ -58,6 +62,7 @@ public class Plane {
 		this.hasBomb = hasBomb;
 		this.highFly = highFly;
 		this.planeType = planeType;
+		this.flying = flying;
 	}
 
 
@@ -99,6 +104,14 @@ public class Plane {
 
 	public int getPlaneType() {
 		return planeType;
+	}
+
+	public int getPlaneCode() {
+		return planeCode;
+	}
+	
+	public boolean getFlying() {
+		return flying;
 	}
 
 	public double getPositionY() {

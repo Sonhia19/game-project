@@ -1,16 +1,11 @@
 import { context } from '../../src/main.js';
+import {COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING} from '../constants/GameConstants.js'
 
 let tower;
 let fuel;
 let hangar;
 let area;
-
 let scene;
-
-//Constantes de colores para mensajes
-const COLOR_SUCCESS = 0x008025;
-const COLOR_DANGER = 0xFF0000;
-const COLOR_WARNING = 0xE2D510;
 export class LobbyGameScene extends Phaser.Scene {
 
 	constructor() {
@@ -39,30 +34,41 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.load.image("joingame_button", "assets/join-game-button.png");
 
 		this.load.image("fuel", "./assets/fuel.png");
-		this.load.image("hangar", "./assets/hangar.png");
-		this.load.image("tower", "./assets/tower.png");
+		this.load.image("hangar_red", "./assets/structures/hangar_red.png");
+		this.load.image("hangar_blue", "./assets/structures/hangar_blue.png");
+		this.load.image("tower", "./assets/structures/tower.png");
 
 	}
 
-	plane1Type = 1;
-	plane2Type = 1;
-	plane3Type = 1;
-	plane4Type = 1;
+	plane1Type;
+	plane2Type;
+	plane3Type;
+	plane4Type;
 
-	artillery1Type = 1;
-	artillery2Type = 1;
-	artillery3Type = 1;
-	artillery4Type = 1;
+	artillery1Type;
+	artillery2Type;
+	artillery3Type;
+	artillery4Type;
 
 	create() {
 
+		this.plane1Type = 1;
+		this.plane2Type = 1;
+		this.plane3Type = 1;
+		this.plane4Type = 1;
+
+		this.artillery1Type = 1;
+		this.artillery2Type = 1;
+		this.artillery3Type = 1;
+		this.artillery4Type = 1;
+		
 		scene = this;
 		tower = this.add.sprite(1100, 325, 'tower');
 		tower.setInteractive();
-		tower.setScale(0.3);
+		tower.setScale(0.2);
 		this.input.setDraggable(tower);
 
-		hangar = this.add.sprite(1100, 500, 'hangar');
+		hangar = this.add.sprite(1100, 500, context.playerSession.teamSide == 1 ? 'hangar_blue' : 'hangar_red');
 		hangar.setInteractive();
 		hangar.setScale(0.2);
 		this.input.setDraggable(hangar);
@@ -74,7 +80,7 @@ export class LobbyGameScene extends Phaser.Scene {
 
 		this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
 
-			gameObject.x = dragX;
+			//gameObject.x = dragX;
 			gameObject.y = dragY;
 
 		});
@@ -100,6 +106,7 @@ export class LobbyGameScene extends Phaser.Scene {
 			let endStructureY = parseFloat(gameObject.y + gameObject.displayHeight / 2);
 			let endMapY = parseFloat(area.y + area.displayHeight / 2)
 
+			console.log(gameObject.y);
 
 			if (initialStructureX < initialMapX || endStructureX > endMapX
 				|| initialStructureY < initialMapY || endStructureY > endMapY) {
@@ -118,7 +125,6 @@ export class LobbyGameScene extends Phaser.Scene {
 					y = 150;
 				}
 
-
 				scene.createMessage("Coloque " + structure + " dentro del mapa", COLOR_DANGER);
 				gameObject.x = 1100;
 				gameObject.y = y;
@@ -131,8 +137,6 @@ export class LobbyGameScene extends Phaser.Scene {
 			}
 
 		})
-
-		console.log(context.playerSession);
 
 		const style = { font: "bold 25px Arial", fill: "#fff" };
 		this.add.text(1, 1, `Game Token: ${context.playerSession.gameId}`, style);

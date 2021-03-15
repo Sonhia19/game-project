@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import exceptions.LogicException;
 import exceptions.PersistenceException;
 import logic.models.Player;
@@ -40,16 +43,18 @@ public class PlayerController {
 		}
 		return playerId;
     }
-    public Player recoverPlayer(final int gameId,final int teamSide) throws LogicException{
-    	Player player = null;
+    
+    public List<Player> recoverPlayers(final int gameId) throws LogicException {
+    	
+    	List<Player> players = new ArrayList<Player>();
     	IDBConnection icon = null;
 		try {
 			icon = ConnectionsPool.getInstancia().obtenerConexion();
-			player = daoPlayer.recoverPlayer(gameId, teamSide, icon);
+			players = daoPlayer.recoverPlayers(gameId, icon);
 		} catch (PersistenceException ex) {
 			throw new LogicException(ex.getMessage());
 		}
-    	return player;
+    	return players;
     	
     }
 
