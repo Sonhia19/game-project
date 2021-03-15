@@ -1,13 +1,13 @@
 
 import { context } from '../../src/main.js';
 
-export class MenuScene extends Phaser.Scene {  
+export class MenuScene extends Phaser.Scene {
     constructor() {
         super('MENU');
-    } 
+    }
 
     init() {
-        
+
     }
 
     preload() {
@@ -18,9 +18,14 @@ export class MenuScene extends Phaser.Scene {
         this.load.image("newgame_button", "assets/new-game-button.png");
         this.load.image("joingame_button", "assets/join-game-button.png");
         this.load.image("recovergame_button", "assets/recover-game-button.png");
+        this.load.audio("intro", "assets/sounds/principal.mp3");
     }
 
     create() {
+        this.sound.play("intro", {
+            loop: true
+        });
+
         this.add.image(0, 0, 'background_menu').setOrigin(0);
         this.add.image(context.game.renderer.width / 2, context.game.renderer.height * 0.20, "play_font").setDepth(0);
 
@@ -34,7 +39,7 @@ export class MenuScene extends Phaser.Scene {
 
         newGameButton.on('pointerdown', function () {
             context.functions.navigateScene("MENU", "NEWGAME");
-    
+
         }, this);
 
         joinGameButton.on('pointerdown', function () {

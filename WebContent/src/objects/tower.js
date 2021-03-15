@@ -17,9 +17,10 @@ export let Tower = new Phaser.Class({
         this.setScale(0.2);
         this.setDepth(0);
     },
-    fire: function (time, angle, bullets) {
+    fire: function (scene, time, angle, bullets) {
         var bullet = bullets.get();
         bullet.fire(this.x, this.y, angle, 15, 300);
+        scene.sound.play("canon");
         this.nextTic = time + 1000;
     },
     update: function (time, delta) {

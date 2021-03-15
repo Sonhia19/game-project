@@ -292,6 +292,7 @@ public class Facade implements IFacade {
 		final Gson gson = new Gson();
 
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("enemyEmptyTank",gson.toJson(String.valueOf(indexPlane)), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 
 		return response;

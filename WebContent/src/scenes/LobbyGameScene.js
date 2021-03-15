@@ -1,4 +1,5 @@
 import { context } from '../../src/main.js';
+import {COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING} from '../constants/GameConstants.js'
 
 let tower;
 let fuel;
@@ -6,11 +7,6 @@ let hangar;
 let area;
 
 let scene;
-
-//Constantes de colores para mensajes
-const COLOR_SUCCESS = 0x008025;
-const COLOR_DANGER = 0xFF0000;
-const COLOR_WARNING = 0xE2D510;
 export class LobbyGameScene extends Phaser.Scene {
 
 	constructor() {

@@ -24,6 +24,7 @@ export class FinishGameScene extends Phaser.Scene {
 
     create() {
 
+        this.game.sound.stopAll();
         this.add.image(0, 0, 'background_menu').setOrigin(0);
 
         if (context.gameStatus == "ENEMIGO_ABANDONO") {

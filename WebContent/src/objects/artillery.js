@@ -7,7 +7,7 @@ export let Artillery = new Phaser.Class({
     initialize:
 
         function Artillery(scene) {
-            Phaser.GameObjects.Image.call(this, scene, 0, 0,'spritesArtilleries', 'mortero_blue');
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'spritesArtilleries', 'mortero_blue');
             this.nextTic = 0;
             this.cadency = 0;
             this.reach = 0;
@@ -37,10 +37,11 @@ export let Artillery = new Phaser.Class({
 
         return this;
     },
-    fire: function (time, angle, bullets) {
+    fire: function (scene, time, angle, bullets) {
         var bullet = bullets.get();
         //this.angle = angle;//(angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
         bullet.fire(this.x, this.y, angle, this.firePower, this.reach);
+        scene.sound.play("canon");
         this.nextTic = time + this.cadency;
     },
     receiveDamage: function (damage) {

@@ -51,3 +51,8 @@ export const RECONOCIMIENTO = 4;
 export const CANON_CAMPANA = 1;
 export const MORTERO = 2;
 export const ARTILLERIA_COHETE = 3;
+
+//Constantes de colores para mensajes
+export const COLOR_SUCCESS = 0x008025;
+export const COLOR_DANGER = 0xFF0000;
+export const COLOR_WARNING = 0xE2D510;
