@@ -19,13 +19,6 @@ public class DAOGame implements IDAOGame {
 		
 	}
 	
-	/**
-	 * Verifica si una partida existe.
-	 * 
-	 * @param idPartida
-	 * @param icon
-	 * @return boolean
-	 */
 	@Override
 	public boolean exists(int idPartida, IDBConnection icon) throws PersistenceException {
 		boolean existe = false;
@@ -45,12 +38,6 @@ public class DAOGame implements IDAOGame {
 		return existe;
 	}
 
-	/**
-	 * Inserta una partida en la BD.
-	 * 
-	 * @param partida
-	 * @param icon
-	 */
 	@Override
 	public int getNewGameId( IDBConnection icon) throws PersistenceException {
 		Connection con = icon.getConnection();
@@ -70,13 +57,15 @@ public class DAOGame implements IDAOGame {
 		}
 		return nuevoId;
 	}
-	public Game restoreGame(final int idPartida,IDBConnection icon) throws PersistenceException{
+	
+	@Override
+	public Game recoverGame(final int gameId, IDBConnection icon) throws PersistenceException{
 		Game restoredGame = null;
 		Connection con = icon.getConnection();
 		
 		try {
 			PreparedStatement pstmt = con.prepareStatement("select id,estado,id_ganador,fecha,fecha_modificacion from partidas where id = ?");
-			pstmt.setInt(1, idPartida);
+			pstmt.setInt(1, gameId);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				restoredGame = new Game(rs.getInt("id"),rs.getInt("estado"),rs.getInt("id_ganador"),rs.getDate("fecha"),rs.getDate("fecha_modificacion"));

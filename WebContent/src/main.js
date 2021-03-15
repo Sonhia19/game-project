@@ -109,9 +109,10 @@ var functions = {
             }
             if (response.action.name == 'recoverGame') {
 
+                console.log(response.responses);
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
-                context.enemySession = JSON.parse(response.responses[2].value);
+                context.enemySession = JSON.parse(response.responses[3].value);
 
                 console.log("RECOVER player session");
                 console.log(context.playerSession);

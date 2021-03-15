@@ -180,7 +180,8 @@ public class WsServer {
 				System.out.println("Recover game ");
 				final int gameId = parameters.getInt("gameId");
 				final String playerName = parameters.getString("playerName");
-				try{response = facade.recoverGame(gameId, playerName, session);}
+				try {
+					response = facade.recoverGame(gameId, playerName, session);}
 				catch (LogicException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -191,7 +192,7 @@ public class WsServer {
 				session.getBasicRemote().sendText(response.toParsedString());
 				
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updateRecover*");
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
 				
 				
 			}

@@ -124,8 +124,8 @@ export let Plane = new Phaser.Class({
         let width = height * this.height / this.width;
         this.displayWidth = height;
         this.displayHeight = width;
-        console.log(this);
-        console.log(isEnemy);
+        // console.log(this);
+        // console.log(isEnemy);
         return this;
     },
     update: function (time, delta) {

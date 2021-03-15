@@ -67,6 +67,7 @@ public class Player {
 		this.activeHangar = true;
 		this.positionXHangar = phx;
 		this.positionYHangar = phy;
+
 		this.activeTower = true;
 		this.positionXTower = ptx;
 		this.positionYTower = pty;
@@ -175,14 +176,23 @@ public class Player {
 	public void setArtilleries(final List<Artillery> artilleries) {
 		this.artilleries = artilleries;
 	}
-	public Player (final int id,final String name,final int gameId,final int teamSide,final boolean activeTower,final boolean activeFuelTank,final boolean activeHangar ) {
+
+	public Player (final int id, final String name, final int gameId, final int teamSide, final boolean activeTower, final double positionXTower,
+				   final double positionYTower, final boolean activeFuelTank, final double positionXFuel, final double positionYFuel,
+				   final boolean activeHangar, final double positionXHangar, final double positionYHangar) {
 		this.id = id;
 		this.name = name;
 		this.gameId = gameId;
 		this.teamSide = teamSide;
 		this.activeTower = activeTower;
+		this.positionXTower = positionXTower;
+		this.positionYTower = positionYTower;
 		this.activeFuel = activeFuelTank;
+		this.positionXFuel = positionXFuel;
+		this.positionYFuel = positionYFuel;
 		this.activeHangar = activeHangar;
+		this.positionXHangar = positionXHangar;
+		this.positionYHangar = positionYHangar;
 	}
 	
 	public Player preparePlayerToSend() {

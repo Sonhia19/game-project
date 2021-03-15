@@ -18,7 +18,7 @@ public class DAOPlane implements IDAOPlane {
 
 	@Override
 	public boolean exists(int playerId, int planeCode,IDBConnection icon) throws PersistenceException {
-		boolean existe = false;
+		boolean exist = false;
 		Connection con = icon.getConnection();
 		
 		try {
@@ -27,22 +27,24 @@ public class DAOPlane implements IDAOPlane {
 			pstmt.setInt(2, planeCode);
 			
 			ResultSet rs = pstmt.executeQuery();
-			existe = rs.next();
+			exist = rs.next();
 			rs.close();
 			pstmt.close();
 		} catch (SQLException e) {
 			throw new PersistenceException("Error SQL: " + e.getMessage());
 		}
 		
-		return existe;
+		return exist;
 	}
+	
 	@Override
-	public void savePlanes (int idJugador,Plane plane,IDBConnection icon,int planeCode)throws PersistenceException{
+	public void savePlanes (int playerId, Plane plane, IDBConnection icon) throws PersistenceException {
+
 		Connection con = icon.getConnection();
 		PreparedStatement pstmt ;
 		try {
-			if (this.exists(idJugador, planeCode, icon)){
-				pstmt = con.prepareStatement("update aviones set combustible = ?, blindaje=?, tiene_bomba=?,vuelo_alto=?,posicion_x=?,posicion_y=?,poder_fuego=?,velocidad=?,angulo=? where id_jugador= ? and avion_codigo=?",Statement.RETURN_GENERATED_KEYS);
+			if (this.exists(playerId, plane.getPlaneCode(), icon)){
+				pstmt = con.prepareStatement("update aviones set combustible = ?, blindaje=?, tiene_bomba=?, vuelo_alto=?, posicion_x=?, posicion_y=?, poder_fuego=?, velocidad=?, angulo=?, volando=? where id_jugador= ? and avion_codigo=?",Statement.RETURN_GENERATED_KEYS);
 			
 				pstmt.setDouble(1, plane.getFuel());
 				pstmt.setDouble(2, plane.getArmor());
@@ -53,13 +55,14 @@ public class DAOPlane implements IDAOPlane {
 				pstmt.setDouble(7,plane.getFirePower());
 				pstmt.setDouble(8,plane.getSpeed());
 				pstmt.setInt(9,plane.getAngle());
-				pstmt.setInt(10, idJugador);
-				pstmt.setInt(11, planeCode);
+				pstmt.setInt(10, playerId);
+				pstmt.setInt(11, plane.getPlaneCode());
+				pstmt.setBoolean(12, plane.getFlying());
 			}
 			else
 			{
-			pstmt = con.prepareStatement("insert into aviones (ID_JUGADOR,AVION_TIPO,COMBUSTIBLE,BLINDAJE,TIENE_BOMBA,VUELO_ALTO,POSICION_X, POSICION_Y,PODER_FUEGO,VELOCIDAD,ANGULO,AVION_CODIGO) values(?,?,?,?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
-			pstmt.setInt(1, idJugador);
+			pstmt = con.prepareStatement("insert into aviones (id_jugador, avion_tipo, combustible, blindaje, tiene_bomba, vuelo_alto, posicion_x, posicion_y, poder_fuego, velocidad, angulo, avion_codigo, volando) values(?,?,?,?,?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, playerId);
 			pstmt.setInt(2, plane.getPlaneType());
 			pstmt.setDouble(3, plane.getFuel());
 			pstmt.setDouble(4, plane.getArmor());
@@ -70,7 +73,8 @@ public class DAOPlane implements IDAOPlane {
 			pstmt.setDouble(9,plane.getFirePower());
 			pstmt.setDouble(10,plane.getSpeed());
 			pstmt.setInt(11,plane.getAngle());
-			pstmt.setInt(12, planeCode);
+			pstmt.setInt(12, plane.getPlaneCode());
+			pstmt.setInt(13, plane.getPlaneCode());
 			}
 			
 			pstmt.executeUpdate();
@@ -82,38 +86,22 @@ public class DAOPlane implements IDAOPlane {
 			throw new PersistenceException("Error SQL: " + e.getMessage());
 		}
 	}
-	public Plane restorePlane(final int planeId,IDBConnection icon) throws PersistenceException{
-		Plane restoredPlane = null;
+
+	@Override
+	public List<Plane> recoverPlanesByPlayerId(final int playerId, IDBConnection icon) throws PersistenceException {
+		
+		Plane plane = null;
+		List<Plane> planes = new ArrayList<Plane>();
 		Connection con = icon.getConnection();
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("select id,id_jugador,avion_tipo,combustible,blindaje,tiene_bomba,vuelo_alto,posicion_x,posicion_y,angulo,poder_fuego,velocidad from aviones where id = ?");
-			pstmt.setInt(1, planeId);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				restoredPlane = new Plane(rs.getInt("id"),rs.getDouble("posicion_x"),rs.getDouble("posicion_y"),rs.getInt("angulo"),rs.getInt("combustible"),rs.getInt("blindaje"),rs.getInt("poder_fuego"),rs.getBoolean("tiene_bomba"),rs.getBoolean("vuelo_alto"),rs.getInt("velocidad"),rs.getInt("avion_tipo"));
-			}
-			rs.close();
-			pstmt.close();
-		} catch (SQLException e) {
-			throw new PersistenceException("Error SQL: " + e.getMessage());
-		}
-		return restoredPlane;
-		
-	}
-	public List<Plane> recoverPlanesByPlayerId(final int playerId,final int teamSide,IDBConnection icon) throws PersistenceException{
-		Plane restoredPlane = null;
-		List<Plane> planes = null;
-		Connection con = icon.getConnection();
-		
-		try {
-			PreparedStatement pstmt = con.prepareStatement("select id,id_jugador,avion_tipo,combustible,blindaje,tiene_bomba,vuelo_alto,posicion_x,posicion_y,angulo,poder_fuego,velocidad from aviones where id_jugador = ?");
+			PreparedStatement pstmt = con.prepareStatement("select id, id_jugador, avion_tipo, combustible, blindaje, tiene_bomba, vuelo_alto, posicion_x, posicion_y, angulo, poder_fuego, velocidad, avion_codigo, volando from aviones where id_jugador = ?");
 			pstmt.setInt(1, playerId);
 			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				restoredPlane = new Plane(rs.getInt("id"),rs.getDouble("posicion_x"),rs.getDouble("posicion_y"),rs.getInt("angulo"),rs.getInt("combustible"),rs.getInt("blindaje"),rs.getInt("poder_fuego"),rs.getBoolean("tiene_bomba"),rs.getBoolean("vuelo_alto"),rs.getInt("velocidad"),rs.getInt("avion_tipo"));
-			}
-			planes.add(restoredPlane);
+			while (rs.next()) {
+				plane = new Plane(rs.getInt("avion_codigo"),rs.getDouble("posicion_x"),rs.getDouble("posicion_y"),rs.getInt("angulo"),rs.getInt("combustible"),rs.getInt("blindaje"),rs.getInt("poder_fuego"),rs.getBoolean("tiene_bomba"),rs.getBoolean("vuelo_alto"),rs.getInt("velocidad"),rs.getInt("avion_tipo"), rs.getBoolean("volando"));
+				planes.add(plane);
+			}			
 			rs.close();
 			pstmt.close();
 		} catch (SQLException e) {

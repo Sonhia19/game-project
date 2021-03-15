@@ -1294,19 +1294,19 @@ export class GameScene extends Phaser.Scene {
 		if (context.enemySession.artilleries != undefined) {
 			let artilleryServer = context.enemySession.artilleries;
 			if (artilleryServer[0].armor > 0) {
-				enemyArtilleryOne = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, 1, artilleryServer[0].artilleryType);
+				enemyArtilleryOne = this.placeEnemyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, artilleryServer[0].artilleryCode, artilleryServer[0].artilleryType);
 				enemyArtilleryOneView = this.add.image(isBlue ? enemyArtilleryOne.x + 425 : enemyArtilleryOne.x + 925, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 			if (artilleryServer[1].armor > 0) {
-				enemyArtilleryTwo = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, 2, artilleryServer[1].artilleryType);
+				enemyArtilleryTwo = this.placeEnemyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[1].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, artilleryServer[1].artilleryCode, artilleryServer[1].artilleryType);
 				enemyArtilleryTwoView = this.add.image(isBlue ? enemyArtilleryTwo.x + 423 : enemyArtilleryTwo.x + 927, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 			if (artilleryServer[2].armor > 0) {
-				enemyArtilleryThree = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, 3, artilleryServer[2].artilleryType);
+				enemyArtilleryThree = this.placeEnemyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[2].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, artilleryServer[2].artilleryCode, artilleryServer[2].artilleryType);
 				enemyArtilleryThreeView = this.add.image(isBlue ? enemyArtilleryThree.x + 421 : enemyArtilleryThree.x + 929, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 			if (artilleryServer[3].armor > 0) {
-				enemyArtilleryFour = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, 4, artilleryServer[3].artilleryType);
+				enemyArtilleryFour = this.placeEnemyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[3].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, artilleryServer[3].artilleryCode, artilleryServer[3].artilleryType);
 				enemyArtilleryFourView = this.add.image(isBlue ? enemyArtilleryFour.x + 419 : enemyArtilleryFour.x + 931, 280, isBlue ? 'artilleryRedView' : 'artilleryBlueView').setScale(0.15);
 			}
 		}
@@ -1428,19 +1428,19 @@ export class GameScene extends Phaser.Scene {
 		if (context.playerSession.artilleries != undefined) {
 			let artilleryServer = context.playerSession.artilleries;
 			if (artilleryServer[0].armor > 0) {
-				myArtilleryOne = this.placeMyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, 1, artilleryServer[0].artilleryType);
+				myArtilleryOne = this.placeMyArtillery(artilleryServer[0].positionY, artilleryServer[0].positionX, artilleryServer[0].cadency, artilleryServer[0].reach, artilleryServer[0].armor, artilleryServer[0].firePower, artilleryServer[0].artilleryCode, artilleryServer[0].artilleryType);
 				myArtilleryOneView = this.add.image(isBlue ? myArtilleryOne.x + 925 : myArtilleryOne.x + 425, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			if (artilleryServer[1].armor > 0) {
-				myArtilleryTwo = this.placeMyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[0].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, 2, artilleryServer[1].artilleryType);
+				myArtilleryTwo = this.placeMyArtillery(artilleryServer[1].positionY, artilleryServer[1].positionX, artilleryServer[0].cadency, artilleryServer[1].reach, artilleryServer[1].armor, artilleryServer[1].firePower, artilleryServer[1].artilleryCode, artilleryServer[1].artilleryType);
 				myArtilleryTwoView = this.add.image(isBlue ? myArtilleryTwo.x + 927 : myArtilleryTwo.x + 423, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			if (artilleryServer[2].armor > 0) {
-				myArtilleryThree = this.placeMyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[0].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, 3, artilleryServer[2].artilleryType);
+				myArtilleryThree = this.placeMyArtillery(artilleryServer[2].positionY, artilleryServer[2].positionX, artilleryServer[0].cadency, artilleryServer[2].reach, artilleryServer[2].armor, artilleryServer[2].firePower, artilleryServer[2].artilleryCode, artilleryServer[2].artilleryType);
 				myArtilleryThreeView = this.add.image(isBlue ? myArtilleryThree.x + 929 : myArtilleryThree.x + 421, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			if (artilleryServer[3].armor > 0) {
-				myArtilleryFour = this.placeMyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[0].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, 4, artilleryServer[3].artilleryType);
+				myArtilleryFour = this.placeMyArtillery(artilleryServer[3].positionY, artilleryServer[3].positionX, artilleryServer[0].cadency, artilleryServer[3].reach, artilleryServer[3].armor, artilleryServer[3].firePower, artilleryServer[3].artilleryCode, artilleryServer[3].artilleryType);
 				myArtilleryFourView = this.add.image(isBlue ? myArtilleryFour.x + 931 : myArtilleryFour.x + 419, 280, isBlue ? 'artilleryBlueView' : 'artilleryRedView').setScale(0.15);
 			}
 			this.physics.add.overlap(enemyBulletsArtillery, myPlanes, this.damageMyPlane);
@@ -1511,6 +1511,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[0].positionX = Math.round(myPlaneOne.x);
 		context.playerSession.planes[0].positionY = Math.round(myPlaneOne.y);
 		context.playerSession.planes[0].angle = myPlaneOne.planeAngle;
+		context.playerSession.planes[0].flying = myPlaneOne.flying;
 
 		context.playerSession.planes[1].fuel = myPlaneTwo.fuel;
 		context.playerSession.planes[1].armor = myPlaneTwo.armor;
@@ -1518,6 +1519,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[1].positionX = Math.round(myPlaneTwo.x);
 		context.playerSession.planes[1].positionY = Math.round(myPlaneTwo.y);
 		context.playerSession.planes[1].angle = myPlaneTwo.planeAngle;
+		context.playerSession.planes[1].flying = myPlaneTwo.flying;
 
 		context.playerSession.planes[2].fuel = myPlaneThree.fuel;
 		context.playerSession.planes[2].armor = myPlaneThree.armor;
@@ -1525,6 +1527,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[2].positionX = Math.round(myPlaneThree.x);
 		context.playerSession.planes[2].positionY = Math.round(myPlaneThree.y);
 		context.playerSession.planes[2].angle = myPlaneThree.planeAngle;
+		context.playerSession.planes[2].flying = myPlaneThree.flying;
 
 		context.playerSession.planes[3].fuel = myPlaneFour.fuel;
 		context.playerSession.planes[3].armor = myPlaneFour.armor;
@@ -1532,6 +1535,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[3].positionX = Math.round(myPlaneFour.x);
 		context.playerSession.planes[3].positionY = Math.round(myPlaneFour.y);
 		context.playerSession.planes[3].angle = myPlaneFour.planeAngle;
+		context.playerSession.planes[3].flying = myPlaneFour.flying;
 
 		context.enemySession.planes[0].fuel = enemyPlaneOne.fuel;
 		context.enemySession.planes[0].armor = enemyPlaneOne.armor;
@@ -1539,6 +1543,7 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[0].positionX = Math.round(enemyPlaneOne.x);
 		context.enemySession.planes[0].positionY = Math.round(enemyPlaneOne.y);
 		context.enemySession.planes[0].angle = enemyPlaneOne.planeAngle;
+		context.enemySession.planes[0].flying = enemyPlaneOne.flying;
 
 		context.enemySession.planes[1].fuel = enemyPlaneTwo.fuel;
 		context.enemySession.planes[1].armor = enemyPlaneTwo.armor;
@@ -1546,6 +1551,7 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[1].positionX = Math.round(enemyPlaneTwo.x);
 		context.enemySession.planes[1].positionY = Math.round(enemyPlaneTwo.y);
 		context.enemySession.planes[1].angle = enemyPlaneTwo.planeAngle;
+		context.enemySession.planes[2].flying = enemyPlaneTwo.flying;
 
 		context.enemySession.planes[2].fuel = enemyPlaneThree.fuel;
 		context.enemySession.planes[2].armor = enemyPlaneThree.armor;
@@ -1553,6 +1559,7 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[2].positionX = Math.round(enemyPlaneThree.x);
 		context.enemySession.planes[2].positionY = Math.round(enemyPlaneThree.y);
 		context.enemySession.planes[2].angle = enemyPlaneThree.planeAngle;
+		context.enemySession.planes[2].flying = enemyPlaneThree.flying;
 
 		context.enemySession.planes[3].fuel = enemyPlaneFour.fuel;
 		context.enemySession.planes[3].armor = enemyPlaneFour.armor;
@@ -1560,45 +1567,46 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[3].positionX = Math.round(enemyPlaneFour.x);
 		context.enemySession.planes[3].positionY = Math.round(enemyPlaneFour.y);
 		context.enemySession.planes[3].angle = enemyPlaneFour.planeAngle;
+		context.enemySession.planes[3].flying = enemyPlaneFour.flying;
 	}
 
 	updateArtilleries() {
-		context.playerSession.artilleries[0].armor = myArtilleryOne.fuel;
+		context.playerSession.artilleries[0].armor = myArtilleryOne.armor;
 		context.playerSession.artilleries[0].angle = myArtilleryOne.artilleryAngle;
 		context.playerSession.artilleries[0].positionX = Math.round(myArtilleryOne.x);
 		context.playerSession.artilleries[0].positionY = Math.round(myArtilleryOne.y);
 
-		context.playerSession.artilleries[1].armor = myArtilleryTwo.fuel;
+		context.playerSession.artilleries[1].armor = myArtilleryTwo.armor;
 		context.playerSession.artilleries[1].angle = myArtilleryTwo.artilleryAngle;
 		context.playerSession.artilleries[1].positionX = Math.round(myArtilleryTwo.x);
 		context.playerSession.artilleries[1].positionY = Math.round(myArtilleryTwo.y);
 
-		context.playerSession.artilleries[2].armor = myArtilleryThree.fuel;
+		context.playerSession.artilleries[2].armor = myArtilleryThree.armor;
 		context.playerSession.artilleries[2].angle = myArtilleryThree.artilleryAngle;
 		context.playerSession.artilleries[2].positionX = Math.round(myArtilleryThree.x);
 		context.playerSession.artilleries[2].positionY = Math.round(myArtilleryThree.y);
 
-		context.playerSession.artilleries[3].armor = myArtilleryFour.fuel;
+		context.playerSession.artilleries[3].armor = myArtilleryFour.armor;
 		context.playerSession.artilleries[3].angle = myArtilleryFour.artilleryAngle;
 		context.playerSession.artilleries[3].positionX = Math.round(myArtilleryFour.x);
 		context.playerSession.artilleries[3].positionY = Math.round(myArtilleryFour.y);
 
-		context.enemySession.artilleries[0].armor = enemyArtilleryOne.fuel;
+		context.enemySession.artilleries[0].armor = enemyArtilleryOne.armor;
 		context.enemySession.artilleries[0].angle = enemyArtilleryOne.artilleryAngle;
 		context.enemySession.artilleries[0].positionX = Math.round(enemyArtilleryOne.x);
 		context.enemySession.artilleries[0].positionY = Math.round(enemyArtilleryOne.y);
 
-		context.enemySession.artilleries[1].armor = enemyArtilleryTwo.fuel;
+		context.enemySession.artilleries[1].armor = enemyArtilleryTwo.armor;
 		context.enemySession.artilleries[1].angle = enemyArtilleryTwo.artilleryAngle;
 		context.enemySession.artilleries[1].positionX = Math.round(enemyArtilleryTwo.x);
 		context.enemySession.artilleries[1].positionY = Math.round(enemyArtilleryTwo.y);
 
-		context.enemySession.artilleries[2].armor = enemyArtilleryThree.fuel;
+		context.enemySession.artilleries[2].armor = enemyArtilleryThree.armor;
 		context.enemySession.artilleries[2].angle = enemyArtilleryThree.artilleryAngle;
 		context.enemySession.artilleries[2].positionX = Math.round(enemyArtilleryThree.x);
 		context.enemySession.artilleries[2].positionY = Math.round(enemyArtilleryThree.y);
 
-		context.enemySession.artilleries[3].armor = enemyArtilleryFour.fuel;
+		context.enemySession.artilleries[3].armor = enemyArtilleryFour.armor;
 		context.enemySession.artilleries[3].angle = enemyArtilleryFour.artilleryAngle;
 		context.enemySession.artilleries[3].positionX = Math.round(enemyArtilleryFour.x);
 		context.enemySession.artilleries[3].positionY = Math.round(enemyArtilleryFour.y);

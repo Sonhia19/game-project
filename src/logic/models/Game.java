@@ -1,6 +1,7 @@
 package logic.models;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -43,6 +44,7 @@ public class Game {
 	private int winnerId;
 	private Date date;
 	private Date updateDate;
+	private List<Player> players;
 	
 
 	public Game(final int gameId, final String userId, final int usersCount) {
@@ -51,6 +53,7 @@ public class Game {
 		this.userId = userId;
 		this.usersCount = usersCount;
 	}
+	
 	public Game(final int gameId, final int state, final int winnerId,final Date date,final Date updateDate) {
 		
 		this.id = gameId;
@@ -107,6 +110,10 @@ public class Game {
 	}
 	public Date getUpdateDate() {
 		return this.updateDate;
+	}
+	
+	public List<Player> getPlayers() {
+		return this.players;
 	}
 	
 	public JSONObject toJson() {
