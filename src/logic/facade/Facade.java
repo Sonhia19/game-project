@@ -218,7 +218,7 @@ public class Facade implements IFacade {
 
             response.generateResponse("gameId", String.valueOf(gameId), "int");
             response.generateResponse("playerSession", result, "String");
-            //response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+            response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 
     	}
 
