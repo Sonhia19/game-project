@@ -60,7 +60,6 @@ export class FinishGameScene extends Phaser.Scene {
 
         gotoMenuButton.on('pointerdown', function () {
             context.functions.navigateScene("FINISHGAME", "MENU");
-
         }, this);
 
     }

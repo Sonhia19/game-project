@@ -24,6 +24,7 @@ export class JoinGameScene extends Phaser.Scene {
 
         this.load.image("background_menu", "assets/background-menu.jpg");
         this.load.html('joinForm', 'assets/html/joinform.html');
+        this.load.image('gotoMenu_button', 'assets/go-menu-button.png');
     }
 
     create() {
@@ -54,23 +55,38 @@ export class JoinGameScene extends Phaser.Scene {
                     else if (isNaN(gameToken.value)) {
                         scene.createMessage('El token debe ser numérico', COLOR_DANGER);
                     }
-                    else {
-                        var message = context.messagesFormat.joinGame(inputUsername.value, gameToken.value);
-                        //envio msj al servidor con nombre de usuario
-                        console.log("desde"+context.fromScene);
-                        if (context.fromScene == "RECOVERGAME") {
-                            message = context.messagesFormat.recoverGame(inputUsername.value, gameToken.value);
-                        }
-
-                        context.functions.sendMessage(message);
+                    else if (isNaN(gameToken.value)) {
+                        scene.createMessage('El token debe ser numérico', COLOR_DANGER);
                     }
+                    else {
+                        if (context.fromScene == "RECOVERGAME") {
+                            var message = context.messagesFormat.recoverGame(inputUsername.value, gameToken.value);
+                            context.functions.sendMessage(message);
+                            context.functions.navigateScene("JOINGAME", "WAITING");
+                        } else {
+                            var message = context.messagesFormat.updatePlayersCount(gameToken.value);
+                            console.log(message);
+                            context.functions.sendMessage(message);
 
-
-
+                            // if (context.playersConnected < 1) {
+                            //     scene.createMessage('No hay jugadores conectados a la partida', COLOR_DANGER);
+                            // } else {
+                                var message = context.messagesFormat.joinGame(inputUsername.value, gameToken.value);
+                                context.functions.sendMessage(message);
+                            // 
+                        }   
+                    }
                 }
             }
 
         })
+
+        var gotoMenuButton = this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.90, "gotoMenu_button").setDepth(0);
+        gotoMenuButton.setInteractive();
+
+        gotoMenuButton.on('pointerdown', function () {
+            context.functions.navigateScene("JOINGAME", "MENU");
+        }, this);
     }
 
     update() {

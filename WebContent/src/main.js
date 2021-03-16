@@ -6,6 +6,7 @@ import { MenuScene } from '../src/scenes/MenuScene.js';
 import { NewGameScene } from '../src/scenes/NewGameScene.js';
 import { JoinGameScene } from '../src/scenes/JoinGameScene.js';
 import { FinishGameScene } from '../src/scenes/FinishGameScene.js';
+import { WaitingScene } from '../src/scenes/WaitingScene.js';
 import { WebSocketClient } from '../src/client/WebSocketClient.js';
 import { MESSAGES_FORMAT } from '../src/constants/MessagesFormatConstants.js';
 
@@ -21,14 +22,14 @@ var config = {
     physics: {
         default: "arcade",
         arcade: {
-            debug: true
+            debug: false
         }
     },
     dom: {
         createContainer: true
     },
     scene: [
-        LoadScene, MenuScene, NewGameScene, JoinGameScene, LobbyGameScene, GameScene, FinishGameScene
+        LoadScene, MenuScene, NewGameScene, JoinGameScene, LobbyGameScene, GameScene, FinishGameScene, WaitingScene
     ]
 };
 
@@ -93,17 +94,17 @@ var functions = {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.gameStatus = response.responses[2].value;
+                context.playersReadyToPlay = response.responses[3].value;
 
                 console.log("CONNECT player session");
                 console.log(context.playerSession);
-                console.log(context.enemySession);
-
-                context.functions.navigateScene("LOBBYGAME", "GAME");
+                console.log(context.playersReadyToPlay);
             }
             if (response.action.name == 'recoverGame') {
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
-                context.enemySession = JSON.parse(response.responses[3].value);
+                context.enemySession = JSON.parse(response.responses[2].value);
+                context.playersReadyToPlay = response.responses[3].value;
 
                 context.functions.navigateScene("JOINGAME", "GAME");
             }
@@ -139,6 +140,10 @@ var functions = {
             }
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
+                context.playersReadyToPlay = response.responses[2].value;
+
+                console.log("PLAYERS READY");
+                console.log(context.playersReadyToPlay);
             }
             if (response.action.name == "syncShootEnemy") {
                 context.enemySession.isShooting = true;
@@ -193,6 +198,7 @@ export const context = {
     gameId: null,
     gameStatus: null, // STARTED, FINISHED, ENEMY_FINISHED
     playersConnected: 0,
+    playersReadyToPlay: 0,
     playerSession: {},
     enemySession: {},
     teamSideWin: 0,

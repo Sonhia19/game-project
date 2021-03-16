@@ -149,6 +149,8 @@ public class Facade implements IFacade {
 		    	gamePlayersMap.put(gameId, new HashMap<>());
 		    	//Se agrega sesion a la partida
 		    	playerSession.setSession(session);
+		    	playerSession.setReadyToPlay(true);
+		    	
 		        final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
 		        gamePlayers.put(playerName, playerSession);
 
@@ -157,8 +159,8 @@ public class Facade implements IFacade {
 				
 				response.generateResponse("gameId", String.valueOf(gameId), "int");
 				response.generateResponse("playerSession", result, "String");
-				response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 				response.generateResponse("enemySession", resultEnemy, "String");
+				response.generateResponse("playersReady", String.valueOf(this.playersReadyToPlay(gameId)), "int");
 
 	    	}			
 	    	
@@ -196,6 +198,7 @@ public class Facade implements IFacade {
         //se arma respuesta
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
+        response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 
 		return response;
 		
@@ -243,6 +246,7 @@ public class Facade implements IFacade {
     	player.setPositionXHangar(Integer.valueOf(structurePositionsJsonArray.get(4).toString()));
     	player.setPositionYHangar(Integer.valueOf(structurePositionsJsonArray.get(5).toString()));
 
+    	player.setReadyToPlay(true);
     	try {
 			player.setPlanes(planeController.generatePlanesList(planesType, teamSide));
 			player.setArtilleries(artilleryController.generateArtilleriesList(artilleriesType, teamSide));
@@ -259,12 +263,12 @@ public class Facade implements IFacade {
     	
         final Gson gson = new Gson();
         final String result = gson.toJson(player.preparePlayerToSend());
-        final String resultEnemy = gson.toJson(enemyPlayer.preparePlayerToSend());
+        //final String resultEnemy = gson.toJson(enemyPlayer.preparePlayerToSend());
 
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
         response.generateResponse("gameStatus", String.valueOf(GameStatus.STARTED), "String");
-        response.generateResponse("playersReady", String.valueOf(gamePlayers.size()), "int");
+        response.generateResponse("playersReady", String.valueOf(this.playersReadyToPlay(gameId)), "int");
         
 		return response;
     }
@@ -305,7 +309,24 @@ public class Facade implements IFacade {
         
 		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
 		response.generateResponse("enemySession", resultEnemy, "String");
+		response.generateResponse("playersReady", String.valueOf(this.playersReadyToPlay(gameId)), "int");
 		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		
+		return response;
+	}
+
+	public WsResponse getPlayersConnected(final int gameId) {
+		
+		final WsResponse response = new WsResponse();
+		int playersConnected = 0;
+		if (gamePlayersMap.containsKey(gameId)) {
+			final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+			playersConnected = gamePlayers.size();
+		}
+		
+		response.generateResponse("gameId", String.valueOf(gameId), "int");
+		response.generateResponse("playersReady", String.valueOf(this.playersReadyToPlay(gameId)), "int");
+		response.generateResponse("playersConnected", String.valueOf(playersConnected), "int");
 		
 		return response;
 	}
@@ -512,5 +533,21 @@ public class Facade implements IFacade {
         	}
         }
         return resultGameId;
+    }
+    
+    private int playersReadyToPlay(final int gameId) {
+
+    	int count = 0;
+    	final HashMap<String, Player> playerSessions = gamePlayersMap.get(gameId);
+
+    	if (playerSessions != null) {
+    		for (final Player playerSession : playerSessions.values()) {
+
+        		if (playerSession.getReadyToPlay()) {
+        			count = count + 1;
+        		}
+        	}
+    	}
+        return count;
     }
 }

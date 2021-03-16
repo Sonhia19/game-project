@@ -25,6 +25,7 @@ export class NewGameScene extends Phaser.Scene {
 
         this.load.image("background_menu", "assets/background-menu.jpg");
         this.load.html('loginForm', 'assets/html/loginform.html');
+        this.load.image('gotoMenu_button', 'assets/go-menu-button.png');
     }
 
     create() {
@@ -55,6 +56,13 @@ export class NewGameScene extends Phaser.Scene {
             }
             
         })
+
+        var gotoMenuButton = this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.90, "gotoMenu_button").setDepth(0);
+        gotoMenuButton.setInteractive();
+
+        gotoMenuButton.on('pointerdown', function () {
+            context.functions.navigateScene("NEWGAME", "MENU");
+        }, this);
     }
 
     update () {

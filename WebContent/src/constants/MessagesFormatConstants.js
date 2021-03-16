@@ -168,5 +168,16 @@ export const MESSAGES_FORMAT = {
                 }
             }
         })
+    },
+
+    updatePlayersCount(gameId) {
+        return JSON.stringify({
+            action: {
+                name: 'updatePlayersCount',
+                parameters: {
+                    gameId: gameId
+                }
+            }
+        })
     }
 };

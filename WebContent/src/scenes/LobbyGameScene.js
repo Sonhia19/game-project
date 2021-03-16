@@ -271,12 +271,15 @@ export class LobbyGameScene extends Phaser.Scene {
 				let structurePositions = [fuel.x, fuel.y, tower.x, tower.y, hangar.x, hangar.y];
 				let message = context.messagesFormat.connectToGame(context.playerSession.name, context.playerSession.teamSide, planesType, artilleriesType, context.playerSession.gameId, structurePositions);
 				context.functions.sendMessage(message);
+
+				context.functions.navigateScene("LOBBYGAME", "WAITING");
 			}
 
 		}, this);
 	}
 
 	update() {
+	
 	}
 
 	/*** PLANES */

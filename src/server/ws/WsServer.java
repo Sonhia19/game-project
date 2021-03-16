@@ -84,6 +84,7 @@ public class WsServer {
 					e.printStackTrace();
 				}
 				response.setAction(action);
+				
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 			}
@@ -211,22 +212,14 @@ public class WsServer {
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
 				
-				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
+				//WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
 				
-				
-			}
-			/*if (action.getString("name").equalsIgnoreCase("syncGame")) {
+				//armar respuesta con enemySession para enviar al otro cliente
+				response = facade.getJsonGameSession(parameters.getInt("gameId"), playerName);
 
-				System.out.println("Sync game");
-				/*response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
-				response.setAction(action);
-				session.getBasicRemote().sendText(response.toParsedString());
-				response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
-				// sincroniza todas las sesiones conectadas
-				WsSynchronization.syncGame(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
-						response);
-			}*/
+				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "syncWithEnemy");
+			}
 			if (action.getString("name").equalsIgnoreCase("syncMove")) {
 
 				System.out.println("Sync move");
@@ -291,6 +284,14 @@ public class WsServer {
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
 						response, "syncPlaneViewXEnemy");
+			}
+			if (action.getString("name").equalsIgnoreCase("updatePlayersCount")) {
+
+				//armar respuesta con enemySession para enviar al otro cliente
+				response = facade.getPlayersConnected(parameters.getInt("gameId"));
+				response.setAction(action);
+				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
+				WsSynchronization.syncGame(facade, parameters.getInt("gameId"), response);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

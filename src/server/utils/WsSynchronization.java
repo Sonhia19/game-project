@@ -31,7 +31,6 @@ public class WsSynchronization {
 		}
 	}
 
-
 	//Sincroniza unicamente las sesiones enemigas
 	public static void syncWithEnemy(final Facade facadeInstance, final int gameId, final String playerName, WsResponse response, String action) throws IOException {
 		
