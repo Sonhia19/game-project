@@ -231,11 +231,11 @@ export class GameScene extends Phaser.Scene {
 		saveGameButton.on('pointerdown', function () {
 
 			this.updateContext();
-			//let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession);
 			let message = context.messagesFormat.requestSaveGame(context.playerSession.name);
 			context.functions.sendMessage(message);
-			//context.functions.navigateScene("GAME", "MENU");
-
+			var color = COLOR_SUCCESS;
+			var messageToast = "Esperando respuesta";
+			scene.createMessage(messageToast, color);
 		}, this);
 
 		//Creación de elementos propios
@@ -323,6 +323,13 @@ export class GameScene extends Phaser.Scene {
 				context.requestSaveGame = false;
 				this.createSaveConfirm();
 			}
+			if (!context.responseSaveGame) {
+				context.responseSaveGame = true;
+				var color = COLOR_WARNING;
+				var message = "No se ha guardado la partida";
+				scene.createMessage(message, color);
+			}
+			
 			if (this.existsEnemySession()) {
 				this.checkEnemyAction(time);
 			}
@@ -1417,7 +1424,7 @@ export class GameScene extends Phaser.Scene {
             },
 
             align: {
-                actions: 'right', // 'center'|'left'|'right'
+                actions: 'center', // 'center'|'left'|'right'
             },
 
             expand: {
@@ -1432,13 +1439,12 @@ export class GameScene extends Phaser.Scene {
             .on('button.click', function (button, groupName, index) {
 				let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession, button.text);
 				context.functions.sendMessage(message);
+				dialog.scaleDownDestroy(100);
+                dialog = undefined;
             }, this)
             .on('button.over', function (button, groupName, index) {
                 button.getElement('background').setStrokeStyle(1, 0xffffff);
             })
-            .on('button.out', function (button, groupName, index) {
-                button.getElement('background').setStrokeStyle();
-            });
 	}
 
 	placeEnemyElements() {

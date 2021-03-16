@@ -163,6 +163,7 @@ public class WsServer {
 				final JSONObject jsonPlayerSession = parameters.getJSONObject("playerSession");
 				final JSONObject jsonEnemySession = parameters.getJSONObject("enemySession");
 
+				response =  new WsResponse();
 				if (confirmSave.equals("Si")) {
 					try {
 						response = facade.saveGame(gameId, jsonPlayerSession, jsonEnemySession);

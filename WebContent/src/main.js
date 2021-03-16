@@ -149,13 +149,11 @@ var functions = {
 
                 if (confirmSave == 'Si') {
                     context.functions.navigateScene("GAME", "MENU");
+                } else {
+                    context.responseSaveGame = false;
                 }
                 
             }
-            // if (response.action.name == 'syncGame') {
-            //     context.gameId = JSON.parse(response.responses[0].value);
-            // }
-
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
 
@@ -221,5 +219,6 @@ export const context = {
     enemySession: {},
     teamSideWin: 0,
     requestSaveGame: false,
+    responseSaveGame: true,
     fromScene: "MENU"
 };
