@@ -87,7 +87,6 @@ let myArtilleries;
 let borders;
 let blacks;
 let grays;
-let explosion;
 
 //Colecciones de elementos del bando enemigo
 let enemyPlanes;
@@ -181,6 +180,8 @@ export class GameScene extends Phaser.Scene {
 		this.load.audio("game", "assets/sounds/game.mp3");
 		this.load.audio("fire", "assets/sounds/fire.mp3");
 		this.load.audio("canon", "assets/sounds/canon.mp3");
+		this.load.audio("plane", "assets/sounds/plane.mp3");
+		this.load.audio("structure", "assets/sounds/structure.mp3");
 	}
 
 	create() {
@@ -340,7 +341,7 @@ export class GameScene extends Phaser.Scene {
 									this.fuelControl();
 									this.checkBomb();
 									highFlyPlaneText.setText('');
-									infoGameText.setText("Presione (F) para despegar avión");
+									infoGameText.setText("Presione (D) para despegar avión");
 								} else {
 									infoGameText.setText("Vuelva a la base para aterrizar");
 								}
@@ -349,7 +350,7 @@ export class GameScene extends Phaser.Scene {
 									this.fuelControl();
 									this.checkBomb();
 									highFlyPlaneText.setText('');
-									infoGameText.setText("Presione (F) para despegar avión");
+									infoGameText.setText("Presione (D) para despegar avión");
 								} else {
 									infoGameText.setText("Vuelva a la base para aterrizar");
 								}
@@ -766,7 +767,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	loadConsole() {
-		infoGameText.setText("Presione (F) para despegar avión");
+		infoGameText.setText("Presione (D) para despegar avión");
 		fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
 		this.checkBomb();
 	}
@@ -917,9 +918,9 @@ export class GameScene extends Phaser.Scene {
 				enemyPlaneSelected = enemyPlaneFour;
 				break;
 		}
-
-		enemyPlaneSelected.y = coord[1];
-		enemyPlaneSelected.x = coord[0];
+		console.log(coord);
+		enemyPlaneSelected.y = parseFloat(coord[1]);
+		enemyPlaneSelected.x = parseFloat(coord[0]);
 		enemyPlaneSelected.planeAngle = coord[2];
 		enemyPlaneSelected.angle = coord[2];
 		//this.changeFlyYPlaneView(enemyPlaneSelected, true);
@@ -934,7 +935,13 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	createExplosion(isStructure, x, y) {
-		explosion = null;
+		let volume = isStructure ? 0.8 : 1;
+		let sound = isStructure ? "structure" : "plane";
+		this.sound.play(sound, {
+			volume: volume
+		});
+
+		let explosion = null;
 		explosion = this.physics.add.sprite(x, y, 'explosion');
 		this.anims.create({
 			key: 'explosion',
@@ -946,7 +953,7 @@ export class GameScene extends Phaser.Scene {
 		explosion.anims.play('explosion', true);
 
 		this.time.addEvent({
-			delay: 1000,
+			delay: 2000,
 			callback: () => {
 				if (explosion != null) {
 					explosion.destroy();
@@ -1221,7 +1228,7 @@ export class GameScene extends Phaser.Scene {
 			structure = false;
 			scene.createMessage(message, COLOR_DANGER);
 			if (myStructuresCount == 0) {
-				scene.gameOver = true;
+				gameOver = true;
 			}
 		}
 	}
@@ -1649,7 +1656,7 @@ export class GameScene extends Phaser.Scene {
 		this.updateStructures();
 	}
 	updatePlanes() {
-		context.playerSession.planes[0].fuel = myPlaneOne.fuel;
+		context.playerSession.planes[0].fuel = myPlaneOne.fuel.toFixed(3);
 		context.playerSession.planes[0].armor = myPlaneOne.armor;
 		context.playerSession.planes[0].hasBomb = myPlaneOne.withBomb;
 		context.playerSession.planes[0].positionX = Math.round(myPlaneOne.x);
@@ -1657,7 +1664,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[0].angle = myPlaneOne.planeAngle;
 		context.playerSession.planes[0].flying = myPlaneOne.flying;
 
-		context.playerSession.planes[1].fuel = myPlaneTwo.fuel;
+		context.playerSession.planes[1].fuel = myPlaneTwo.fuel.toFixed(3);
 		context.playerSession.planes[1].armor = myPlaneTwo.armor;
 		context.playerSession.planes[1].hasBomb = myPlaneTwo.withBomb;
 		context.playerSession.planes[1].positionX = Math.round(myPlaneTwo.x);
@@ -1665,7 +1672,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[1].angle = myPlaneTwo.planeAngle;
 		context.playerSession.planes[1].flying = myPlaneTwo.flying;
 
-		context.playerSession.planes[2].fuel = myPlaneThree.fuel;
+		context.playerSession.planes[2].fuel = myPlaneThree.fuel.toFixed(3);
 		context.playerSession.planes[2].armor = myPlaneThree.armor;
 		context.playerSession.planes[2].hasBomb = myPlaneThree.withBomb;
 		context.playerSession.planes[2].positionX = Math.round(myPlaneThree.x);
@@ -1673,7 +1680,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[2].angle = myPlaneThree.planeAngle;
 		context.playerSession.planes[2].flying = myPlaneThree.flying;
 
-		context.playerSession.planes[3].fuel = myPlaneFour.fuel;
+		context.playerSession.planes[3].fuel = myPlaneFour.fuel.toFixed(3);
 		context.playerSession.planes[3].armor = myPlaneFour.armor;
 		context.playerSession.planes[3].hasBomb = myPlaneFour.withBomb;
 		context.playerSession.planes[3].positionX = Math.round(myPlaneFour.x);
@@ -1681,7 +1688,7 @@ export class GameScene extends Phaser.Scene {
 		context.playerSession.planes[3].angle = myPlaneFour.planeAngle;
 		context.playerSession.planes[3].flying = myPlaneFour.flying;
 
-		context.enemySession.planes[0].fuel = enemyPlaneOne.fuel;
+		context.enemySession.planes[0].fuel = enemyPlaneOne.fuel.toFixed(3);
 		context.enemySession.planes[0].armor = enemyPlaneOne.armor;
 		context.enemySession.planes[0].hasBomb = enemyPlaneOne.withBomb;
 		context.enemySession.planes[0].positionX = Math.round(enemyPlaneOne.x);
@@ -1689,7 +1696,7 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[0].angle = enemyPlaneOne.planeAngle;
 		context.enemySession.planes[0].flying = enemyPlaneOne.flying;
 
-		context.enemySession.planes[1].fuel = enemyPlaneTwo.fuel;
+		context.enemySession.planes[1].fuel = enemyPlaneTwo.fuel.toFixed(3);
 		context.enemySession.planes[1].armor = enemyPlaneTwo.armor;
 		context.enemySession.planes[1].hasBomb = enemyPlaneTwo.withBomb;
 		context.enemySession.planes[1].positionX = Math.round(enemyPlaneTwo.x);
@@ -1697,7 +1704,7 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[1].angle = enemyPlaneTwo.planeAngle;
 		context.enemySession.planes[2].flying = enemyPlaneTwo.flying;
 
-		context.enemySession.planes[2].fuel = enemyPlaneThree.fuel;
+		context.enemySession.planes[2].fuel = enemyPlaneThree.fuel.toFixed(3);
 		context.enemySession.planes[2].armor = enemyPlaneThree.armor;
 		context.enemySession.planes[2].hasBomb = enemyPlaneThree.withBomb;
 		context.enemySession.planes[2].positionX = Math.round(enemyPlaneThree.x);
@@ -1705,7 +1712,7 @@ export class GameScene extends Phaser.Scene {
 		context.enemySession.planes[2].angle = enemyPlaneThree.planeAngle;
 		context.enemySession.planes[2].flying = enemyPlaneThree.flying;
 
-		context.enemySession.planes[3].fuel = enemyPlaneFour.fuel;
+		context.enemySession.planes[3].fuel = enemyPlaneFour.fuel.toFixed(3);
 		context.enemySession.planes[3].armor = enemyPlaneFour.armor;
 		context.enemySession.planes[3].hasBomb = enemyPlaneFour.withBomb;
 		context.enemySession.planes[3].positionX = Math.round(enemyPlaneFour.x);
@@ -1717,43 +1724,43 @@ export class GameScene extends Phaser.Scene {
 	updateArtilleries() {
 		context.playerSession.artilleries[0].armor = myArtilleryOne.armor;
 		context.playerSession.artilleries[0].angle = myArtilleryOne.artilleryAngle;
-		context.playerSession.artilleries[0].positionX = Math.round(myArtilleryOne.x);
-		context.playerSession.artilleries[0].positionY = Math.round(myArtilleryOne.y);
+		context.playerSession.artilleries[0].positionX = myArtilleryOne.x;
+		context.playerSession.artilleries[0].positionY = myArtilleryOne.y;
 
 		context.playerSession.artilleries[1].armor = myArtilleryTwo.armor;
 		context.playerSession.artilleries[1].angle = myArtilleryTwo.artilleryAngle;
-		context.playerSession.artilleries[1].positionX = Math.round(myArtilleryTwo.x);
-		context.playerSession.artilleries[1].positionY = Math.round(myArtilleryTwo.y);
+		context.playerSession.artilleries[1].positionX = myArtilleryTwo.x;
+		context.playerSession.artilleries[1].positionY = myArtilleryTwo.y;
 
 		context.playerSession.artilleries[2].armor = myArtilleryThree.armor;
 		context.playerSession.artilleries[2].angle = myArtilleryThree.artilleryAngle;
-		context.playerSession.artilleries[2].positionX = Math.round(myArtilleryThree.x);
-		context.playerSession.artilleries[2].positionY = Math.round(myArtilleryThree.y);
+		context.playerSession.artilleries[2].positionX = myArtilleryThree.x;
+		context.playerSession.artilleries[2].positionY = myArtilleryThree.y;
 
 		context.playerSession.artilleries[3].armor = myArtilleryFour.armor;
 		context.playerSession.artilleries[3].angle = myArtilleryFour.artilleryAngle;
-		context.playerSession.artilleries[3].positionX = Math.round(myArtilleryFour.x);
-		context.playerSession.artilleries[3].positionY = Math.round(myArtilleryFour.y);
+		context.playerSession.artilleries[3].positionX = myArtilleryFour.x;
+		context.playerSession.artilleries[3].positionY = myArtilleryFour.y;
 
 		context.enemySession.artilleries[0].armor = enemyArtilleryOne.armor;
 		context.enemySession.artilleries[0].angle = enemyArtilleryOne.artilleryAngle;
-		context.enemySession.artilleries[0].positionX = Math.round(enemyArtilleryOne.x);
-		context.enemySession.artilleries[0].positionY = Math.round(enemyArtilleryOne.y);
+		context.enemySession.artilleries[0].positionX = enemyArtilleryOne.x;
+		context.enemySession.artilleries[0].positionY = enemyArtilleryOne.y;
 
 		context.enemySession.artilleries[1].armor = enemyArtilleryTwo.armor;
 		context.enemySession.artilleries[1].angle = enemyArtilleryTwo.artilleryAngle;
-		context.enemySession.artilleries[1].positionX = Math.round(enemyArtilleryTwo.x);
-		context.enemySession.artilleries[1].positionY = Math.round(enemyArtilleryTwo.y);
+		context.enemySession.artilleries[1].positionX = enemyArtilleryTwo.x;
+		context.enemySession.artilleries[1].positionY = enemyArtilleryTwo.y;
 
 		context.enemySession.artilleries[2].armor = enemyArtilleryThree.armor;
 		context.enemySession.artilleries[2].angle = enemyArtilleryThree.artilleryAngle;
-		context.enemySession.artilleries[2].positionX = Math.round(enemyArtilleryThree.x);
-		context.enemySession.artilleries[2].positionY = Math.round(enemyArtilleryThree.y);
+		context.enemySession.artilleries[2].positionX = enemyArtilleryThree.x;
+		context.enemySession.artilleries[2].positionY = enemyArtilleryThree.y;
 
 		context.enemySession.artilleries[3].armor = enemyArtilleryFour.armor;
 		context.enemySession.artilleries[3].angle = enemyArtilleryFour.artilleryAngle;
-		context.enemySession.artilleries[3].positionX = Math.round(enemyArtilleryFour.x);
-		context.enemySession.artilleries[3].positionY = Math.round(enemyArtilleryFour.y);
+		context.enemySession.artilleries[3].positionX = enemyArtilleryFour.x;
+		context.enemySession.artilleries[3].positionY = enemyArtilleryFour.y;
 	}
 
 	updateStructures() {
@@ -1767,7 +1774,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	syncMove(planeViewX) {
-		let planePosition = [Math.round(myPlaneSelected.x), Math.round(myPlaneSelected.y), myPlaneSelected.planeAngle];
+		let planePosition = [myPlaneSelected.x, myPlaneSelected.y, myPlaneSelected.planeAngle];
 		let message = context.messagesFormat.syncMove(myPlaneSelected.planeIndex, planePosition, planeViewX);
 		context.functions.sendMessage(message);
 	}

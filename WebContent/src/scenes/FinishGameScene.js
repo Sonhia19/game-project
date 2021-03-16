@@ -20,6 +20,9 @@ export class FinishGameScene extends Phaser.Scene {
 
         this.load.image('defeat_blue', 'assets/defeat_blue.png');
         this.load.image('defeat_red', 'assets/defeat_red.png');
+
+        this.load.audio("winner", "assets/sounds/winner.mp3");
+        this.load.audio("defeat", "assets/sounds/defeat.mp3");
     }
 
     create() {
@@ -32,9 +35,11 @@ export class FinishGameScene extends Phaser.Scene {
         } else if (context.teamSideWin != 0) {
 
             if (context.teamSideWin == context.playerSession.teamSide) {
+                this.sound.play("winner");
                 this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.45, context.playerSession.teamSide == 1 ? 'victory_blue' : 'victory_red').setScale(0.4);
             }
             else {
+                this.sound.play("defeat");
                 this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.45, context.playerSession.teamSide == 1 ? 'defeat_blue' : 'defeat_red').setScale(0.4);
             }
         }
