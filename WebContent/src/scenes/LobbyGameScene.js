@@ -11,6 +11,23 @@ let plane2TypeButton;
 let plane3TypeButton;
 let plane4TypeButton;
 let plane1Text;
+let plane2Text;
+let plane3Text;
+let plane4Text;
+
+let artillery1TypeButton;
+let artillery2TypeButton;
+let artillery3TypeButton;
+let artillery4TypeButton;
+let artilleryText1;
+let artilleryText2;
+let artilleryText3;
+let artilleryText4;
+
+const blue = 0x1E2EA0;
+const red = 0xA01E1E;
+
+let originalY;
 
 export class LobbyGameScene extends Phaser.Scene {
 
@@ -38,6 +55,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.load.image("fuel", "./assets/fuel.png");
 		this.load.image("hangar_red", "./assets/structures/hangar_red.png");
 		this.load.image("hangar_blue", "./assets/structures/hangar_blue.png");
+		this.load.image("crop_field", "./assets/structures/crop_field.jpg");
 		this.load.image("tower", "./assets/structures/tower.png");
 
 	}
@@ -64,30 +82,43 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.artillery3Type = 1;
 		this.artillery4Type = 1;
 
+		const style = { font: "bold 25px Arial", fill: "#fff" };
+		const styleText = { font: "bold 12px Arial", fill: "#fff" };
+		this.add.text(1, 1, `Token del juego: ${context.playerSession.gameId}`, style);
+		this.add.text(1, 35, `Nombre jugador: ${context.playerSession.name}`, style);
+
 		scene = this;
-		tower = this.add.sprite(1100, 325, 'tower');
+		let field = this.add.image(1100, 300, "crop_field");
+		field.displayWidth = 200;
+		this.add.text(1012, 15, `Ubicación de estructuras`, { font: "bold 15px Arial", color: "#fff", backgroundColor: context.playerSession.teamSide == 1 ? "#1E2EA0" : "#A01E1E" });
+
+		tower = this.physics.add.sprite(1100, 325, 'tower');
 		tower.setInteractive();
 		tower.setScale(0.2);
 		this.input.setDraggable(tower);
 
-		hangar = this.add.sprite(1100, 500, context.playerSession.teamSide == 1 ? 'hangar_blue' : 'hangar_red');
+		hangar = this.physics.add.sprite(1100, 500, context.playerSession.teamSide == 1 ? 'hangar_blue' : 'hangar_red');
 		hangar.setInteractive();
 		hangar.setScale(0.2);
 		this.input.setDraggable(hangar);
 
-		fuel = this.add.sprite(1100, 150, 'fuel');
+		fuel = this.physics.add.sprite(1100, 150, 'fuel');
 		fuel.setInteractive();
 		fuel.setScale(0.2);
 		this.input.setDraggable(fuel);
 
 		this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+
 			gameObject.y = dragY;
 
 		});
 
-		area = this.add.rectangle(1100, 300, 150, 600);
+		this.input.on('dragstart', function (pointer, gameObject) {
+			gameObject.setDepth(2);
+			originalY = gameObject.y;
+		})
 
-		area.setStrokeStyle(2, 0x1a65ac);
+		area = this.add.rectangle(1100, 300, 150, 600);
 
 		this.input.on('dragend', function (pointer, gameObject) {
 
@@ -107,24 +138,20 @@ export class LobbyGameScene extends Phaser.Scene {
 
 				if (object == "tower") {
 					structure = "la torre";
-					y = 325;
 				}
 				else if (object == "fuel") {
 					structure = "el tanque";
-					y = 150;
 				}
 				else {
 					structure = "el hangar";
-					y = 500;
 				}
 
 				scene.createMessage("Coloque " + structure + " dentro del mapa", COLOR_DANGER);
-				gameObject.y = y;
+				gameObject.y = originalY;
 			}
 			else if (object == "tower") {
 				if ((scene.checkOverlap(tower, fuel) || scene.checkOverlap(tower, hangar))) {
 					overlap = true;
-					y = 325
 				}
 
 			}
@@ -132,85 +159,101 @@ export class LobbyGameScene extends Phaser.Scene {
 				if ((scene.checkOverlap(fuel, tower) || scene.checkOverlap(fuel, hangar))) {
 					{
 						overlap = true;
-						y = 150;
 					}
 				}
 			}
 			else if (scene.checkOverlap(hangar, tower) || scene.checkOverlap(hangar, fuel)) {
 				overlap = true;
-				y = 500;
 			}
 			if (overlap) {
 				scene.createMessage("La estructuras no pueden estar superpuestas", COLOR_DANGER);
-				gameObject.y = y;
+				gameObject.y = originalY;
 			}
-
-
-
-
+			gameObject.setDepth(1);
 		})
-
-		const style = { font: "bold 25px Arial", fill: "#fff" };
-		const styleText = { font: "bold 12px Arial", fill: "#fff" };
-		this.add.text(1, 1, `Token del juego: ${context.playerSession.gameId}`, style);
-		this.add.text(1, 35, `Nombre jugador: ${context.playerSession.name}`, style);
-
 		/** PLANES */
-		this.add.text(300, 80, `Seleccione tipo de aviones`, style);
+		this.add.text(500, 80, `Seleccione tipo de aviones`, style);
 		/***   se incorpora boton para tipo avion 1   ***/
-		this.add.circle(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, 55, 55);
+		this.add.circle(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, 55, context.playerSession.teamSide == 1 ? blue : red);
 		plane1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane1Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane1(this.plane1Type));
 		plane1TypeButton.setScale(0.25);
-		this.add.circle(context.game.renderer.width * 0.35, context.game.renderer.height * 0.40, 55, 55);
-		plane1Text = this.add.text(context.game.renderer.width * 0.35, context.game.renderer.height * 0.35, this.getPlaneTypeName(this.plane1Type), styleText).setOrigin(0, 1);
+
+		plane1Text = this.add.text(context.game.renderer.width * 0.35, context.game.renderer.height * 0.42, this.getPlaneTypeName(this.plane1Type), styleText).setOrigin(0, 1);
+		this.relocationText(plane1Text, 0.35);
 
 		/***   se incorpora boton para tipo avion 2   ***/
-		this.add.circle(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, 55, 55);
+		this.add.circle(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, 55, context.playerSession.teamSide == 1 ? blue : red);
 		plane2TypeButton = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane2Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane2(this.plane2Type));
 		plane2TypeButton.setScale(0.25);
+		plane2Text = this.add.text(context.game.renderer.width * 0.45, context.game.renderer.height * 0.42, this.getPlaneTypeName(this.plane1Type), styleText).setOrigin(0, 1);
+		this.relocationText(plane2Text, 0.45);
 
 		/***   se incorpora boton para tipo avion 3   ***/
-		this.add.circle(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, 55, 55);
+		this.add.circle(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, 55, context.playerSession.teamSide == 1 ? blue : red);
 		plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane3Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane3(this.plane3Type));
 		plane3TypeButton.setScale(0.25);
+		plane3Text = this.add.text(context.game.renderer.width * 0.55, context.game.renderer.height * 0.42, this.getPlaneTypeName(this.plane1Type), styleText).setOrigin(0, 1);
+		this.relocationText(plane3Text, 0.55);
 
 
 		/***   se incorpora boton para tipo avion 4  ***/
-		this.add.circle(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, 55, 55);
+		this.add.circle(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, 55, context.playerSession.teamSide == 1 ? blue : red);
 		plane4TypeButton = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane4Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane4(this.plane4Type));
 		plane4TypeButton.setScale(0.25);
+		plane4Text = this.add.text(context.game.renderer.width * 0.65, context.game.renderer.height * 0.42, this.getPlaneTypeName(this.plane1Type), styleText).setOrigin(0, 1);
+		this.relocationText(plane4Text, 0.65);
 
 		/** ARTILLERIES */
-		this.add.text(300, 250, `Seleccione tipo de artillería`, style);
+		this.add.text(500, 260, `Seleccione tipo de artillería`, style);
 
 		/***   se incorpora boton para tipo artilleria 1   ***/
-		let artillery1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery1Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, 55, context.playerSession.teamSide == 1 ? blue : red);
+		artillery1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, 'spritesArtilleries', this.getArtilleryTypeImage(this.artillery1Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updateArtillery1(this.artillery1Type));
+		artillery1TypeButton.setScale(0.4);
+		artillery1TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText1 = this.add.text(context.game.renderer.width * 0.35, context.game.renderer.height * 0.72, this.getArtilleryTypeName(this.artillery1Type), styleText).setOrigin(0, 1);
+		this.relocationText(artilleryText1, 0.35);
 
 		/***   se incorpora boton para tipo artilleria 2   ***/
-		let artillery2TypeButton = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery2Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.45, context.game.renderer.height * 0.60, 55, context.playerSession.teamSide == 1 ? blue : red);
+		artillery2TypeButton = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.60, 'spritesArtilleries', this.getArtilleryTypeImage(this.artillery2Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updateArtillery2(this.artillery2Type));
+		artillery2TypeButton.setScale(0.4);
+		artillery2TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText2 = this.add.text(context.game.renderer.width * 0.45, context.game.renderer.height * 0.72, this.getArtilleryTypeName(this.artillery2Type), styleText).setOrigin(0, 1);
+		this.relocationText(artilleryText2, 0.45);
 
 		/***   se incorpora boton para tipo artilleria 3   ***/
-		let artillery3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery3Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.55, context.game.renderer.height * 0.60, 55, context.playerSession.teamSide == 1 ? blue : red);
+		artillery3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.60, 'spritesArtilleries', this.getArtilleryTypeImage(this.artillery3Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updateArtillery3(this.artillery3Type));
+		artillery3TypeButton.setScale(0.4);
+		artillery3TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText3 = this.add.text(context.game.renderer.width * 0.55, context.game.renderer.height * 0.72, this.getArtilleryTypeName(this.artillery3Type), styleText).setOrigin(0, 1);
+		this.relocationText(artilleryText3, 0.55);
 
 
 		/***   se incorpora boton para tipo artilleria 4  ***/
-		let artillery4TypeButton = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery4Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.65, context.game.renderer.height * 0.60, 55, context.playerSession.teamSide == 1 ? blue : red);
+		artillery4TypeButton = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.60, 'spritesArtilleries', this.getArtilleryTypeImage(this.artillery4Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updateArtillery4(this.artillery4Type));
+		artillery4TypeButton.setScale(0.4);
+		artillery4TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText4 = this.add.text(context.game.renderer.width * 0.65, context.game.renderer.height * 0.72, this.getArtilleryTypeName(this.artillery4Type), styleText).setOrigin(0, 1);
+		this.relocationText(artilleryText4, 0.65);
 
 
 
@@ -231,8 +274,6 @@ export class LobbyGameScene extends Phaser.Scene {
 			}
 
 		}, this);
-
-
 	}
 
 	update() {
@@ -252,6 +293,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		plane1TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane1Type));
 		plane1TypeButton.setScale(0.25);
 		plane1Text.setText(this.getPlaneTypeName(this.plane1Type));
+		this.relocationText(plane1Text, 0.35);
 	}
 
 	updatePlane2(type) {
@@ -266,6 +308,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		}
 		plane2TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane2Type));
 		plane2TypeButton.setScale(0.25);
+		plane2Text.setText(this.getPlaneTypeName(this.plane2Type));
+		this.relocationText(plane2Text, 0.45);
 	}
 
 	updatePlane3(type) {
@@ -280,6 +324,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		}
 		plane3TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane3Type));
 		plane3TypeButton.setScale(0.25);
+		plane3Text.setText(this.getPlaneTypeName(this.plane3Type));
+		this.relocationText(plane3Text, 0.55);
 	}
 
 	updatePlane4(type) {
@@ -294,6 +340,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		}
 		plane4TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane4Type));
 		plane4TypeButton.setScale(0.25);
+		plane4Text.setText(this.getPlaneTypeName(this.plane4Type));
+		this.relocationText(plane4Text, 0.65);
 	}
 
 	/*** ARTILLERY */
@@ -305,7 +353,11 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery1Type = 1;
 		}
-		this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery1Type)).setDepth(0);
+		artillery1TypeButton.setTexture('spritesArtilleries', this.getArtilleryTypeImage(this.artillery1Type));
+		artillery1TypeButton.setScale(0.4);
+		artillery1TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText1.setText(this.getArtilleryTypeName(this.artillery1Type));
+		this.relocationText(artilleryText1, 0.35);
 	}
 
 	updateArtillery2(type) {
@@ -316,7 +368,11 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery2Type = 1;
 		}
-		this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery2Type)).setDepth(0);
+		artillery2TypeButton.setTexture('spritesArtilleries', this.getArtilleryTypeImage(this.artillery2Type)).setDepth(0);
+		artillery2TypeButton.setScale(0.4);
+		artillery2TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText2.setText(this.getArtilleryTypeName(this.artillery2Type));
+		this.relocationText(artilleryText2, 0.45);
 	}
 
 	updateArtillery3(type) {
@@ -327,7 +383,11 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery3Type = 1;
 		}
-		this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery3Type)).setDepth(0);
+		artillery3TypeButton.setTexture('spritesArtilleries', this.getArtilleryTypeImage(this.artillery3Type)).setDepth(0);
+		artillery3TypeButton.setScale(0.4);
+		artillery3TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText3.setText(this.getArtilleryTypeName(this.artillery3Type));
+		this.relocationText(artilleryText3, 0.55);
 	}
 
 	updateArtillery4(type) {
@@ -338,7 +398,11 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery4Type = 1;
 		}
-		this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery4Type)).setDepth(0);
+		artillery4TypeButton.setTexture('spritesArtilleries', this.getArtilleryTypeImage(this.artillery4Type)).setDepth(0);
+		artillery4TypeButton.setScale(0.4);
+		artillery4TypeButton.angle = context.playerSession.teamSide == 1 ? 270 : 90;
+		artilleryText4.setText(this.getArtilleryTypeName(this.artillery4Type));
+		this.relocationText(artilleryText4, 0.65);
 	}
 
 	getPlaneTypeImage(planeNumber) {
@@ -385,42 +449,55 @@ export class LobbyGameScene extends Phaser.Scene {
 		return name;
 	}
 
+	getArtilleryTypeName(artilleryNumber) {
+		let name;
+		switch (parseInt(artilleryNumber)) {
+			case 1:
+				name = "Campaña";
+				break;
+			case 2:
+				name = "Mortero";
+				break;
+			case 3:
+				name = "Cohete";
+				break;
+		}
+		return name;
+	}
+
 	getArtilleryTypeImage(artilleryNumber) {
 
-		let imageName = "artillery-type1";
-		if (artilleryNumber == 1) {
-			imageName = "artillery-type1";
-		} else if (artilleryNumber == 2) {
-			imageName = "artillery-type2";
-		} else if (artilleryNumber == 3) {
-			imageName = "artillery-type3";
+		let imageName;
+		switch (parseInt(artilleryNumber)) {
+			case 1:
+				imageName = "campana";
+				break;
+			case 2:
+				imageName = "mortero";
+				break;
+			case 3:
+				imageName = "cohete";
+				break;
 		}
-
+		if (context.playerSession.teamSide == 1) {
+			imageName = imageName + "_blue";
+		}
+		else {
+			imageName = imageName + "_red";
+		}
 		return imageName;
 	}
 
 	checkOverlap(structure1, structure2) {
+		var boundsA = structure1.getBounds();
+		var boundsB = structure2.getBounds();
 
-		console.log(structure1);
-		console.log(structure2);
-
-		let initStructure1Y = structure1.y;
-		let endStructure1Y = structure1.y - structure1.displayHeight;
-
-		let initStructure2Y = structure2.y;
-		let endStructure2Y = structure2.y - structure2.displayHeight;
-
-
-		let bool1 = initStructure1Y >= initStructure2Y && endStructure1Y <= initStructure2Y;
-		let bool2 = initStructure1Y <= initStructure2Y && endStructure2Y <= initStructure1Y
-
-		return false;
-
+		return Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
 	}
 
 	createMessage(message, indicator) {
 		var toast = this.rexUI.add.toast({
-			x: 600,
+			x: context.game.renderer.width * 0.5,
 			y: 500,
 
 			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 20, indicator),
@@ -440,5 +517,9 @@ export class LobbyGameScene extends Phaser.Scene {
 			},
 		});
 		toast.show(message);
+	}
+
+	relocationText(text, y) {
+		text.x = context.game.renderer.width * y - text.displayWidth / 2
 	}
 }

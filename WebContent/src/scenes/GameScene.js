@@ -159,7 +159,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.atlas('spritesArtilleries', 'assets/artilleries/spritesheet.png', 'assets/artilleries/sprites.json');
 		this.load.image('bullet', './assets/Bullet3.png');
 		this.load.image("fuel", "./assets/structures/fuel.png");
-		this.load.image("plane", "./assets/plane.png");
 		this.load.image("hangar", "./assets/hangar.png");
 		this.load.image("hangar_blue", "./assets/structures/hangar_blue.png");
 		this.load.image("hangar_red", "./assets/structures/hangar_red.png");
