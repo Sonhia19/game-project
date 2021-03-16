@@ -14,9 +14,8 @@ import logic.models.Player;
 public class WsSynchronization {
 
 	//Sincroniza todas las sesiones conectadas
-	public static void syncGame(final Facade facadeInstance, final int gameId, final String userId, WsResponse response) throws IOException {
+	public static void syncGame(final Facade facadeInstance, final int gameId, WsResponse response) throws IOException {
 		
-		response.setAction((new JSONObject()).put("name", "syncGame"));
 		final HashMap<String, Player> gamePlayers = facadeInstance.getGamePlayers(gameId);
 		
 		if (gamePlayers != null) {

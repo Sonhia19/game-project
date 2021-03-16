@@ -138,9 +138,23 @@ var functions = {
                     context.functions.navigateScene("GAME", "FINISHGAME");
                 }
             }
-            if (response.action.name == 'syncGame') {
-                context.gameId = JSON.parse(response.responses[0].value);
+            if (response.action.name == 'requestSaveGame') {
+
+                console.log(response.responses[0].value);
+                context.requestSaveGame = response.responses[0].value;
+            } 
+            if (response.action.name == 'saveGame') {
+
+                var confirmSave = response.responses[0].value;
+
+                if (confirmSave == 'Si') {
+                    context.functions.navigateScene("GAME", "MENU");
+                }
+                
             }
+            // if (response.action.name == 'syncGame') {
+            //     context.gameId = JSON.parse(response.responses[0].value);
+            // }
 
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
@@ -206,5 +220,6 @@ export const context = {
     playerSession: {},
     enemySession: {},
     teamSideWin: 0,
+    requestSaveGame: false,
     fromScene: "MENU"
 };

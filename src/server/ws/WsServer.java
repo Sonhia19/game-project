@@ -144,23 +144,40 @@ public class WsServer {
 				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
 						"syncWithEnemy");
 			}
-			if (action.getString("name").equalsIgnoreCase("saveGame")) {
+			if (action.getString("name").equalsIgnoreCase("requestSaveGame")) {
+
+				System.out.println("Request save game ");
+				final int gameId = parameters.getInt("gameId");
+				final String playerName = parameters.getString("playerName");
+				response = new WsResponse();
+				
+				response.generateResponse("requestSaveGame", "true", "Boolean");
+				response.setAction(action);
+				//sincroniza todas las sesiones
+				WsSynchronization.syncWithEnemy(facade, gameId, playerName, response, "requestSaveGame");
+			} if (action.getString("name").equalsIgnoreCase("saveGame")) {
 
 				System.out.println("Save game ");
 				final int gameId = parameters.getInt("gameId");
+				final String confirmSave = parameters.getString("action");
 				final JSONObject jsonPlayerSession = parameters.getJSONObject("playerSession");
 				final JSONObject jsonEnemySession = parameters.getJSONObject("enemySession");
 
-				try {
-					response = facade.saveGame(gameId, jsonPlayerSession, jsonEnemySession);
-				} catch (LogicException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (confirmSave.equals("Si")) {
+					try {
+						response = facade.saveGame(gameId, jsonPlayerSession, jsonEnemySession);
+					} catch (LogicException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					// envia msj al servidor que lo invoco
+					//session.getBasicRemote().sendText(response.toParsedString());
 				}
+				response.generateResponse("confirmSave", String.valueOf(confirmSave), "String");
 				response.setAction(action);
-				// envia msj al servidor que lo invoco
-				session.getBasicRemote().sendText(response.toParsedString());
-				
+				//sincroniza todas las sesiones
+				WsSynchronization.syncGame(facade, gameId, response);
 			} if (action.getString("name").equalsIgnoreCase("finishGame")) {
 
 				System.out.println("Finish game ");
@@ -196,7 +213,7 @@ public class WsServer {
 				
 				
 			}
-			if (action.getString("name").equalsIgnoreCase("syncGame")) {
+			/*if (action.getString("name").equalsIgnoreCase("syncGame")) {
 
 				System.out.println("Sync game");
 				/*response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
@@ -205,8 +222,8 @@ public class WsServer {
 				response = facade.getJsonGameSession(parameters.getInt("gameId"), parameters.getString("playerName"));
 				// sincroniza todas las sesiones conectadas
 				WsSynchronization.syncGame(facade, parameters.getInt("gameId"), parameters.getString("playerName"),
-						response);*/
-			}
+						response);
+			}*/
 			if (action.getString("name").equalsIgnoreCase("syncMove")) {
 
 				System.out.println("Sync move");
