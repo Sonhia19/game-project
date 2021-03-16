@@ -99,7 +99,7 @@ public class WsServer {
 				session.getBasicRemote().sendText(response.toParsedString());
 				
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
+				//WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
 			}
 			// Conectar jugador a una partida existente.
 			if (action.getString("name").equalsIgnoreCase("connectToGame")) {
@@ -141,8 +141,7 @@ public class WsServer {
 				response = facade.getJsonGameSession(parameters.getInt("gameId"), playerName);
 
 				// sincroniza sesiones enemigas para actualiza conexion de nuevo jugador
-				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response,
-						"syncWithEnemy");
+				WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "syncWithEnemy");
 			}
 			if (action.getString("name").equalsIgnoreCase("requestSaveGame")) {
 
@@ -179,6 +178,9 @@ public class WsServer {
 				response.setAction(action);
 				//sincroniza todas las sesiones
 				WsSynchronization.syncGame(facade, gameId, response);
+				if (confirmSave.equals("Si")) {
+					facade.finishGame(gameId);
+				}
 			} if (action.getString("name").equalsIgnoreCase("finishGame")) {
 
 				System.out.println("Finish game ");

@@ -99,6 +99,8 @@ public class Facade implements IFacade {
     		throw new LogicException(ex.getMessage());
     	}
 
+    	//se guarda la partida se cierra la sesion por el momento
+    	gamePlayersMap.remove(gameId);
     	return response;
     }
     
@@ -216,7 +218,7 @@ public class Facade implements IFacade {
 
             response.generateResponse("gameId", String.valueOf(gameId), "int");
             response.generateResponse("playerSession", result, "String");
-            response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+            //response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 
     	}
 
@@ -262,6 +264,7 @@ public class Facade implements IFacade {
         response.generateResponse("gameId", String.valueOf(gameId), "int");
         response.generateResponse("playerSession", result, "String");
         response.generateResponse("gameStatus", String.valueOf(GameStatus.STARTED), "String");
+        response.generateResponse("playersReady", String.valueOf(gamePlayers.size()), "int");
         
 		return response;
     }
