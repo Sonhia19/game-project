@@ -307,15 +307,11 @@ export class GameScene extends Phaser.Scene {
 	update(time, delta) {
 
 		if (gameOver) {
-
-			console.log("GAMEOVER");
 			if (myStructuresCount == 0 || myPlanesCount == 0) {
 				context.teamSideWin = isBlue ? 2 : 1;
 			} else if (enemyStructuresCount == 0 || enemyPlanesCount == 0) {
 				context.teamSideWin = isBlue ? 1 : 2;
 			}
-
-			console.log(context.teamSideWin);
 			context.gameStatus = "FINISHED";
 			context.functions.navigateScene("GAME", "FINISHGAME");
 		} else {
@@ -952,7 +948,6 @@ export class GameScene extends Phaser.Scene {
 				enemyPlaneSelected = enemyPlaneFour;
 				break;
 		}
-		console.log(coord);
 		enemyPlaneSelected.y = parseFloat(coord[1]);
 		enemyPlaneSelected.x = parseFloat(coord[0]);
 		enemyPlaneSelected.planeAngle = coord[2];
@@ -1392,14 +1387,14 @@ export class GameScene extends Phaser.Scene {
 
 	createSaveConfirm() {
 		var dialog = this.rexUI.add.dialog({
-            x: 400,
+            x: 600,
             y: 300,
 
             background: this.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
 
             title: this.rexUI.add.label({
                 background: this.rexUI.add.roundRectangle(0, 0, 100, 40, 20, 0x003c8f),
-                text: this.add.text(0, 0, 'Partida guardada', {
+                text: this.add.text(0, 0, 'Guardar partida', {
                     fontSize: '24px'
                 }),
                 space: {
@@ -1410,7 +1405,7 @@ export class GameScene extends Phaser.Scene {
                 }
             }),
 
-            content: this.add.text(0, 0, 'Desea confirmar?', {
+            content: this.add.text(0, 0, '¿Desea confirmar?', {
                 fontSize: '24px'
             }),
 
@@ -1540,7 +1535,6 @@ export class GameScene extends Phaser.Scene {
 			myTower = myTowers.get();
 			yTower = context.playerSession.positionYTower;
 			xTower = context.playerSession.positionXTower;
-			console.log(yTower);
 			myTower.place(yTower, isBlue ? xTower - 1030 : xTower - 175);
 			myStructuresCount += 1;
 			myTowerView = this.add.image(isBlue ? BLUE_BASE_X_VIEW : RED_BASE_X_VIEW + 18, 268, isBlue ? 'towerBlueView' : 'towerRedView').setScale(0.4);
@@ -1551,7 +1545,6 @@ export class GameScene extends Phaser.Scene {
 			myHangar = myHangars.get();
 			xHangar = context.playerSession.positionXHangar;
 			yHangar = context.playerSession.positionYHangar;
-			console.log(yHangar);
 			myHangar.place(yHangar, isBlue ? xHangar - 1030 : xHangar - 175, false);
 			myStructuresCount += 1;
 			myHangarView = this.add.image(isBlue ? BLUE_BASE_X_VIEW + 18 : RED_BASE_X_VIEW, 275, isBlue ? 'hangarBlueView' : 'hangarRedView').setScale(0.3);

@@ -1,11 +1,17 @@
 import { context } from '../../src/main.js';
-import {COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING} from '../constants/GameConstants.js'
+import { COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING } from '../constants/GameConstants.js'
 
 let tower;
 let fuel;
 let hangar;
 let area;
 let scene;
+let plane1TypeButton;
+let plane2TypeButton;
+let plane3TypeButton;
+let plane4TypeButton;
+let plane1Text;
+
 export class LobbyGameScene extends Phaser.Scene {
 
 	constructor() {
@@ -22,14 +28,10 @@ export class LobbyGameScene extends Phaser.Scene {
 
 
 		this.add.image(0, 0, 'background_menu').setOrigin(0);
-		this.load.image("plane-type1", "assets/plane-type1.png");
-		this.load.image("plane-type2", "assets/plane-type2.png");
-		this.load.image("plane-type3", "assets/plane-type3.png");
-		this.load.image("plane-type4", "assets/plane-type4.png");
+		this.load.atlas('spritesPlanes', 'assets/planes/spritesheet.png', 'assets/planes/sprites.json');
+		this.load.atlas('spritesArtilleries', 'assets/artilleries/spritesheet.png', 'assets/artilleries/sprites.json');
+		this.load.image('black', 'assets/black.png');
 
-		this.load.image("artillery-type1", "assets/artillery-type1.png");
-		this.load.image("artillery-type2", "assets/artillery-type2.png");
-		this.load.image("artillery-type3", "assets/artillery-type3.png");
 
 		this.load.image("joingame_button", "assets/join-game-button.png");
 
@@ -61,7 +63,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.artillery2Type = 1;
 		this.artillery3Type = 1;
 		this.artillery4Type = 1;
-		
+
 		scene = this;
 		tower = this.add.sprite(1100, 325, 'tower');
 		tower.setInteractive();
@@ -79,8 +81,6 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.input.setDraggable(fuel);
 
 		this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-
-			//gameObject.x = dragX;
 			gameObject.y = dragY;
 
 		});
@@ -94,79 +94,102 @@ export class LobbyGameScene extends Phaser.Scene {
 			gameObject.x = Math.round(gameObject.x);
 			gameObject.y = Math.round(gameObject.y);
 
-			let initialStructureX = parseFloat(gameObject.x - gameObject.displayWidth / 2);
-			let initialMapX = parseFloat(area.x - area.displayWidth / 2);
-
+			let object = gameObject.texture.key;
 			let initialStructureY = parseFloat(gameObject.y - gameObject.displayHeight / 2);
 			let initialMapY = parseFloat(area.y - area.displayHeight / 2);
 
-			let endStructureX = parseFloat(gameObject.x + gameObject.displayWidth / 2);
-			let endMapX = parseFloat(area.x + area.displayWidth / 2)
-
 			let endStructureY = parseFloat(gameObject.y + gameObject.displayHeight / 2);
 			let endMapY = parseFloat(area.y + area.displayHeight / 2)
-
-			console.log(gameObject.y);
-
-			if (initialStructureX < initialMapX || endStructureX > endMapX
-				|| initialStructureY < initialMapY || endStructureY > endMapY) {
+			let overlap = false;
+			let y;
+			if (initialStructureY < initialMapY || endStructureY > endMapY) {
 				let structure;
-				let y;
-				if (gameObject.texture.key == "tower") {
+
+				if (object == "tower") {
 					structure = "la torre";
 					y = 325;
 				}
-				else if (gameObject.texture.key == "hangar") {
-					structure = "el hangar";
-					y = 500;
-				}
-				else {
+				else if (object == "fuel") {
 					structure = "el tanque";
 					y = 150;
 				}
+				else {
+					structure = "el hangar";
+					y = 500;
+				}
 
 				scene.createMessage("Coloque " + structure + " dentro del mapa", COLOR_DANGER);
-				gameObject.x = 1100;
 				gameObject.y = y;
-				// }else if (scene.checkOverlap(fuel, tower) || scene.checkOverlap(tower, fuel)
-				// 	|| scene.checkOverlap(fuel, hangar) || scene.checkOverlap(hangar, fuel)
-				// 	|| scene.checkOverlap(hangar, tower || scene.checkOverlap(tower, hangar))) {
-				// 	scene.createMessage("La estructuras no pueden estar superpuestas", COLOR_DANGER);
-				// 	// gameObject.x = 1100;
-				// 	// gameObject.y = y;
 			}
+			else if (object == "tower") {
+				if ((scene.checkOverlap(tower, fuel) || scene.checkOverlap(tower, hangar))) {
+					overlap = true;
+					y = 325
+				}
+
+			}
+			else if (object == "fuel") {
+				if ((scene.checkOverlap(fuel, tower) || scene.checkOverlap(fuel, hangar))) {
+					{
+						overlap = true;
+						y = 150;
+					}
+				}
+			}
+			else if (scene.checkOverlap(hangar, tower) || scene.checkOverlap(hangar, fuel)) {
+				overlap = true;
+				y = 500;
+			}
+			if (overlap) {
+				scene.createMessage("La estructuras no pueden estar superpuestas", COLOR_DANGER);
+				gameObject.y = y;
+			}
+
+
+
 
 		})
 
 		const style = { font: "bold 25px Arial", fill: "#fff" };
-		this.add.text(1, 1, `Game Token: ${context.playerSession.gameId}`, style);
-		this.add.text(1, 35, `Player Name: ${context.playerSession.name}`, style);
+		const styleText = { font: "bold 12px Arial", fill: "#fff" };
+		this.add.text(1, 1, `Token del juego: ${context.playerSession.gameId}`, style);
+		this.add.text(1, 35, `Nombre jugador: ${context.playerSession.name}`, style);
 
 		/** PLANES */
-		this.add.text(300, 90, `Select planes type`, style);
+		this.add.text(300, 80, `Seleccione tipo de aviones`, style);
 		/***   se incorpora boton para tipo avion 1   ***/
-		let plane1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane1Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, 55, 55);
+		plane1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane1Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane1(this.plane1Type));
+		plane1TypeButton.setScale(0.25);
+		this.add.circle(context.game.renderer.width * 0.35, context.game.renderer.height * 0.40, 55, 55);
+		plane1Text = this.add.text(context.game.renderer.width * 0.35, context.game.renderer.height * 0.35, this.getPlaneTypeName(this.plane1Type), styleText).setOrigin(0, 1);
 
 		/***   se incorpora boton para tipo avion 2   ***/
-		let plane2TypeButton = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane2Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, 55, 55);
+		plane2TypeButton = this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane2Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane2(this.plane2Type));
+		plane2TypeButton.setScale(0.25);
 
 		/***   se incorpora boton para tipo avion 3   ***/
-		let plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane3Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, 55, 55);
+		plane3TypeButton = this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane3Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane3(this.plane3Type));
+		plane3TypeButton.setScale(0.25);
 
 
 		/***   se incorpora boton para tipo avion 4  ***/
-		let plane4TypeButton = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane4Type)).setDepth(0)
+		this.add.circle(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, 55, 55);
+		plane4TypeButton = this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, 'spritesPlanes', this.getPlaneTypeImage(this.plane4Type)).setDepth(0)
 			.setInteractive()
 			.on('pointerdown', () => this.updatePlane4(this.plane4Type));
+		plane4TypeButton.setScale(0.25);
 
 		/** ARTILLERIES */
-		this.add.text(300, 250, `Select artilleries type`, style);
+		this.add.text(300, 250, `Seleccione tipo de artillería`, style);
 
 		/***   se incorpora boton para tipo artilleria 1   ***/
 		let artillery1TypeButton = this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery1Type)).setDepth(0)
@@ -213,15 +236,6 @@ export class LobbyGameScene extends Phaser.Scene {
 	}
 
 	update() {
-		this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane1Type)).setDepth(0);
-		this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane2Type)).setDepth(0);
-		this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane3Type)).setDepth(0);
-		this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.30, this.getPlaneTypeImage(this.plane4Type)).setDepth(0);
-
-		this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery1Type)).setDepth(0);
-		this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery2Type)).setDepth(0);
-		this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery3Type)).setDepth(0);
-		this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery4Type)).setDepth(0);
 	}
 
 	/*** PLANES */
@@ -235,6 +249,9 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 4) {
 			this.plane1Type = 1;
 		}
+		plane1TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane1Type));
+		plane1TypeButton.setScale(0.25);
+		plane1Text.setText(this.getPlaneTypeName(this.plane1Type));
 	}
 
 	updatePlane2(type) {
@@ -247,6 +264,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 4) {
 			this.plane2Type = 1;
 		}
+		plane2TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane2Type));
+		plane2TypeButton.setScale(0.25);
 	}
 
 	updatePlane3(type) {
@@ -259,6 +278,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 4) {
 			this.plane3Type = 1;
 		}
+		plane3TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane3Type));
+		plane3TypeButton.setScale(0.25);
 	}
 
 	updatePlane4(type) {
@@ -271,6 +292,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 4) {
 			this.plane4Type = 1;
 		}
+		plane4TypeButton.setTexture('spritesPlanes', this.getPlaneTypeImage(this.plane4Type));
+		plane4TypeButton.setScale(0.25);
 	}
 
 	/*** ARTILLERY */
@@ -282,6 +305,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery1Type = 1;
 		}
+		this.add.image(context.game.renderer.width * 0.35, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery1Type)).setDepth(0);
 	}
 
 	updateArtillery2(type) {
@@ -292,6 +316,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery2Type = 1;
 		}
+		this.add.image(context.game.renderer.width * 0.45, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery2Type)).setDepth(0);
 	}
 
 	updateArtillery3(type) {
@@ -302,6 +327,7 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery3Type = 1;
 		}
+		this.add.image(context.game.renderer.width * 0.55, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery3Type)).setDepth(0);
 	}
 
 	updateArtillery4(type) {
@@ -312,22 +338,51 @@ export class LobbyGameScene extends Phaser.Scene {
 		} else if (type == 3) {
 			this.artillery4Type = 1;
 		}
+		this.add.image(context.game.renderer.width * 0.65, context.game.renderer.height * 0.60, this.getArtilleryTypeImage(this.artillery4Type)).setDepth(0);
 	}
 
 	getPlaneTypeImage(planeNumber) {
-
-		let imageName = "plane-type1";
-		if (planeNumber == 1) {
-			imageName = "plane-type1";
-		} else if (planeNumber == 2) {
-			imageName = "plane-type2";
-		} else if (planeNumber == 3) {
-			imageName = "plane-type3";
-		} else if (planeNumber == 4) {
-			imageName = "plane-type4";
+		let imageName;
+		switch (parseInt(planeNumber)) {
+			case 1:
+				imageName = "bombardero";
+				break;
+			case 2:
+				imageName = "caza";
+				break;
+			case 3:
+				imageName = "patrulla";
+				break;
+			case 4:
+				imageName = "reconocimiento";
+				break;
 		}
-
+		if (context.playerSession.teamSide == 1) {
+			imageName = imageName + "_azul_default";
+		}
+		else {
+			imageName = imageName + "_rojo_default";
+		}
 		return imageName;
+	}
+
+	getPlaneTypeName(planeNumber) {
+		let name;
+		switch (parseInt(planeNumber)) {
+			case 1:
+				name = "Bombardero";
+				break;
+			case 2:
+				name = "Caza";
+				break;
+			case 3:
+				name = "Patrulla";
+				break;
+			case 4:
+				name = "Reconocimiento";
+				break;
+		}
+		return name;
 	}
 
 	getArtilleryTypeImage(artilleryNumber) {
@@ -345,29 +400,28 @@ export class LobbyGameScene extends Phaser.Scene {
 	}
 
 	checkOverlap(structure1, structure2) {
-		let initStructure1X = structure1.x;
+
+		console.log(structure1);
+		console.log(structure2);
+
 		let initStructure1Y = structure1.y;
-		let endStructure1X = structure1.x + structure1.displayWidth;
-		let endStructure1Y = structure1.y + structure1.displayHeight;
+		let endStructure1Y = structure1.y - structure1.displayHeight;
 
-		let initStructure2X = structure2.x;
 		let initStructure2Y = structure2.y;
-		let endStructure2X = structure2.x + structure2.displayWidth;
-		let endStructure2Y = structure2.y + structure2.displayHeight;
+		let endStructure2Y = structure2.y - structure2.displayHeight;
 
-		return (initStructure1X < initStructure2X && endStructure1X > initStructure2X) ||
-			(initStructure2X < initStructure2X && endstructure1x > endStructure2X) ||
-			(initStructure1X > initStructure2X && endStructure1X > endStructure2X) ||
-			(initStructure1Y < initStructure2Y && endStructure1Y > initStructure2Y) ||
-			(initStructure2Y < initStructure2Y && endstructure1Y > endStructure2Y) ||
-			(initStructure1Y > initStructure2Y && endStructure1Y > endStructure2Y)
+
+		let bool1 = initStructure1Y >= initStructure2Y && endStructure1Y <= initStructure2Y;
+		let bool2 = initStructure1Y <= initStructure2Y && endStructure2Y <= initStructure1Y
+
+		return false;
 
 	}
 
 	createMessage(message, indicator) {
 		var toast = this.rexUI.add.toast({
 			x: 600,
-			y: 250,
+			y: 500,
 
 			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 20, indicator),
 			text: this.add.text(0, 0, '', {
