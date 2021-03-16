@@ -101,12 +101,16 @@ var functions = {
                 console.log(context.playersReadyToPlay);
             }
             if (response.action.name == 'recoverGame') {
-                context.gameId = parseInt(response.responses[0].value);
-                context.playerSession = JSON.parse(response.responses[1].value);
-                context.enemySession = JSON.parse(response.responses[2].value);
-                context.playersReadyToPlay = response.responses[3].value;
 
-                context.functions.navigateScene("JOINGAME", "GAME");
+                var gameId = parseInt(response.responses[0].value);
+                if (gameId != null) {
+                    context.gameId = gameId;
+                    context.playerSession = JSON.parse(response.responses[1].value);
+                    context.enemySession = JSON.parse(response.responses[2].value);
+                    context.playersReadyToPlay = response.responses[3].value;
+
+                    context.functions.navigateScene("JOINGAME", "GAME");
+                }
             }
             if (response.action.name == 'disconnectSession') {
                 context.gameStatus = response.responses[0].value;
