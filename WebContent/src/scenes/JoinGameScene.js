@@ -22,7 +22,6 @@ export class JoinGameScene extends Phaser.Scene {
             sceneKey: 'rexUI'
         });
 
-        console.log('FROM JOINGAME');
         this.load.image("background_menu", "assets/background-menu.jpg");
         this.load.html('joinForm', 'assets/html/joinform.html');
     }

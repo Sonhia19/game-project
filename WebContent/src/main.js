@@ -66,8 +66,6 @@ var functions = {
 
                 if (context.gameId != -1) {
                     context.playerSession = JSON.parse(response.responses[1].value);
-                    console.log('playerSession');
-                    console.log(context.playerSession);
 
                     context.functions.navigateScene("NEWGAME", "LOBBYGAME");
                 }
@@ -80,11 +78,6 @@ var functions = {
                 if (context.gameId != -1) {
                     context.playerSession = JSON.parse(response.responses[1].value);
                     context.playersConnected = parseInt(response.responses[2].value);
-
-                    console.log("JOIN GAME");
-                    console.log('playerSession');
-                    console.log(context.playerSession);
-                    console.log(context.playersConnected);
                     context.functions.navigateScene("JOINGAME", "LOBBYGAME");
                 } else {
                     context.functions.navigateScene("JOINGAME", "JOINGAME");
@@ -103,20 +96,14 @@ var functions = {
 
                 console.log("CONNECT player session");
                 console.log(context.playerSession);
-                console.log(context.gameStatus);
+                console.log(context.enemySession);
 
                 context.functions.navigateScene("LOBBYGAME", "GAME");
             }
             if (response.action.name == 'recoverGame') {
-
-                console.log(response.responses);
                 context.gameId = parseInt(response.responses[0].value);
                 context.playerSession = JSON.parse(response.responses[1].value);
                 context.enemySession = JSON.parse(response.responses[3].value);
-
-                console.log("RECOVER player session");
-                console.log(context.playerSession);
-                console.log(context.enemySession);
 
                 context.functions.navigateScene("JOINGAME", "GAME");
             }
@@ -124,14 +111,12 @@ var functions = {
                 context.gameStatus = response.responses[0].value;
                 
                 if (context.gameStatus == "ENEMY_FINISHED") {
-                    console.log("DISCONNECT player session");
                     context.enemySession.id = null;
                     context.functions.navigateScene("GAME", "FINISHGAME");
                 }
             }
             if (response.action.name == 'finishGame') {
 
-                console.log(response.responses[0].value);
                 context.gameStatus = response.responses[0].value;
                 
                 if (context.gameStatus == "FINISHED") {
@@ -139,8 +124,6 @@ var functions = {
                 }
             }
             if (response.action.name == 'requestSaveGame') {
-
-                console.log(response.responses[0].value);
                 context.requestSaveGame = response.responses[0].value;
             } 
             if (response.action.name == 'saveGame') {
@@ -156,9 +139,6 @@ var functions = {
             }
             if (response.action.name == 'syncWithEnemy') {
                 context.enemySession = JSON.parse(response.responses[1].value);
-
-                console.log("CONNECT enemy session");
-                console.log(context.enemySession);
             }
             if (response.action.name == "syncShootEnemy") {
                 context.enemySession.isShooting = true;
@@ -176,8 +156,6 @@ var functions = {
                 context.enemySession.planeCoord = JSON.parse(response.responses[2].value);
             }
             if (response.action.name == "syncEmptyTankEnemy") {
-
-                console.log(JSON.parse(response.responses[1].value));
                 context.enemySession.isEmptyTank = true;
                 context.enemySession.planeEmptyTank = JSON.parse(response.responses[1].value);
             }

@@ -113,23 +113,23 @@ let enemyPlaneSelected = null, enemyPlaneOne = null, enemyPlaneOneView, enemyPla
 let enemyArtilleryOne, enemyArtilleryOneView, enemyArtilleryTwo, enemyArtilleryTwoView, enemyArtilleryThree, enemyArtilleryThreeView, enemyArtilleryFour, enemyArtilleryFourView;
 
 var createLabel = function (scene, text) {
-    return scene.rexUI.add.label({
-        // width: 40,
-        // height: 40,
+	return scene.rexUI.add.label({
+		// width: 40,
+		// height: 40,
 
-        background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, 0x5e92f3),
+		background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, 0x5e92f3),
 
-        text: scene.add.text(0, 0, text, {
-            fontSize: '24px'
-        }),
+		text: scene.add.text(0, 0, text, {
+			fontSize: '24px'
+		}),
 
-        space: {
-            left: 10,
-            right: 10,
-            top: 10,
-            bottom: 10
-        }
-    });
+		space: {
+			left: 10,
+			right: 10,
+			top: 10,
+			bottom: 10
+		}
+	});
 }
 //#endregion
 export class GameScene extends Phaser.Scene {
@@ -159,7 +159,6 @@ export class GameScene extends Phaser.Scene {
 		this.load.atlas('spritesArtilleries', 'assets/artilleries/spritesheet.png', 'assets/artilleries/sprites.json');
 		this.load.image('bullet', './assets/Bullet3.png');
 		this.load.image("fuel", "./assets/structures/fuel.png");
-		this.load.image("hangar", "./assets/hangar.png");
 		this.load.image("hangar_blue", "./assets/structures/hangar_blue.png");
 		this.load.image("hangar_red", "./assets/structures/hangar_red.png");
 		this.load.image("tower", "./assets/structures/tower.png");
@@ -204,6 +203,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	create() {
+		this.clean();
 		gameOver = false;
 		this.game.sound.stopAll();
 		this.sound.play("game", {
@@ -269,13 +269,8 @@ export class GameScene extends Phaser.Scene {
 
 		cursors = this.input.keyboard.createCursorKeys();
 
-
 		//this.placeGrays();
 		//this.placeBlacks();
-
-
-
-
 		let graphics = this.add.graphics();
 		let path;
 
@@ -325,7 +320,7 @@ export class GameScene extends Phaser.Scene {
 				var message = "No se ha guardado la partida";
 				scene.createMessage(message, color);
 			}
-			
+
 			if (this.existsEnemySession()) {
 				this.checkEnemyAction(time);
 			}
@@ -810,6 +805,85 @@ export class GameScene extends Phaser.Scene {
 	//#endregion
 
 	//#region Aciones
+	clean() {
+		scene = null;
+		isBlue = null;
+		enemyDraw = false;
+		myStructuresCount = null, myPlanesCount = null;
+		enemyStructuresCount = null, enemyPlanesCount = null;
+		gameOver = false;
+		keyA = null, keyOne = null, keyTwo = null, keyThree = null, keyFour = null, keyD = null, keyS = null;
+		cursors = null;
+		fuelText = null;
+		bombText = null;
+		infoGameText = null;
+		myPlaneSelectedText = null;
+		highFlyPlaneText = null;
+		plane1ArmorText = null;
+		plane2ArmorText = null;
+		plane3ArmorText = null;
+		plane4ArmorText = null;
+		towerText = null;
+		hangarText = null;
+		fuelsText = null;
+		consolePlane1 = null;
+		consolePlane2 = null;
+		consolePlane3 = null;
+		consolePlane4 = null;
+		artilleryCount = 0;
+		artilleryEnemyCount = 0;
+		artilleryText = null;
+		artilleryEnemyText = null;
+		towerEnemyText = null;
+		hangarEnemyText = null;
+		fuelsEnemyText = null;
+		ledRedBomb = null;
+		myBaseText = null;
+		enemyBaseText = null;
+		ledGreenBomb = null;
+		ledRedHangar = null;
+		ledGreenHangar = null;
+		ledGreenFuel = null;
+		ledRedFuel = null;
+		ledGreenTower = null;
+		ledRedTower = null;
+		ledGreenBombEnemy = null;
+		ledRedHangarEnemy = null;
+		ledGreenHangarEnemy = null;
+		ledGreenFuelEnemy = null;
+		ledRedFuelEnemy = null;
+		ledGreenTowerEnemy = null;
+		ledRedTowerEnemy = null;
+		myBullets = null;
+		myBulletsArtillery = null;
+		myPlanes = null;
+		myFuels = null;
+		myTowers = null;
+		myHangars = null;
+		myBombs = null;
+		myArtilleries = null;
+		borders = null;
+		blacks = null;
+		grays = null;
+		enemyPlanes = null;
+		enemyFuels = null;
+		enemyHangars = null;
+		enemyTowers = null;
+		enemyArtilleries = null;
+		enemyBullets = null;
+		enemyBombs = null;
+		enemyBulletsArtillery = null;
+		myFuel, myFuelView = null;
+		myTower, myTowerView = null;
+		myHangar, myHangarView = null;
+		myPlaneSelected = null, myPlaneOne = null, myPlaneOneView = null, myPlaneTwo = null, myPlaneTwoView = null, myPlaneThree, myPlaneThreeView, myPlaneFour = null, myPlaneFourView = null;
+		myArtilleryOne = null, myArtilleryOneView = null, myArtilleryTwo = null, myArtilleryTwoView = null, myArtilleryThree = null, myArtilleryThreeView = null, myArtilleryFour = null, myArtilleryFourView = null;
+		enemyFuel = null, enemyFuelView = null;
+		enemyTower = null, enemyTowerView = null;
+		enemyHangar = null, enemyHangarView = null;
+		enemyPlaneSelected = null, enemyPlaneOne = null, enemyPlaneOneView = null, enemyPlaneTwo = null, enemyPlaneTwoView = null, enemyPlaneThree = null, enemyPlaneThreeView = null, enemyPlaneFour = null, enemyPlaneFourView = null;
+		enemyArtilleryOne = null, enemyArtilleryOneView = null, enemyArtilleryTwo = null, enemyArtilleryTwoView = null, enemyArtilleryThree = null, enemyArtilleryThreeView = null, enemyArtilleryFour = null, enemyArtilleryFourView = null;
+	}
 
 	checkEnemyAction(time) {
 		if (!enemyDraw) {
@@ -1386,66 +1460,66 @@ export class GameScene extends Phaser.Scene {
 
 	createSaveConfirm() {
 		var dialog = this.rexUI.add.dialog({
-            x: 600,
-            y: 300,
+			x: 600,
+			y: 300,
 
-            background: this.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
+			background: this.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
 
-            title: this.rexUI.add.label({
-                background: this.rexUI.add.roundRectangle(0, 0, 100, 40, 20, 0x003c8f),
-                text: this.add.text(0, 0, 'Guardar partida', {
-                    fontSize: '24px'
-                }),
-                space: {
-                    left: 15,
-                    right: 15,
-                    top: 10,
-                    bottom: 10
-                }
-            }),
+			title: this.rexUI.add.label({
+				background: this.rexUI.add.roundRectangle(0, 0, 100, 40, 20, 0x003c8f),
+				text: this.add.text(0, 0, 'Guardar partida', {
+					fontSize: '24px'
+				}),
+				space: {
+					left: 15,
+					right: 15,
+					top: 10,
+					bottom: 10
+				}
+			}),
 
-            content: this.add.text(0, 0, '¿Desea confirmar?', {
-                fontSize: '24px'
-            }),
+			content: this.add.text(0, 0, '¿Desea confirmar?', {
+				fontSize: '24px'
+			}),
 
-            actions: [
-                createLabel(this, 'Si'),
+			actions: [
+				createLabel(this, 'Si'),
 				createLabel(this, 'No')
-            ],
+			],
 
-            space: {
-                title: 25,
-                content: 25,
-                action: 15,
+			space: {
+				title: 25,
+				content: 25,
+				action: 15,
 
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: 20,
-            },
+				left: 20,
+				right: 20,
+				top: 20,
+				bottom: 20,
+			},
 
-            align: {
-                actions: 'center', // 'center'|'left'|'right'
-            },
+			align: {
+				actions: 'center', // 'center'|'left'|'right'
+			},
 
-            expand: {
-                content: false, // Content is a pure text object
-            }
-        })
-            .layout()
-            .popUp(1000);
+			expand: {
+				content: false, // Content is a pure text object
+			}
+		})
+			.layout()
+			.popUp(1000);
 
-        this.print = this.add.text(0, 0, '');
-        dialog
-            .on('button.click', function (button, groupName, index) {
+		this.print = this.add.text(0, 0, '');
+		dialog
+			.on('button.click', function (button, groupName, index) {
 				let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession, button.text);
 				context.functions.sendMessage(message);
 				dialog.scaleDownDestroy(100);
-                dialog = undefined;
-            }, this)
-            .on('button.over', function (button, groupName, index) {
-                button.getElement('background').setStrokeStyle(1, 0xffffff);
-            })
+				dialog = undefined;
+			}, this)
+			.on('button.over', function (button, groupName, index) {
+				button.getElement('background').setStrokeStyle(1, 0xffffff);
+			})
 	}
 
 	placeEnemyElements() {

@@ -1,17 +1,16 @@
 
 import { context } from '../../src/main.js';
 
-export class FinishGameScene extends Phaser.Scene {  
+export class FinishGameScene extends Phaser.Scene {
     constructor() {
         super('FINISHGAME');
-    } 
+    }
 
     init() {
-        
+
     }
 
     preload() {
-        console.log('FROM FINISHGAME');
         this.load.image('background_load', 'assets/background-load.jpg');
         this.load.image('gotoMenu_button', 'assets/go-menu-button.png');
 
@@ -30,6 +29,9 @@ export class FinishGameScene extends Phaser.Scene {
         this.game.sound.stopAll();
         this.add.image(0, 0, 'background_menu').setOrigin(0);
 
+
+
+
         if (context.gameStatus == "ENEMY_FINISHED") {
             this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.45, context.playerSession.teamSide == 1 ? 'victory_blue' : 'victory_red').setScale(0.4);
         } else if (context.teamSideWin != 0) {
@@ -43,6 +45,15 @@ export class FinishGameScene extends Phaser.Scene {
                 this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.45, context.playerSession.teamSide == 1 ? 'defeat_blue' : 'defeat_red').setScale(0.4);
             }
         }
+
+        context.gameId = null;
+        context.gameStatus = null; // STARTED; FINISHED; ENEMY_FINISHED
+        context.playersConnected = 0;
+        context.playerSession = {};
+        context.enemySession = {};
+        context.teamSideWin = 0;
+        context.requestSaveGame = false;
+        context.responseSaveGame = true;
 
         var gotoMenuButton = this.add.image(context.game.renderer.width * 0.50, context.game.renderer.height * 0.90, "gotoMenu_button").setDepth(0);
         gotoMenuButton.setInteractive();
