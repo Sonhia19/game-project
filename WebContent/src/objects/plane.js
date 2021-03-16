@@ -222,7 +222,10 @@ export let Plane = new Phaser.Class({
                 case MORE_Y:
                     this.y += this.speed * delta;
                     break;
+
             }
+            this.x = Math.round(this.x);
+            this.y = Math.round(this.y);
         }
         this.angle = angle;
         this.planeAngle = angle;
