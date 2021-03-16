@@ -64,7 +64,7 @@ public class DAOGame implements IDAOGame {
 		Connection con = icon.getConnection();
 		
 		try {
-			PreparedStatement pstmt = con.prepareStatement("select id,estado,id_ganador,fecha,fecha_modificacion from partidas where id = ?");
+			PreparedStatement pstmt = con.prepareStatement("select id,estado,id_ganador,fecha,fecha_modificacion from partidas where id = ? and fecha_modificacion > fecha");
 			pstmt.setInt(1, gameId);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
