@@ -133,7 +133,8 @@ export let Plane = new Phaser.Class({
     consumeFuel: function () {
         let notEmpty = true;
         if (this.fuel > 0) {
-            this.fuel -= this.highFly ? 0.1 : 0.05;
+            let consume = this.getConsumeFuel();
+            this.fuel -= this.highFly ? consume * 2 : consume;
         }
         if (this.fuel < 0 && this.fuel > -1) {
             this.emptyTank(true);
@@ -286,6 +287,25 @@ export let Plane = new Phaser.Class({
                 break;
         }
         return plane;
+    },
+
+    getConsumeFuel() {
+        let consume = 0.02
+        switch (this.type) {
+            case BOMBARDERO:
+                consume = 0.02;
+                break;
+            case CAZA:
+                consume = 0.02;
+                break;
+            case PATRULLA:
+                consume = 0.01;
+                break;
+            case RECONOCIMIENTO:
+                consume = 0.0075;
+                break;
+        }
+        return consume;
     }
 
 });

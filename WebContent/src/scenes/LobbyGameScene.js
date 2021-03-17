@@ -27,6 +27,8 @@ let artilleryText4;
 const blue = 0x1E2EA0;
 const red = 0xA01E1E;
 
+var modsForm;
+
 let originalY;
 
 export class LobbyGameScene extends Phaser.Scene {
@@ -58,6 +60,8 @@ export class LobbyGameScene extends Phaser.Scene {
 		this.load.image("crop_field", "./assets/structures/crop_field.jpg");
 		this.load.image("tower", "./assets/structures/tower.png");
 
+		this.load.html('modsForm', 'assets/html/mods.html');
+
 	}
 
 	plane1Type;
@@ -86,6 +90,9 @@ export class LobbyGameScene extends Phaser.Scene {
 		const styleText = { font: "bold 12px Arial", fill: "#fff" };
 		this.add.text(1, 1, `Token del juego: ${context.playerSession.gameId}`, style);
 		this.add.text(1, 35, `Nombre jugador: ${context.playerSession.name}`, style);
+
+		modsForm = this.add.dom(context.game.renderer.width * 0.5, context.game.renderer.height * 0.80).createFromCache('modsForm');
+		modsForm.setPerspective(800);
 
 		scene = this;
 		let field = this.add.image(1100, 300, "crop_field");
@@ -272,6 +279,11 @@ export class LobbyGameScene extends Phaser.Scene {
 				let message = context.messagesFormat.connectToGame(context.playerSession.name, context.playerSession.teamSide, planesType, artilleriesType, context.playerSession.gameId, structurePositions);
 				context.functions.sendMessage(message);
 
+				let switchMap = modsForm.getChildByID('switchMapa');
+				if (switchMapa.value != undefined) {
+					context.clearMap = switchMap.checked;
+
+				}
 				context.functions.navigateScene("LOBBYGAME", "WAITING");
 			}
 

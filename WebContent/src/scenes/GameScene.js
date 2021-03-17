@@ -21,6 +21,7 @@ import { COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING } from '../constants/GameCon
 let scene;
 //Bandera para saber el bando del jugador
 let isBlue;
+let clearMap;
 //Bandera para saber si se dibujaron los elementos del enemigo
 let enemyDraw = false;
 
@@ -204,11 +205,12 @@ export class GameScene extends Phaser.Scene {
 
 	create() {
 		this.clean();
+
 		gameOver = false;
 		this.game.sound.stopAll();
 		this.sound.play("game", {
 			loop: true,
-			volume: 0.25
+			volume: 0.8
 		});
 		scene = this;
 		enemyPlanesCount = 0; enemyStructuresCount = 0;
@@ -220,6 +222,7 @@ export class GameScene extends Phaser.Scene {
 		imageField.displayWidth = 1000;
 
 		isBlue = context.playerSession.teamSide == 1
+		clearMap = context.clearMap;
 
 		this.captureKeys();
 
@@ -270,7 +273,10 @@ export class GameScene extends Phaser.Scene {
 		cursors = this.input.keyboard.createCursorKeys();
 
 		//this.placeGrays();
-		//this.placeBlacks();
+		if (!clearMap) {
+			this.placeBlacks();
+		}
+
 		let graphics = this.add.graphics();
 		let path;
 
@@ -682,17 +688,50 @@ export class GameScene extends Phaser.Scene {
 
 
 		//Aviones Consola
-		consolePlane1 = this.add.image(1050, 520, 'spritesPlanes', myPlaneOne.getImage(UNSELECT, false));
-		plane1ArmorText = this.add.text(1035, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		if (myPlaneOne != null) {
+			consolePlane1 = this.add.image(1050, 520, 'spritesPlanes', myPlaneOne.getImage(UNSELECT, false));
+			plane1ArmorText = this.add.text(1035, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		}
+		else {
+			if (context.playerSession.planes != undefined) {
+				consolePlane1.setTexture('spritesPlanesEliminated', context.playerSession.planes[0].planeType.getImage(ELIMINATED, false));
+			}
 
-		consolePlane2 = this.add.image(1130, 520, 'spritesPlanes', myPlaneTwo.getImage(UNSELECT, false));
-		plane2ArmorText = this.add.text(1115, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		}
 
-		consolePlane3 = this.add.image(1210, 520, 'spritesPlanes', myPlaneThree.getImage(UNSELECT, false));
-		plane3ArmorText = this.add.text(1195, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		if (myPlaneTwo != null) {
+			consolePlane2 = this.add.image(1130, 520, 'spritesPlanes', myPlaneTwo.getImage(UNSELECT, false));
+			plane2ArmorText = this.add.text(1115, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		}
+		else {
+			if (context.playerSession.planes != undefined) {
+				consolePlane2.setTexture('spritesPlanesEliminated', context.playerSession.planes[1].planeType.getImage(ELIMINATED, false));
+			}
 
-		consolePlane4 = this.add.image(1290, 520, 'spritesPlanes', myPlaneFour.getImage(UNSELECT, false));
-		plane4ArmorText = this.add.text(1275, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		}
+
+
+		if (myPlaneThree != null) {
+			consolePlane3 = this.add.image(1210, 520, 'spritesPlanes', myPlaneThree.getImage(UNSELECT, false));
+			plane3ArmorText = this.add.text(1195, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		}
+		else {
+			if (context.playerSession.planes != undefined) {
+				consolePlane3.setTexture('spritesPlanesEliminated', context.playerSession.planes[2].planeType.getImage(ELIMINATED, false));
+			}
+
+		}
+
+		if (myPlaneFour != null) {
+			consolePlane4 = this.add.image(1290, 520, 'spritesPlanes', myPlaneFour.getImage(UNSELECT, false));
+			plane4ArmorText = this.add.text(1275, 540, '', { fontSize: '15px', color: '#FFFFFF', backgroundColor: '#108C05' });
+		}
+		else {
+			if (context.playerSession.planes != undefined) {
+				consolePlane4.setTexture('spritesPlanesEliminated', context.playerSession.planes[3].planeType.getImage(ELIMINATED, false));
+			}
+
+		}
 
 		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
 		fuelText = this.add.text(1010, 316, '', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
@@ -808,6 +847,7 @@ export class GameScene extends Phaser.Scene {
 	clean() {
 		scene = null;
 		isBlue = null;
+		clearMap = false;
 		enemyDraw = false;
 		myStructuresCount = null, myPlanesCount = null;
 		enemyStructuresCount = null, enemyPlanesCount = null;
@@ -1025,7 +1065,9 @@ export class GameScene extends Phaser.Scene {
 		enemyPlaneSelected.x = parseFloat(coord[0]);
 		enemyPlaneSelected.planeAngle = coord[2];
 		enemyPlaneSelected.angle = coord[2];
-		//this.changeFlyYPlaneView(enemyPlaneSelected, true);
+		if (clearMap) {
+			this.changeFlyYPlaneView(enemyPlaneSelected, true);
+		}
 	}
 
 	existsEnemySession() {
@@ -1955,13 +1997,19 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	syncTakeOff(takeOff) {
-		let message = context.messagesFormat.syncTakeOff(myPlaneSelected.planeIndex, takeOff);
-		context.functions.sendMessage(message);
+		if (clearMap) {
+			let message = context.messagesFormat.syncTakeOff(myPlaneSelected.planeIndex, takeOff);
+			context.functions.sendMessage(message);
+		}
+
 	}
 
 	syncPlaneViewX(index, x) {
-		let message = context.messagesFormat.syncPlaneViewX(index, x);
-		context.functions.sendMessage(message);
+		if (clearMap) {
+			let message = context.messagesFormat.syncPlaneViewX(index, x);
+			context.functions.sendMessage(message);
+		}
+
 	}
 	//#endregion
 
@@ -2036,7 +2084,7 @@ export class GameScene extends Phaser.Scene {
 						planeView.setTexture("PlaneLeftRedView")
 					}
 				}
-				//this.syncPlaneViewX(plane.planeIndex, Math.round(planeView.x));
+				this.syncPlaneViewX(plane.planeIndex, Math.round(planeView.x));
 			}
 		}
 	}
