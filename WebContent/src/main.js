@@ -101,12 +101,14 @@ var functions = {
                 console.log(context.playersReadyToPlay);
             }
             if (response.action.name == 'recoverGame') {
-                context.gameId = parseInt(response.responses[0].value);
-                context.playerSession = JSON.parse(response.responses[1].value);
-                context.enemySession = JSON.parse(response.responses[2].value);
-                context.playersReadyToPlay = response.responses[3].value;
 
-                context.functions.navigateScene("JOINGAME", "GAME");
+                var gameId = parseInt(response.responses[0].value);
+                if (gameId != null) {
+                    context.gameId = gameId;
+                    context.playerSession = JSON.parse(response.responses[1].value);
+                    context.enemySession = JSON.parse(response.responses[2].value);
+                    context.playersReadyToPlay = response.responses[3].value;
+                }
             }
             if (response.action.name == 'disconnectSession') {
                 context.gameStatus = response.responses[0].value;
@@ -119,7 +121,6 @@ var functions = {
             if (response.action.name == 'finishGame') {
 
                 context.gameStatus = response.responses[0].value;
-                
                 if (context.gameStatus == "FINISHED") {
                     context.functions.navigateScene("GAME", "FINISHGAME");
                 }
@@ -130,7 +131,6 @@ var functions = {
             if (response.action.name == 'saveGame') {
 
                 var confirmSave = response.responses[0].value;
-
                 if (confirmSave == 'Si') {
                     context.functions.navigateScene("GAME", "MENU");
                 } else {

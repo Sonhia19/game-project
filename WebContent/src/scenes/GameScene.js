@@ -233,7 +233,6 @@ export class GameScene extends Phaser.Scene {
 
 		saveGameButton.on('pointerdown', function () {
 
-			this.updateContext();
 			let message = context.messagesFormat.requestSaveGame(context.playerSession.name);
 			context.functions.sendMessage(message);
 			var color = COLOR_SUCCESS;
@@ -1561,6 +1560,9 @@ export class GameScene extends Phaser.Scene {
 		dialog.setDepth(5);
 		dialog
 			.on('button.click', function (button, groupName, index) {
+
+				console.log("confirm save");
+				this.updateContext();
 				let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession, button.text);
 				context.functions.sendMessage(message);
 				dialog.scaleDownDestroy(100);

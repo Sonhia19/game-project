@@ -21,6 +21,22 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
+
+        //clean context
+        context.gameId = null;
+        context.gameStatus = null; // STARTED, FINISHED, ENEMY_FINISHED
+        context.playersConnected = 0;
+        context.playersReadyToPlay = 0;
+        context.playerSession = {};
+        context.enemySession = {};
+        context.teamSideWin = 0;
+        context.requestSaveGame = false;
+        context.responseSaveGame = true;
+        context.fromScene = "MENU";
+
+        console.log("FROM MENU 1");
+        console.log(context);
+
         this.sound.play("intro", {
             loop: true
         });
