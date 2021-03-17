@@ -49,6 +49,7 @@ export class FinishGameScene extends Phaser.Scene {
         context.gameId = null;
         context.gameStatus = null; // STARTED; FINISHED; ENEMY_FINISHED
         context.playersConnected = 0;
+        context.playersReadyToPlay = 0,
         context.playerSession = {};
         context.enemySession = {};
         context.teamSideWin = 0;

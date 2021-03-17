@@ -108,8 +108,6 @@ var functions = {
                     context.playerSession = JSON.parse(response.responses[1].value);
                     context.enemySession = JSON.parse(response.responses[2].value);
                     context.playersReadyToPlay = response.responses[3].value;
-
-                    context.functions.navigateScene("JOINGAME", "GAME");
                 }
             }
             if (response.action.name == 'disconnectSession') {
@@ -123,7 +121,6 @@ var functions = {
             if (response.action.name == 'finishGame') {
 
                 context.gameStatus = response.responses[0].value;
-                
                 if (context.gameStatus == "FINISHED") {
                     context.functions.navigateScene("GAME", "FINISHGAME");
                 }
@@ -134,7 +131,6 @@ var functions = {
             if (response.action.name == 'saveGame') {
 
                 var confirmSave = response.responses[0].value;
-
                 if (confirmSave == 'Si') {
                     context.functions.navigateScene("GAME", "MENU");
                 } else {

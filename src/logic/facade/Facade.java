@@ -99,8 +99,6 @@ public class Facade implements IFacade {
     		throw new LogicException(ex.getMessage());
     	}
 
-    	//se guarda la partida se cierra la sesion por el momento
-    	gamePlayersMap.remove(gameId);
     	return response;
     }
     
@@ -126,7 +124,7 @@ public class Facade implements IFacade {
 	    				enemySession = player;
 	    			}
 	    		}
-		    	
+
 	    		//Se recuperan aviones
 		    	List<Plane> planesPlayerSession= null;
 		    	List<Plane> planesEnemySession = null;
@@ -145,8 +143,10 @@ public class Facade implements IFacade {
 		    	playerSession.setArtilleries(artilleriesPlayerSession);
 		    	enemySession.setArtilleries(artilleriesEnemySession);
 		    	
+		    	if (!gamePlayersMap.containsKey(gameId)) {
+		    		gamePlayersMap.put(gameId, new HashMap<>());
+		    	}
 		    	
-		    	gamePlayersMap.put(gameId, new HashMap<>());
 		    	//Se agrega sesion a la partida
 		    	playerSession.setSession(session);
 		    	playerSession.setReadyToPlay(true);

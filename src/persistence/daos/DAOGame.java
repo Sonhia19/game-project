@@ -59,7 +59,8 @@ public class DAOGame implements IDAOGame {
 	}
 	
 	@Override
-	public Game recoverGame(final int gameId, IDBConnection icon) throws PersistenceException{
+	public Game recoverGame(final int gameId, IDBConnection icon) throws PersistenceException {
+		
 		Game restoredGame = null;
 		Connection con = icon.getConnection();
 		
