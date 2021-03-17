@@ -49,12 +49,11 @@ public class WsServer {
 			}
 		} catch (IOException ex) {
 			System.out.println("Ha ocurrido un error al cerrar la conexion");
-			//throw new LogicException(ex.getMessage());
 		}
 	}
 
 	@OnMessage
-	public void onMessage(String message, Session session) {//throws LogicException {
+	public void onMessage(String message, Session session) {
 		
 		System.out.println(message);
 
@@ -81,7 +80,7 @@ public class WsServer {
 					response = facade.newGame(playerName, session);
 				} catch (LogicException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.print("Ha ocurrido un error al crear la partida");
 				}
 				response.setAction(action);
 				
@@ -169,7 +168,7 @@ public class WsServer {
 						response = facade.saveGame(gameId, jsonPlayerSession, jsonEnemySession);
 					} catch (LogicException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.out.print("Ha ocurrido un error al guardar la partida");
 					}
 					
 					// envia msj al servidor que lo invoco
@@ -205,14 +204,12 @@ public class WsServer {
 					response = facade.recoverGame(gameId, playerName, session);}
 				catch (LogicException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.print("Ha ocurrido un error al recuperar la partida");
 				}
 				response.setAction(action);
 				
 				// envia msj al servidor que lo invoco
 				session.getBasicRemote().sendText(response.toParsedString());
-				
-				//WsSynchronization.syncWithEnemy(facade, parameters.getInt("gameId"), playerName, response, "updatePlayersCount");
 				
 				//armar respuesta con enemySession para enviar al otro cliente
 				response = facade.getJsonGameSession(parameters.getInt("gameId"), playerName);
@@ -295,7 +292,7 @@ public class WsServer {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.print("Ha ocurrido un error al sincronizar el servicio");
 		}
 	}
 
