@@ -14,6 +14,7 @@ import { BLUE_BASE_X_VIEW, MINUS_X, MINUS_Y, MORE_X, MORE_Y, RED_BASE_X_VIEW, RE
 import { ANGLE_0, ANGLE_135, ANGLE_180, ANGLE_225, ANGLE_270, ANGLE_315, ANGLE_45, ANGLE_90 } from '../constants/GameConstants.js';
 import { BLUE_SAFE_ZONE_X, BLUE_PLANE_X, BLUE_BASE_X, BLUE_ARTILLERY_X_VIEW } from '../constants/GameConstants.js';
 import { COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING } from '../constants/GameConstants.js'
+import { BOMBARDERO, CAZA, PATRULLA, RECONOCIMIENTO } from '../constants/GameConstants.js';
 
 
 
@@ -626,6 +627,27 @@ export class GameScene extends Phaser.Scene {
 	//#endregion
 
 	//#region Tablero
+	imageDestroyedPlane(type) {
+		let plane;
+		let color = isBlue ? "azul" : "rojo";
+		switch (type) {
+			case BOMBARDERO:
+				plane = "bombardero";
+				break;
+			case CAZA:
+				plane = "caza";
+				break;
+			case PATRULLA:
+				plane = "patrulla";
+				break;
+			case RECONOCIMIENTO:
+				plane = "reconocimiento";
+				break;
+		}
+		return plane + "_" + color + "_eliminado";
+	}
+
+
 	createText() {
 		//Led indicadores Bomba
 		ledRedBomb = this.add.image(1075, 338, 'ledRed');
@@ -693,7 +715,7 @@ export class GameScene extends Phaser.Scene {
 		}
 		else {
 			if (context.playerSession.planes != undefined) {
-				consolePlane1.setTexture('spritesPlanesEliminated', context.playerSession.planes[0].planeType.getImage(ELIMINATED, false));
+				consolePlane1 = this.add.image(1050, 520, 'spritesPlanesEliminated', this.imageDestroyedPlane(context.playerSession.planes[0].planeType));
 			}
 
 		}
@@ -704,7 +726,7 @@ export class GameScene extends Phaser.Scene {
 		}
 		else {
 			if (context.playerSession.planes != undefined) {
-				consolePlane2.setTexture('spritesPlanesEliminated', context.playerSession.planes[1].planeType.getImage(ELIMINATED, false));
+				consolePlane2 = this.add.image(1130, 520, 'spritesPlanesEliminated', this.imageDestroyedPlane(context.playerSession.planes[1].planeType));
 			}
 
 		}
@@ -716,7 +738,7 @@ export class GameScene extends Phaser.Scene {
 		}
 		else {
 			if (context.playerSession.planes != undefined) {
-				consolePlane3.setTexture('spritesPlanesEliminated', context.playerSession.planes[2].planeType.getImage(ELIMINATED, false));
+				consolePlane3 = this.add.image(1210, 520, 'spritesPlanesEliminated', this.imageDestroyedPlane(context.playerSession.planes[2].planeType));
 			}
 
 		}
@@ -727,7 +749,7 @@ export class GameScene extends Phaser.Scene {
 		}
 		else {
 			if (context.playerSession.planes != undefined) {
-				consolePlane4.setTexture('spritesPlanesEliminated', context.playerSession.planes[3].planeType.getImage(ELIMINATED, false));
+				consolePlane4 = this.add.image(1290, 520, 'spritesPlanesEliminated', this.imageDestroyedPlane(context.playerSession.planes[3].planeType));
 			}
 
 		}
@@ -800,30 +822,41 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	checkPlanesArmor() {
-		if (myPlaneOne.armor <= 0) {
-			consolePlane1.setTexture('spritesPlanesEliminated', myPlaneOne.getImage(ELIMINATED, false));
-			plane1ArmorText.setText('');
-		} else {
-			plane1ArmorText.setText(myPlaneOne.armor);
+		if (myPlaneOne != null) {
+			if (myPlaneOne.armor <= 0) {
+				consolePlane1.setTexture('spritesPlanesEliminated', myPlaneOne.getImage(ELIMINATED, false));
+				plane1ArmorText.setText('');
+			} else {
+				plane1ArmorText.setText(myPlaneOne.armor);
+			}
 		}
-		if (myPlaneTwo.armor <= 0) {
-			consolePlane2.setTexture('spritesPlanesEliminated', myPlaneTwo.getImage(ELIMINATED, false));
-			plane2ArmorText.setText('');
-		} else {
-			plane2ArmorText.setText(myPlaneTwo.armor);
+
+		if (myPlaneTwo != null) {
+			if (myPlaneTwo.armor <= 0) {
+				consolePlane2.setTexture('spritesPlanesEliminated', myPlaneTwo.getImage(ELIMINATED, false));
+				plane2ArmorText.setText('');
+			} else {
+				plane2ArmorText.setText(myPlaneTwo.armor);
+			}
 		}
-		if (myPlaneThree.armor <= 0) {
-			consolePlane3.setTexture('spritesPlanesEliminated', myPlaneThree.getImage(ELIMINATED, false));
-			plane3ArmorText.setText('');
-		} else {
-			plane3ArmorText.setText(myPlaneThree.armor);
+
+		if (myPlaneThree != null) {
+			if (myPlaneThree.armor <= 0) {
+				consolePlane3.setTexture('spritesPlanesEliminated', myPlaneThree.getImage(ELIMINATED, false));
+				plane3ArmorText.setText('');
+			} else {
+				plane3ArmorText.setText(myPlaneThree.armor);
+			}
 		}
-		if (myPlaneFour.armor <= 0) {
-			consolePlane4.setTexture('spritesPlanesEliminated', myPlaneFour.getImage(ELIMINATED, false));
-			plane4ArmorText.setText('');
-		} else {
-			plane4ArmorText.setText(myPlaneFour.armor);
+		if (myPlaneFour != null) {
+			if (myPlaneFour.armor <= 0) {
+				consolePlane4.setTexture('spritesPlanesEliminated', myPlaneFour.getImage(ELIMINATED, false));
+				plane4ArmorText.setText('');
+			} else {
+				plane4ArmorText.setText(myPlaneFour.armor);
+			}
 		}
+
 		this.resizeConsolePlanes();
 
 	}
