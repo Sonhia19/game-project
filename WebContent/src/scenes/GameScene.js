@@ -1003,11 +1003,14 @@ export class GameScene extends Phaser.Scene {
 				p.setDepth(1);
 				enemyPlaneSelected = p;
 				enemyPlaneSelected.flying = takeOff == "true";
-				let planeView = this.checkPlaneView(true, enemyPlaneSelected.planeIndex);
-				if (planeView != null) {
-					let position = takeOff == 'true' ? isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y : isBlue ? RED_PLANE_LAND_VIEW_Y : BLUE_PLANE_LAND_VIEW_Y;
-					this.changeHighFlyPlaneView(planeView.y, position, planeView);
+				if (clearMap) {
+					let planeView = this.checkPlaneView(true, enemyPlaneSelected.planeIndex);
+					if (planeView != null) {
+						let position = takeOff == 'true' ? isBlue ? RED_PLANE_LOW_VIEW_Y : BLUE_PLANE_LOW_VIEW_Y : isBlue ? RED_PLANE_LAND_VIEW_Y : BLUE_PLANE_LAND_VIEW_Y;
+						this.changeHighFlyPlaneView(planeView.y, position, planeView);
+					}
 				}
+
 			}
 		}
 
@@ -1318,7 +1321,10 @@ export class GameScene extends Phaser.Scene {
 	damageEnemyPlane(bullet, plane) {
 
 		if (plane.active === true && bullet.active === true) {
+			console.log(plane);
+			console.log(bullet);
 			if ((bullet.frame.texture.key == 'bullet' && plane.flying) || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
+
 				if (plane.receiveDamage(bullet.damage)) {
 					scene.createExplosion(false, plane.x, plane.y);
 					scene.createMessage(plane.getType() + " enemigo destruido", COLOR_SUCCESS);
@@ -1552,6 +1558,7 @@ export class GameScene extends Phaser.Scene {
 			.popUp(1000);
 
 		this.print = this.add.text(0, 0, '');
+		dialog.setDepth(5);
 		dialog
 			.on('button.click', function (button, groupName, index) {
 				let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession, button.text);
@@ -1997,10 +2004,10 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	syncTakeOff(takeOff) {
-		if (clearMap) {
-			let message = context.messagesFormat.syncTakeOff(myPlaneSelected.planeIndex, takeOff);
-			context.functions.sendMessage(message);
-		}
+
+		let message = context.messagesFormat.syncTakeOff(myPlaneSelected.planeIndex, takeOff);
+		context.functions.sendMessage(message);
+
 
 	}
 
