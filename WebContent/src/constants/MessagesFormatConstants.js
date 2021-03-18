@@ -12,27 +12,28 @@ export const MESSAGES_FORMAT = {
         })
     },
 
-    saveGame: (playerSession, enemySession, action) => {
+    saveGame: (playerSession, enemyName, action) => {
         return JSON.stringify({
             action: {
                 name: 'saveGame',
                 parameters: {
                     gameId: context.gameId,
                     playerSession: playerSession,
-                    enemySession: enemySession,
+                    enemyName: enemyName,
                     action: action
                 }
             }
         })
     },
 
-    requestSaveGame: (playerName) => {
+    requestSaveGame: (playerSession) => {
         return JSON.stringify({
             action: {
                 name: 'requestSaveGame',
                 parameters: {
                     gameId: context.gameId,
-                    playerName: playerName
+                    playerSession: playerSession,
+                    playerName: playerSession.name
                 }
             }
         })

@@ -59,17 +59,16 @@ public class Facade implements IFacade {
     	artilleryController = ArtilleryController.getInstance();
     }
 
-    public WsResponse saveGame(final int gameId, final JSONObject jsonPlayerSession, final JSONObject jsonEnemySession) throws LogicException {
+    @Override
+    public WsResponse saveGame(final int gameId, final JSONObject jsonPlayerSession, final String enemyName) throws LogicException {
     	
     	//hacer que venga una partida entera desde el cliente con gameid, estado y si hay ganador quien
     	final WsResponse response = new WsResponse();
     	final Gson gson = new Gson();
+    	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
     	//cargamos datos que vienen desde servidor a objetos player
         final Player playerSession = gson.fromJson(jsonPlayerSession.toString(), Player.class);
-        final Player enemySession = gson.fromJson(jsonEnemySession.toString(), Player.class);
-        System.out.print("1: "+jsonPlayerSession.toString());
-        
-        System.out.print("2: "+jsonEnemySession.toString());
+        final Player enemySession = gamePlayers.get(enemyName);
         
     	try {
 	    	gameController.saveGame(gameId);
@@ -102,6 +101,7 @@ public class Facade implements IFacade {
     	return response;
     }
     
+    @Override
     public WsResponse recoverGame(final int gameId, final String playerName, final Session session) throws LogicException {
     	
     	//hacer que venga una partida entera desde el cliente con gameid, estado y si hay ganador quien
@@ -172,7 +172,25 @@ public class Facade implements IFacade {
 
     	return response;
     }
+    
+    @Override
+    public WsResponse requestSaveGame(final int gameId, final JSONObject jsonPlayerSession) {
+    	
+    	final WsResponse response = new WsResponse();
+    	final Gson gson = new Gson();
+    	final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+    	
+    	//cargamos datos que vienen desde servidor a objetos player
+        final Player playerSession = gson.fromJson(jsonPlayerSession.toString(), Player.class);
+        final Player playerSessionExisting = gamePlayers.get(playerSession.getName());
+        playerSession.setSession(playerSessionExisting.getSession());
+        gamePlayers.replace(playerSession.getName(), playerSession);
+        
+        response.generateResponse("requestSaveGame", "true", "Boolean");
+	    return response;
+    }
 
+    @Override
     public WsResponse newGame(final String playerName, final Session session) throws LogicException {
     	
     	final WsResponse response = new WsResponse();
@@ -204,6 +222,7 @@ public class Facade implements IFacade {
 		
     }
     
+    @Override
     public WsResponse joinGame(final int gameId, final String playerName, final Session session) {
 
     	final WsResponse response = new WsResponse();
@@ -228,6 +247,7 @@ public class Facade implements IFacade {
 		return response;
     }
     
+    @Override
     public WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
     		final ArrayList<Integer> artilleriesType, JSONArray structurePositionsJsonArray, final Session session) {
 
@@ -273,7 +293,7 @@ public class Facade implements IFacade {
 		return response;
     }
 
-
+    @Override
     public WsResponse disconnectGameSession(final Session session) {
 
         int gameId = removeSession(session);
@@ -292,11 +312,13 @@ public class Facade implements IFacade {
 
     }
     
+    @Override
     public void finishGame(final int gameId) {
 
     	gamePlayersMap.remove(gameId);
     }
     
+    @Override
 	public WsResponse getJsonGameSession(final int gameId, final String playerName) {
 		
 		final WsResponse response = new WsResponse();
@@ -315,6 +337,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getPlayersConnected(final int gameId) {
 		
 		final WsResponse response = new WsResponse();
@@ -331,22 +354,24 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonShootEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
-			final WsResponse response = new WsResponse();
-			final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
-			final Game game = new Game(gameId, playerName, gamePlayers.size());
+		final WsResponse response = new WsResponse();
+		final HashMap<String, Player> gamePlayers = gamePlayersMap.get(gameId);
+		final Game game = new Game(gameId, playerName, gamePlayers.size());
 
-			int indexPlane =(int)parameters.get("shootingPlane");
-			final Gson gson = new Gson();
+		int indexPlane =(int)parameters.get("shootingPlane");
+		final Gson gson = new Gson();
 
-			response.generateResponse("gameId", String.valueOf(game.getId()), "int");
-			response.generateResponse("enemyShoot",gson.toJson(String.valueOf(indexPlane)), "int");
-			response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
+		response.generateResponse("gameId", String.valueOf(game.getId()), "int");
+		response.generateResponse("enemyShoot",gson.toJson(String.valueOf(indexPlane)), "int");
+		response.generateResponse("playersConnected", String.valueOf(gamePlayers.size()), "int");
 
-			return response;
-		}
+		return response;
+	}
 
+    @Override
 	public WsResponse getJsonBombEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -363,6 +388,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonEmptyTankEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -379,6 +405,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonTakeOffEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -397,6 +424,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonPlaneViewEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -415,6 +443,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonHighFlyEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -431,6 +460,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonDamagePlane(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -449,6 +479,7 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
 	public WsResponse getJsonMoveEnemy(final int gameId, final String playerName, final JSONObject parameters) {
 
 		final WsResponse response = new WsResponse();
@@ -512,10 +543,12 @@ public class Facade implements IFacade {
 		return response;
 	}
 
+    @Override
     public HashMap<String, Player> getGamePlayers(final int gameId) {
         return gamePlayersMap.get(gameId);
     }
     
+    @Override
     public int removeSession(final Session session) {
 
     	int resultGameId = -1;

@@ -234,7 +234,8 @@ export class GameScene extends Phaser.Scene {
 
 		saveGameButton.on('pointerdown', function () {
 
-			let message = context.messagesFormat.requestSaveGame(context.playerSession.name);
+			this.updateContext();
+			let message = context.messagesFormat.requestSaveGame(context.playerSession);
 			context.functions.sendMessage(message);
 			var color = COLOR_SUCCESS;
 			var messageToast = "Esperando respuesta";
@@ -1645,9 +1646,8 @@ export class GameScene extends Phaser.Scene {
 		dialog
 			.on('button.click', function (button, groupName, index) {
 
-				console.log("confirm save");
 				this.updateContext();
-				let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession, button.text);
+				let message = context.messagesFormat.saveGame(context.playerSession, context.enemySession.name, button.text);
 				context.functions.sendMessage(message);
 				dialog.scaleDownDestroy(100);
 				dialog = undefined;
@@ -2064,7 +2064,7 @@ export class GameScene extends Phaser.Scene {
 		}
 
 		if (enemyPlaneOne != null) {
-			context.enemySession.planes[0].fuel = enemyPlaneOne.fuel.toFixed(3);
+			//context.enemySession.planes[0].fuel = enemyPlaneOne.fuel.toFixed(3);
 			context.enemySession.planes[0].armor = enemyPlaneOne.armor;
 			context.enemySession.planes[0].hasBomb = enemyPlaneOne.withBomb;
 			context.enemySession.planes[0].positionX = Math.round(enemyPlaneOne.x);
@@ -2074,7 +2074,7 @@ export class GameScene extends Phaser.Scene {
 		}
 
 		if (enemyPlaneTwo != null) {
-			context.enemySession.planes[1].fuel = enemyPlaneTwo.fuel.toFixed(3);
+			//context.enemySession.planes[1].fuel = enemyPlaneTwo.fuel.toFixed(3);
 			context.enemySession.planes[1].armor = enemyPlaneTwo.armor;
 			context.enemySession.planes[1].hasBomb = enemyPlaneTwo.withBomb;
 			context.enemySession.planes[1].positionX = Math.round(enemyPlaneTwo.x);
@@ -2084,7 +2084,7 @@ export class GameScene extends Phaser.Scene {
 		}
 
 		if (enemyPlaneThree != null) {
-			context.enemySession.planes[2].fuel = enemyPlaneThree.fuel.toFixed(3);
+			//context.enemySession.planes[2].fuel = enemyPlaneThree.fuel.toFixed(3);
 			context.enemySession.planes[2].armor = enemyPlaneThree.armor;
 			context.enemySession.planes[2].hasBomb = enemyPlaneThree.withBomb;
 			context.enemySession.planes[2].positionX = Math.round(enemyPlaneThree.x);
@@ -2094,7 +2094,7 @@ export class GameScene extends Phaser.Scene {
 		}
 
 		if (enemyPlaneFour != null) {
-			context.enemySession.planes[3].fuel = enemyPlaneFour.fuel.toFixed(3);
+			//context.enemySession.planes[3].fuel = enemyPlaneFour.fuel.toFixed(3);
 			context.enemySession.planes[3].armor = enemyPlaneFour.armor;
 			context.enemySession.planes[3].hasBomb = enemyPlaneFour.withBomb;
 			context.enemySession.planes[3].positionX = Math.round(enemyPlaneFour.x);

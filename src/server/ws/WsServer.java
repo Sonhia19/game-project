@@ -148,10 +148,9 @@ public class WsServer {
 				System.out.println("Request save game ");
 				final int gameId = parameters.getInt("gameId");
 				final String playerName = parameters.getString("playerName");
-				response = new WsResponse();
-				
-				response.generateResponse("requestSaveGame", "true", "Boolean");
-				response.setAction(action);
+				final JSONObject jsonPlayerSession = parameters.getJSONObject("playerSession");
+				response = facade.requestSaveGame(gameId, jsonPlayerSession);
+
 				//sincroniza todas las sesiones
 				WsSynchronization.syncWithEnemy(facade, gameId, playerName, response, "requestSaveGame");
 			} if (action.getString("name").equalsIgnoreCase("saveGame")) {
@@ -160,12 +159,12 @@ public class WsServer {
 				final int gameId = parameters.getInt("gameId");
 				final String confirmSave = parameters.getString("action");
 				final JSONObject jsonPlayerSession = parameters.getJSONObject("playerSession");
-				final JSONObject jsonEnemySession = parameters.getJSONObject("enemySession");
+				final String enemyName = parameters.getString("enemyName");
 
 				response =  new WsResponse();
 				if (confirmSave.equals("Si")) {
 					try {
-						response = facade.saveGame(gameId, jsonPlayerSession, jsonEnemySession);
+						response = facade.saveGame(gameId, jsonPlayerSession, enemyName);
 					} catch (LogicException e) {
 						// TODO Auto-generated catch block
 						System.out.print("Ha ocurrido un error al guardar la partida");

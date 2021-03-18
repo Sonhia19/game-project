@@ -15,11 +15,17 @@ import java.util.HashMap;
 
 public interface IFacade {
 	
-	WsResponse saveGame(final int gameId, final JSONObject playerSession, final JSONObject enemySession) throws LogicException;
+	WsResponse saveGame(final int gameId, final JSONObject playerSession, final String enemyName) throws LogicException;
 	
 	WsResponse newGame(final String playerName, final Session session) throws LogicException;
 	
 	WsResponse joinGame(final int gameId, final String playerName, final Session session);
+	
+	WsResponse requestSaveGame(final int gameId, final JSONObject jsonPlayerSession);
+	
+	WsResponse recoverGame(final int gameId, final String playerName, final Session session) throws LogicException;
+	
+	WsResponse getPlayersConnected(final int gameId);
 
 	WsResponse connectGameSession(final int gameId, final String playerName, final int teamSide, final ArrayList<Integer> planesType,
 										 final ArrayList<Integer> artilleriesType, JSONArray structurePositionsJsonArray, final Session session);
