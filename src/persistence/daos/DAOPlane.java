@@ -45,7 +45,6 @@ public class DAOPlane implements IDAOPlane {
 		try {
 			if (this.exists(playerId, plane.getPlaneCode(), icon)){
 				pstmt = con.prepareStatement("update aviones set combustible = ?, blindaje=?, tiene_bomba=?, vuelo_alto=?, posicion_x=?, posicion_y=?, poder_fuego=?, velocidad=?, angulo=?, volando=? where id_jugador= ? and avion_codigo=?",Statement.RETURN_GENERATED_KEYS);
-			
 				pstmt.setDouble(1, plane.getFuel());
 				pstmt.setDouble(2, plane.getArmor());
 				pstmt.setBoolean(3, plane.getHasBomb());
@@ -55,9 +54,9 @@ public class DAOPlane implements IDAOPlane {
 				pstmt.setDouble(7,plane.getFirePower());
 				pstmt.setDouble(8,plane.getSpeed());
 				pstmt.setInt(9,plane.getAngle());
-				pstmt.setInt(10, playerId);
-				pstmt.setInt(11, plane.getPlaneCode());
-				pstmt.setBoolean(12, plane.getFlying());
+				pstmt.setBoolean(10, plane.getFlying());
+				pstmt.setInt(11, playerId);
+				pstmt.setInt(12, plane.getPlaneCode());
 			}
 			else
 			{

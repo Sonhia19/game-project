@@ -55,22 +55,23 @@ public class Player {
 	}
 
 	public Player(final String name, final int gameId, final int teamSide, final List<Plane> planes,
-			final List<Artillery> artilleries, double pfx, double pfy, double ptx, double pty, double phx, double phy, boolean readyToPlay) {
+			final List<Artillery> artilleries, double pfx, double pfy, double ptx, double pty, double phx, double phy, boolean readyToPlay,
+			boolean activeTower, boolean activeFuel, boolean activeHangar) {
 		this.name = name;
 		this.gameId = gameId;
 		this.teamSide = teamSide;
 		this.artilleries = artilleries;
 		this.planes = planes;
 
-		this.activeFuel = true;
+		this.activeFuel = activeFuel;
 		this.positionXFuel = pfx;
 		this.positionYFuel = pfy;
 
-		this.activeHangar = true;
+		this.activeHangar = activeHangar;
 		this.positionXHangar = phx;
 		this.positionYHangar = phy;
 
-		this.activeTower = true;
+		this.activeTower = activeTower;
 		this.positionXTower = ptx;
 		this.positionYTower = pty;
 		
@@ -211,7 +212,7 @@ public class Player {
 
 		return new Player(this.name, this.gameId, this.teamSide, this.planes, this.artilleries, this.positionXFuel,
 				this.positionYFuel, this.positionXTower, this.positionYTower, this.positionXHangar,
-				this.positionYHangar, this.readyToPlay);
+				this.positionYHangar, this.readyToPlay,this.activeTower, this.activeFuel,this.activeHangar);
 	}
 	
 	public Player preparePlayerToSendMove(final Player player, final int[][] coordinates) {

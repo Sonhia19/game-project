@@ -333,40 +333,36 @@ export class GameScene extends Phaser.Scene {
 
 			//Selección de avión
 			if (Phaser.Input.Keyboard.JustDown(keyOne)) {
-				if(myPlaneOne != null)
-				{
+				if (myPlaneOne != null) {
 					if (myPlaneOne.scene) {
 						this.selectPlane(myPlaneOne);
 					}
 				}
-				
+
 			}
 			else if (Phaser.Input.Keyboard.JustDown(keyTwo)) {
-				if(myPlaneTwo != null)
-				{
+				if (myPlaneTwo != null) {
 					if (myPlaneTwo.scene) {
 						this.selectPlane(myPlaneTwo);
 					}
 				}
-				
+
 			}
 			else if (Phaser.Input.Keyboard.JustDown(keyThree)) {
-				if(myPlaneThree != null)
-				{
+				if (myPlaneThree != null) {
 					if (myPlaneThree.scene) {
 						this.selectPlane(myPlaneThree);
 					}
 				}
-				
+
 			}
 			else if (Phaser.Input.Keyboard.JustDown(keyFour)) {
-				if(myPlaneFour != null)
-				{
+				if (myPlaneFour != null) {
 					if (myPlaneFour.scene) {
 						this.selectPlane(myPlaneFour);
 					}
 				}
-				
+
 			}
 
 			if (myPlaneSelected != null) {
@@ -1216,30 +1212,28 @@ export class GameScene extends Phaser.Scene {
 			if (myPlaneSelected != p) {
 				if (!this.checkOtherPlaneFlying(p)) {
 					let angle = isBlue ? ANGLE_90 : ANGLE_270;
-					if(myPlaneOne != null)
-					{
+					if (myPlaneOne != null) {
 						if (myPlaneOne.scene) { this.unselectPlane(myPlaneOne); };
 					}
-					if(myPlaneTwo != null)
-					{
+					if (myPlaneTwo != null) {
 						if (myPlaneTwo.scene) { this.unselectPlane(myPlaneTwo); };
 					}
-					if(myPlaneThree != null)
-					{
+					if (myPlaneThree != null) {
 						if (myPlaneThree.scene) { this.unselectPlane(myPlaneThree); };
 					}
-					if( myPlaneFour != null)
-					{
+					if (myPlaneFour != null) {
 						if (myPlaneFour.scene) { this.unselectPlane(myPlaneFour); };
-					}					
+					}
 					myPlaneSelected = p;
 					myPlaneSelected.angle = angle;
 					myPlaneSelected.planeAngle = angle;
 					myPlaneSelected.flying = false;
 					myPlaneSelected.setTexture('spritesPlanes', myPlaneSelected.getImage(LANDED, false));
-					myPlaneSelectedText.setText('Avión #' + myPlaneSelected.planeIndex + " - " + myPlaneSelected.getType());
-					//Info en Consola
-					this.loadConsole();
+					if (myPlaneSelectedText != null) {
+						myPlaneSelectedText.setText('Avión #' + myPlaneSelected.planeIndex + " - " + myPlaneSelected.getType());
+						//Info en Consola
+						this.loadConsole();
+					}
 				}
 				else {
 					infoGameText.setText("Otro avión esta en el aire");
@@ -1273,23 +1267,19 @@ export class GameScene extends Phaser.Scene {
 
 	checkAllArtilleryFire(time) {
 		if (myPlaneSelected != null && myPlaneSelected.armor > 0) {
-			if(enemyArtilleryOne != null)
-			{
+			if (enemyArtilleryOne != null) {
 				this.checkArtilleryFire(time, enemyArtilleryOne, myPlaneSelected, enemyBulletsArtillery);
 
 			}
-			if(enemyArtilleryTwo != null)
-			{
+			if (enemyArtilleryTwo != null) {
 				this.checkArtilleryFire(time, enemyArtilleryTwo, myPlaneSelected, enemyBulletsArtillery);
 
 			}
-			if(enemyArtilleryThree != null)
-			{
+			if (enemyArtilleryThree != null) {
 				this.checkArtilleryFire(time, enemyArtilleryThree, myPlaneSelected, enemyBulletsArtillery);
 
 			}
-			if(enemyArtilleryFour != null)
-			{
+			if (enemyArtilleryFour != null) {
 				this.checkArtilleryFire(time, enemyArtilleryFour, myPlaneSelected, enemyBulletsArtillery);
 
 			}
@@ -1297,23 +1287,19 @@ export class GameScene extends Phaser.Scene {
 
 
 		if (enemyPlaneSelected != null && enemyPlaneSelected.armor > 0) {
-			if(myArtilleryOne != null)
-			{
+			if (myArtilleryOne != null) {
 				this.checkArtilleryFire(time, myArtilleryOne, enemyPlaneSelected, myBulletsArtillery);
 
 			}
-			if(myArtilleryTwo != null)
-			{
+			if (myArtilleryTwo != null) {
 				this.checkArtilleryFire(time, myArtilleryTwo, enemyPlaneSelected, myBulletsArtillery);
 
 			}
-			if(myArtilleryThree != null)
-			{
+			if (myArtilleryThree != null) {
 				this.checkArtilleryFire(time, myArtilleryThree, enemyPlaneSelected, myBulletsArtillery);
 
 			}
-			if(myArtilleryFourView != null)
-			{
+			if (myArtilleryFourView != null) {
 				this.checkArtilleryFire(time, myArtilleryFour, enemyPlaneSelected, myBulletsArtillery);
 
 			}
@@ -1337,26 +1323,31 @@ export class GameScene extends Phaser.Scene {
 	checkMyTowersFire(time) {
 		let angle;
 		if (enemyPlaneSelected != null && enemyPlaneSelected.armor > 0) {
-			if (time > myTower.nextTic && !myTower.destroyed) {
-				if (Phaser.Math.Distance.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y) < 300) {
-					angle = Phaser.Math.Angle.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y);
-					if (!enemyPlaneSelected.highFly) {
-						myTower.fire(scene, time, angle, myBulletsArtillery);
-						this.checkPlanesArmor();
+			if (myTower != null) {
+				if (time > myTower.nextTic && !myTower.destroyed) {
+					if (Phaser.Math.Distance.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y) < 300) {
+						angle = Phaser.Math.Angle.Between(myTower.x, myTower.y, enemyPlaneSelected.x, enemyPlaneSelected.y);
+						if (!enemyPlaneSelected.highFly) {
+							myTower.fire(scene, time, angle, myBulletsArtillery);
+							this.checkPlanesArmor();
+						}
 					}
 				}
 			}
+
 		}
 	}
 	checkEnemyTowerFire(time) {
 		let angle;
 		if (myPlaneSelected != null && myPlaneSelected.armor > 0) {
-			if (time > enemyTower.nextTic && !enemyTower.destroyed) {
-				if (Phaser.Math.Distance.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y) < 300) {
-					angle = Phaser.Math.Angle.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y);
-					if (!myPlaneSelected.highFly) {
-						enemyTower.fire(scene, time, angle, enemyBulletsArtillery);
-						this.checkPlanesArmor();
+			if (enemyTower != null) {
+				if (time > enemyTower.nextTic && !enemyTower.destroyed) {
+					if (Phaser.Math.Distance.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y) < 300) {
+						angle = Phaser.Math.Angle.Between(enemyTower.x, enemyTower.y, myPlaneSelected.x, myPlaneSelected.y);
+						if (!myPlaneSelected.highFly) {
+							enemyTower.fire(scene, time, angle, enemyBulletsArtillery);
+							this.checkPlanesArmor();
+						}
 					}
 				}
 			}
@@ -1734,6 +1725,9 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	placeMyElements() {
+		console.log(context.playerSession.activeHangar);
+		console.log(context.playerSession.activeTower);
+		console.log(context.playerSession.activeFuel);
 
 		let yFuel = -1, yTower = -1, yHangar = -1;
 		let xFuel = -1, xTower = -1, xHangar = -1;
@@ -1769,35 +1763,69 @@ export class GameScene extends Phaser.Scene {
 		}
 
 		if (yFuel >= yHangar && yFuel >= yTower) {
-			myFuelView.setDepth(3);
+			if (myFuelView != null) {
+				myFuelView.setDepth(3);
+			}
 			if (yHangar >= yTower) {
-				myHangarView.setDepth(2);
-				myTowerView.setDepth(1);
+				if (myHangarView != null) {
+					myHangarView.setDepth(2);
+				}
+				if (myTowerView != null) {
+					myTowerView.setDepth(1);
+				}
 			}
 			else {
-				myHangarView.setDepth(1);
-				myTowerView.setDepth(2);
+				if (myHangarView != null) {
+					myHangarView.setDepth(1);
+				}
+				if (myTowerView != null) {
+					myTowerView.setDepth(2);
+				}
 			}
 		}
 		else if (yFuel >= yHangar) {
-			myFuelView.setDepth(2);
-			myHangarView.setDepth(1);
-			myTowerView.setDepth(3);
+			if (myFuelView != null) {
+				myFuelView.setDepth(2);
+			}
+			if (myHangarView != null) {
+				myHangarView.setDepth(1);
+			}
+			if (myTowerView != null) {
+				myTowerView.setDepth(3);
+			}
 		}
 		else if (yFuel >= yTower) {
-			myFuelView.setDepth(2);
-			myHangarView.setDepth(3);
-			myTowerView.setDepth(1);
+			if (myFuelView != null) {
+				myFuelView.setDepth(2);
+			}
+			if (myHangarView != null) {
+				myHangarView.setDepth(3);
+			}
+			if (myTowerView != null) {
+				myTowerView.setDepth(1);
+			}
 		}
 		else if (yTower >= yHangar) {
-			myFuelView.setDepth(1);
-			myHangarView.setDepth(2);
-			myTowerView.setDepth(3);
+			if (myFuelView != null) {
+				myFuelView.setDepth(1);
+			}
+			if (myHangarView != null) {
+				myHangarView.setDepth(2);
+			}
+			if (myTowerView != null) {
+				myTowerView.setDepth(3);
+			}
 		}
 		else {
-			myFuelView.setDepth(1);
-			myHangarView.setDepth(3);
-			myTowerView.setDepth(2);
+			if (myFuelView != null) {
+				myFuelView.setDepth(1);
+			}
+			if (myHangarView != null) {
+				myHangarView.setDepth(3);
+			}
+			if (myTowerView != null) {
+				myTowerView.setDepth(2);
+			}
 		}
 
 		this.placeMyPlanes();
@@ -1807,7 +1835,18 @@ export class GameScene extends Phaser.Scene {
 		this.physics.add.overlap(enemyBombs, myTowers, this.damageMyStructure);
 		this.physics.add.overlap(enemyBombs, myFuels, this.damageMyStructure);
 	}
+
+	takeOffPlaneRecover(p) {
+		this.selectPlane(p);
+		let planeView = this.checkPlaneView(false, myPlaneSelected.planeIndex);
+		if (planeView != null) {
+			this.changeHighFlyPlaneView(planeView.y, isBlue ? BLUE_PLANE_LOW_VIEW_Y : RED_PLANE_LOW_VIEW_Y, planeView);
+		}
+		myPlaneSelected.takeOff();
+		this.syncTakeOff(true);
+	}
 	placeMyPlanes() {
+
 
 		if (context.playerSession.planes != undefined) {
 			let planesServer = context.playerSession.planes;
@@ -1816,25 +1855,42 @@ export class GameScene extends Phaser.Scene {
 				myPlanesCount += 1;
 				myPlaneOneView = this.add.image(isBlue ? myPlaneOne.x + 929 : myPlaneOne.x + 421, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 				this.resizePlaneView(myPlaneOneView, 40);
+				if (planesServer[0].flying) {
+					this.takeOffPlaneRecover(myPlaneOne);
+				}
 			}
 			if (planesServer[1].armor > 0) {
 				myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2, planesServer[1].planeType);
 				myPlanesCount += 1;
 				myPlaneTwoView = this.add.image(isBlue ? myPlaneTwo.x + 931 : myPlaneTwo.x + 419, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 				this.resizePlaneView(myPlaneTwoView, 40);
+				if (planesServer[1].flying) {
+					this.takeOffPlaneRecover(myPlaneTwo);
+				}
 			}
 			if (planesServer[2].armor > 0) {
 				myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, planesServer[2].speed, planesServer[2].hasBomb, planesServer[2].firePower, 3, planesServer[2].planeType);
 				myPlanesCount += 1;
 				myPlaneThreeView = this.add.image(isBlue ? myPlaneThree.x + 933 : myPlaneThree.x + 417, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 				this.resizePlaneView(myPlaneThreeView, 40);
+				if (planesServer[2].flying) {
+					this.takeOffPlaneRecover(myPlaneThree);
+				}
 			}
 			if (planesServer[3].armor > 0) {
 				myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4, planesServer[3].planeType);
 				myPlanesCount += 1;
 				myPlaneFourView = this.add.image(isBlue ? myPlaneFour.x + 935 : myPlaneFour.x + 415, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
 				this.resizePlaneView(myPlaneFourView, 40);
+				if (planesServer[3].flying) {
+					this.takeOffPlaneRecover(myPlaneFour);
+				}
 			}
+
+			console.log(myPlaneOne);
+			console.log(myPlaneTwo);
+			console.log(myPlaneThree);
+			console.log(myPlaneFour);
 
 			this.physics.add.collider(myPlanes, borders, this.borderPlane);
 			this.physics.add.overlap(myPlanes, blacks, this.exploreBlackMap);
@@ -1966,19 +2022,17 @@ export class GameScene extends Phaser.Scene {
 	}
 	updatePlanes() {
 
-		if(myPlaneOne != null)
-		{
+		if (myPlaneOne != null) {
 			context.playerSession.planes[0].fuel = myPlaneOne.fuel.toFixed(3);
-		context.playerSession.planes[0].armor = myPlaneOne.armor;
-		context.playerSession.planes[0].hasBomb = myPlaneOne.withBomb;
-		context.playerSession.planes[0].positionX = Math.round(myPlaneOne.x);
-		context.playerSession.planes[0].positionY = Math.round(myPlaneOne.y);
-		context.playerSession.planes[0].angle = myPlaneOne.planeAngle;
-		context.playerSession.planes[0].flying = myPlaneOne.flying;
+			context.playerSession.planes[0].armor = myPlaneOne.armor;
+			context.playerSession.planes[0].hasBomb = myPlaneOne.withBomb;
+			context.playerSession.planes[0].positionX = Math.round(myPlaneOne.x);
+			context.playerSession.planes[0].positionY = Math.round(myPlaneOne.y);
+			context.playerSession.planes[0].angle = myPlaneOne.planeAngle;
+			context.playerSession.planes[0].flying = myPlaneOne.flying;
 		}
-		
-		if(myPlaneTwo != null)
-		{
+
+		if (myPlaneTwo != null) {
 			context.playerSession.planes[1].fuel = myPlaneTwo.fuel.toFixed(3);
 			context.playerSession.planes[1].armor = myPlaneTwo.armor;
 			context.playerSession.planes[1].hasBomb = myPlaneTwo.withBomb;
@@ -1988,31 +2042,28 @@ export class GameScene extends Phaser.Scene {
 			context.playerSession.planes[1].flying = myPlaneTwo.flying;
 		}
 
-		if(myPlaneThree != null)
-		{
+		if (myPlaneThree != null) {
 			context.playerSession.planes[2].fuel = myPlaneThree.fuel.toFixed(3);
-		context.playerSession.planes[2].armor = myPlaneThree.armor;
-		context.playerSession.planes[2].hasBomb = myPlaneThree.withBomb;
-		context.playerSession.planes[2].positionX = Math.round(myPlaneThree.x);
-		context.playerSession.planes[2].positionY = Math.round(myPlaneThree.y);
-		context.playerSession.planes[2].angle = myPlaneThree.planeAngle;
-		context.playerSession.planes[2].flying = myPlaneThree.flying;
+			context.playerSession.planes[2].armor = myPlaneThree.armor;
+			context.playerSession.planes[2].hasBomb = myPlaneThree.withBomb;
+			context.playerSession.planes[2].positionX = Math.round(myPlaneThree.x);
+			context.playerSession.planes[2].positionY = Math.round(myPlaneThree.y);
+			context.playerSession.planes[2].angle = myPlaneThree.planeAngle;
+			context.playerSession.planes[2].flying = myPlaneThree.flying;
 		}
 
-		if(myPlaneFour != null)
-		{
+		if (myPlaneFour != null) {
 			context.playerSession.planes[3].fuel = myPlaneFour.fuel.toFixed(3);
-		context.playerSession.planes[3].armor = myPlaneFour.armor;
-		context.playerSession.planes[3].hasBomb = myPlaneFour.withBomb;
-		context.playerSession.planes[3].positionX = Math.round(myPlaneFour.x);
-		context.playerSession.planes[3].positionY = Math.round(myPlaneFour.y);
-		context.playerSession.planes[3].angle = myPlaneFour.planeAngle;
-		context.playerSession.planes[3].flying = myPlaneFour.flying;
+			context.playerSession.planes[3].armor = myPlaneFour.armor;
+			context.playerSession.planes[3].hasBomb = myPlaneFour.withBomb;
+			context.playerSession.planes[3].positionX = Math.round(myPlaneFour.x);
+			context.playerSession.planes[3].positionY = Math.round(myPlaneFour.y);
+			context.playerSession.planes[3].angle = myPlaneFour.planeAngle;
+			context.playerSession.planes[3].flying = myPlaneFour.flying;
 
 		}
-		
-		if(enemyPlaneOne != null)
-		{
+
+		if (enemyPlaneOne != null) {
 			context.enemySession.planes[0].fuel = enemyPlaneOne.fuel.toFixed(3);
 			context.enemySession.planes[0].armor = enemyPlaneOne.armor;
 			context.enemySession.planes[0].hasBomb = enemyPlaneOne.withBomb;
@@ -2022,8 +2073,7 @@ export class GameScene extends Phaser.Scene {
 			context.enemySession.planes[0].flying = enemyPlaneOne.flying;
 		}
 
-		if( enemyPlaneTwo != null)
-		{
+		if (enemyPlaneTwo != null) {
 			context.enemySession.planes[1].fuel = enemyPlaneTwo.fuel.toFixed(3);
 			context.enemySession.planes[1].armor = enemyPlaneTwo.armor;
 			context.enemySession.planes[1].hasBomb = enemyPlaneTwo.withBomb;
@@ -2032,9 +2082,8 @@ export class GameScene extends Phaser.Scene {
 			context.enemySession.planes[1].angle = enemyPlaneTwo.planeAngle;
 			context.enemySession.planes[2].flying = enemyPlaneTwo.flying;
 		}
-		
-		if(enemyPlaneThree != null)
-		{
+
+		if (enemyPlaneThree != null) {
 			context.enemySession.planes[2].fuel = enemyPlaneThree.fuel.toFixed(3);
 			context.enemySession.planes[2].armor = enemyPlaneThree.armor;
 			context.enemySession.planes[2].hasBomb = enemyPlaneThree.withBomb;
@@ -2044,95 +2093,103 @@ export class GameScene extends Phaser.Scene {
 			context.enemySession.planes[2].flying = enemyPlaneThree.flying;
 		}
 
-		if(enemyPlaneFour != null)
-		{
+		if (enemyPlaneFour != null) {
 			context.enemySession.planes[3].fuel = enemyPlaneFour.fuel.toFixed(3);
-		context.enemySession.planes[3].armor = enemyPlaneFour.armor;
-		context.enemySession.planes[3].hasBomb = enemyPlaneFour.withBomb;
-		context.enemySession.planes[3].positionX = Math.round(enemyPlaneFour.x);
-		context.enemySession.planes[3].positionY = Math.round(enemyPlaneFour.y);
-		context.enemySession.planes[3].angle = enemyPlaneFour.planeAngle;
-		context.enemySession.planes[3].flying = enemyPlaneFour.flying;
+			context.enemySession.planes[3].armor = enemyPlaneFour.armor;
+			context.enemySession.planes[3].hasBomb = enemyPlaneFour.withBomb;
+			context.enemySession.planes[3].positionX = Math.round(enemyPlaneFour.x);
+			context.enemySession.planes[3].positionY = Math.round(enemyPlaneFour.y);
+			context.enemySession.planes[3].angle = enemyPlaneFour.planeAngle;
+			context.enemySession.planes[3].flying = enemyPlaneFour.flying;
 		}
-		
+
+		if (enemyPlaneSelected != null) {
+			context.enemySession.planes[enemyPlaneSelected.planeIndex - 1].flying = enemyPlaneSelected.flying;
+		}
+
 	}
 
 	updateArtilleries() {
 
-		if(myArtilleryOne != null)
-		{
+		if (myArtilleryOne != null) {
 			context.playerSession.artilleries[0].armor = myArtilleryOne.armor;
 			context.playerSession.artilleries[0].angle = myArtilleryOne.artilleryAngle;
 			context.playerSession.artilleries[0].positionX = myArtilleryOne.x;
 			context.playerSession.artilleries[0].positionY = myArtilleryOne.y;
 		}
 
-		if(myArtilleryTwo != null)
-		{
+		if (myArtilleryTwo != null) {
 			context.playerSession.artilleries[1].armor = myArtilleryTwo.armor;
 			context.playerSession.artilleries[1].angle = myArtilleryTwo.artilleryAngle;
 			context.playerSession.artilleries[1].positionX = myArtilleryTwo.x;
 			context.playerSession.artilleries[1].positionY = myArtilleryTwo.y;
 		}
 
-		if(myArtilleryThree != null)
-		{
+		if (myArtilleryThree != null) {
 			context.playerSession.artilleries[2].armor = myArtilleryThree.armor;
 			context.playerSession.artilleries[2].angle = myArtilleryThree.artilleryAngle;
 			context.playerSession.artilleries[2].positionX = myArtilleryThree.x;
 			context.playerSession.artilleries[2].positionY = myArtilleryThree.y;
-		}	
+		}
 
-		if(myArtilleryFour != null)
-		{
+		if (myArtilleryFour != null) {
 			context.playerSession.artilleries[3].armor = myArtilleryFour.armor;
 			context.playerSession.artilleries[3].angle = myArtilleryFour.artilleryAngle;
 			context.playerSession.artilleries[3].positionX = myArtilleryFour.x;
 			context.playerSession.artilleries[3].positionY = myArtilleryFour.y;
 		}
 
-		if(enemyArtilleryOne != null)
-		{
+		if (enemyArtilleryOne != null) {
 			context.enemySession.artilleries[0].armor = enemyArtilleryOne.armor;
 			context.enemySession.artilleries[0].angle = enemyArtilleryOne.artilleryAngle;
 			context.enemySession.artilleries[0].positionX = enemyArtilleryOne.x;
 			context.enemySession.artilleries[0].positionY = enemyArtilleryOne.y;
 		}
 
-		if(enemyArtilleryTwo != null)
-		{
+		if (enemyArtilleryTwo != null) {
 			context.enemySession.artilleries[1].armor = enemyArtilleryTwo.armor;
-		context.enemySession.artilleries[1].angle = enemyArtilleryTwo.artilleryAngle;
-		context.enemySession.artilleries[1].positionX = enemyArtilleryTwo.x;
-		context.enemySession.artilleries[1].positionY = enemyArtilleryTwo.y;
+			context.enemySession.artilleries[1].angle = enemyArtilleryTwo.artilleryAngle;
+			context.enemySession.artilleries[1].positionX = enemyArtilleryTwo.x;
+			context.enemySession.artilleries[1].positionY = enemyArtilleryTwo.y;
 		}
 
-		if(enemyArtilleryThree != null)
-		{
+		if (enemyArtilleryThree != null) {
 			context.enemySession.artilleries[2].armor = enemyArtilleryThree.armor;
 			context.enemySession.artilleries[2].angle = enemyArtilleryThree.artilleryAngle;
 			context.enemySession.artilleries[2].positionX = enemyArtilleryThree.x;
 			context.enemySession.artilleries[2].positionY = enemyArtilleryThree.y;
 		}
 
-		if(enemyArtilleryFour != null)
-		{
+		if (enemyArtilleryFour != null) {
 			context.enemySession.artilleries[3].armor = enemyArtilleryFour.armor;
 			context.enemySession.artilleries[3].angle = enemyArtilleryFour.artilleryAngle;
 			context.enemySession.artilleries[3].positionX = enemyArtilleryFour.x;
 			context.enemySession.artilleries[3].positionY = enemyArtilleryFour.y;
 		}
-		
+
 	}
 
 	updateStructures() {
-		context.playerSession.activeFuel = !myFuel.destroyed;
-		context.playerSession.activeHangar = !myHangar.destroyed;
-		context.playerSession.activeTower = !myTower.destroyed;
+		if (myFuel != null) {
+			context.playerSession.activeFuel = !myFuel.destroyed;
+		}
+		if (myHangar != null) {
+			context.playerSession.activeHangar = !myHangar.destroyed;
+		}
+		if (myTower != null) {
+			context.playerSession.activeTower = !myTower.destroyed;
+		}
 
-		context.enemySession.activeFuel = !enemyFuel.destroyed;
-		context.enemySession.activeHangar = !enemyHangar.destroyed;
-		context.enemySession.activeTower = !enemyTower.destroyed;
+		if (enemyFuel != null) {
+			context.enemySession.activeFuel = !enemyFuel.destroyed;
+		}
+		if (enemyHangar != null) {
+			context.enemySession.activeHangar = !enemyHangar.destroyed;
+		}
+		if (enemyTower != null) {
+			context.enemySession.activeTower = !enemyTower.destroyed;
+		}
+
 	}
 
 	syncMove(planeViewX) {
