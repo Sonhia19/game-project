@@ -1405,8 +1405,6 @@ export class GameScene extends Phaser.Scene {
 	damageEnemyPlane(bullet, plane) {
 
 		if (plane.active === true && bullet.active === true) {
-			console.log(plane);
-			console.log(bullet);
 			if ((bullet.frame.texture.key == 'bullet' && plane.flying) || (bullet.frame.texture.key == "bulletArtillery" && !plane.highFly)) {
 
 				if (plane.receiveDamage(bullet.damage)) {
@@ -1725,9 +1723,6 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	placeMyElements() {
-		console.log(context.playerSession.activeHangar);
-		console.log(context.playerSession.activeTower);
-		console.log(context.playerSession.activeFuel);
 
 		let yFuel = -1, yTower = -1, yHangar = -1;
 		let xFuel = -1, xTower = -1, xHangar = -1;
@@ -1845,6 +1840,30 @@ export class GameScene extends Phaser.Scene {
 		myPlaneSelected.takeOff();
 		this.syncTakeOff(true);
 	}
+
+	checkXPlaneRecover(p, isEnemy) {
+		let recoverX;
+		let oldX = p.x;
+		if (!isEnemy) {
+			if (isBlue) {
+				if (oldX <= 150) {
+					recoverX = 1079 - ((150 - oldX) / 3.5);
+				}
+				else {
+					recoverX = 150 + 929 + ((oldX - 150) / 3.5);
+				}
+			}
+			else {
+				if (oldX <= 850) {
+					recoverX = 1271 - ((850 - oldX) / 3.5);
+				}
+				else {
+					recoverX = 850 + 421 + ((oldX - 850) / 3.5);
+				}
+			}
+		}
+		return recoverX;
+	}
 	placeMyPlanes() {
 
 
@@ -1853,48 +1872,65 @@ export class GameScene extends Phaser.Scene {
 			if (planesServer[0].armor > 0) {
 				myPlaneOne = this.placeMyPlane(planesServer[0].positionY, planesServer[0].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[0].fuel, planesServer[0].armor, planesServer[0].speed, planesServer[0].hasBomb, planesServer[0].firePower, 1, planesServer[0].planeType);
 				myPlanesCount += 1;
-				myPlaneOneView = this.add.image(isBlue ? myPlaneOne.x + 929 : myPlaneOne.x + 421, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
-				this.resizePlaneView(myPlaneOneView, 40);
+
+
 				if (planesServer[0].flying) {
+					
+					let recoverX = this.checkXPlaneRecover(myPlaneOne, false);
+					myPlaneOneView = this.add.image(recoverX, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneOne);
 				}
+				else {
+					myPlaneOneView = this.add.image(isBlue ? myPlaneOne.x + 929 : myPlaneOne.x + 421, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
+				}
+				this.resizePlaneView(myPlaneOneView, 40);
 			}
 			if (planesServer[1].armor > 0) {
 				myPlaneTwo = this.placeMyPlane(planesServer[1].positionY, planesServer[1].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[1].fuel, planesServer[1].armor, planesServer[1].speed, planesServer[1].hasBomb, planesServer[1].firePower, 2, planesServer[1].planeType);
 				myPlanesCount += 1;
-				myPlaneTwoView = this.add.image(isBlue ? myPlaneTwo.x + 931 : myPlaneTwo.x + 419, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
-				this.resizePlaneView(myPlaneTwoView, 40);
+
 				if (planesServer[1].flying) {
+					
+					let recoverX = this.checkXPlaneRecover(myPlaneTwo, false);
+					myPlaneTwoView = this.add.image(recoverX, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneTwo);
 				}
+				else {
+					myPlaneTwoView = this.add.image(isBlue ? myPlaneTwo.x + 931 : myPlaneTwo.x + 419, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				}
+				this.resizePlaneView(myPlaneTwoView, 40);
 			}
 			if (planesServer[2].armor > 0) {
 				myPlaneThree = this.placeMyPlane(planesServer[2].positionY, planesServer[2].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[2].fuel, planesServer[2].armor, planesServer[2].speed, planesServer[2].hasBomb, planesServer[2].firePower, 3, planesServer[2].planeType);
 				myPlanesCount += 1;
-				myPlaneThreeView = this.add.image(isBlue ? myPlaneThree.x + 933 : myPlaneThree.x + 417, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
-				this.resizePlaneView(myPlaneThreeView, 40);
+
 				if (planesServer[2].flying) {
+					
+					let recoverX = this.checkXPlaneRecover(myPlaneThree, false);
+					myPlaneThreeView = this.add.image(recoverX, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneThree);
 				}
+				else {
+					myPlaneThreeView = this.add.image(isBlue ? myPlaneThree.x + 933 : myPlaneThree.x + 417, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				}
+				this.resizePlaneView(myPlaneThreeView, 40);
 			}
 			if (planesServer[3].armor > 0) {
 				myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4, planesServer[3].planeType);
 				myPlanesCount += 1;
-				myPlaneFourView = this.add.image(isBlue ? myPlaneFour.x + 935 : myPlaneFour.x + 415, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
-				this.resizePlaneView(myPlaneFourView, 40);
 				if (planesServer[3].flying) {
+					
+					let recoverX = this.checkXPlaneRecover(myPlaneFour, false);
+					myPlaneFourView = this.add.image(recoverX, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneFour);
 				}
+				else {
+					myPlaneFourView = this.add.image(isBlue ? myPlaneFour.x + 935 : myPlaneFour.x + 415, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView').setScale(0.08);
+				}
+				this.resizePlaneView(myPlaneFourView, 40);
 			}
-
-			console.log(myPlaneOne);
-			console.log(myPlaneTwo);
-			console.log(myPlaneThree);
-			console.log(myPlaneFour);
-
 			this.physics.add.collider(myPlanes, borders, this.borderPlane);
 			this.physics.add.overlap(myPlanes, blacks, this.exploreBlackMap);
-			//this.physics.add.overlap(myPlanes, grays, this.exploreGrayMap);
 			this.physics.add.overlap(enemyBullets, myPlanes, this.damageMyPlane);
 		}
 	}
@@ -2278,8 +2314,10 @@ export class GameScene extends Phaser.Scene {
 		if (plane != null) {
 			let planeView = this.checkPlaneView(enemy, plane.planeIndex);
 			if (planeView != null && plane.x > 0) {
+				let speedK = plane.speed == 100 ? 3.5 : plane.speed < 100 ? 4.3 : 2.6;
+
 				if (isRight && planeView.x < 1305) {
-					planeView.x += (plane.speed * delta) / 3.50;
+					planeView.x += (plane.speed * delta) / speedK;
 					if (isBlue) {
 						planeView.setTexture("PlaneRightBlueView")
 					}
@@ -2288,7 +2326,7 @@ export class GameScene extends Phaser.Scene {
 					}
 				}
 				else if (!isRight && planeView.x > 1035) {
-					planeView.x -= (plane.speed * delta) / 3.50;
+					planeView.x -= (plane.speed * delta) / speedK;
 					if (isBlue) {
 						planeView.setTexture("PlaneLeftBlueView")
 					}
