@@ -767,11 +767,14 @@ export class GameScene extends Phaser.Scene {
 
 		}
 
+
 		myPlaneSelectedText = this.add.text(1010, 301, '', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
 		fuelText = this.add.text(1010, 316, '', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
 		bombText = this.add.text(1010, 331, '', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
 		highFlyPlaneText = this.add.text(1010, 346, '', { fontSize: '15px', color: '#000000', backgroundColor: '#F8FF00' });
-		infoGameText = this.add.text(1010, 361, 'Presione (1) (2) (3) (4) para seleccionar avión', { fontSize: '12px', color: '#fff', backgroundColor: '#F60303' });
+		infoGameText = this.add.text(1010, 361, myPlaneSelected == null ? 'Presione (1) (2) (3) (4) para seleccionar avión' : '', { fontSize: '12px', color: '#fff', backgroundColor: '#F60303' });
+
+
 
 		myBaseText = this.add.text(1010, 400, 'Base Aliada', { fontSize: '13px', color: '#FFFFFF', backgroundColor: '#108C05' });
 		artilleryText = this.add.text(1010, 415, '', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
@@ -785,6 +788,11 @@ export class GameScene extends Phaser.Scene {
 		hangarEnemyText = this.add.text(1190, 445, 'Hangar', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
 		fuelsEnemyText = this.add.text(1190, 460, 'Tanque', { fontSize: '15px', color: '#fff', backgroundColor: '#000000' });
 		this.resizeConsolePlanes();
+		if (myPlaneSelected != null) {
+			myPlaneSelectedText.setText('Avión #' + myPlaneSelected.planeIndex + " - " + myPlaneSelected.getType());
+			fuelText.setText('Combustible: ' + myPlaneSelected.fuel);
+			this.checkBomb();
+		}
 
 	}
 
@@ -1875,7 +1883,7 @@ export class GameScene extends Phaser.Scene {
 
 
 				if (planesServer[0].flying) {
-					
+
 					let recoverX = this.checkXPlaneRecover(myPlaneOne, false);
 					myPlaneOneView = this.add.image(recoverX, 280, isBlue ? myPlaneOne.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneOne.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneOne);
@@ -1890,7 +1898,7 @@ export class GameScene extends Phaser.Scene {
 				myPlanesCount += 1;
 
 				if (planesServer[1].flying) {
-					
+
 					let recoverX = this.checkXPlaneRecover(myPlaneTwo, false);
 					myPlaneTwoView = this.add.image(recoverX, 280, isBlue ? myPlaneTwo.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneTwo.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneTwo);
@@ -1905,7 +1913,7 @@ export class GameScene extends Phaser.Scene {
 				myPlanesCount += 1;
 
 				if (planesServer[2].flying) {
-					
+
 					let recoverX = this.checkXPlaneRecover(myPlaneThree, false);
 					myPlaneThreeView = this.add.image(recoverX, 280, isBlue ? myPlaneThree.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneThree.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneThree);
@@ -1919,7 +1927,7 @@ export class GameScene extends Phaser.Scene {
 				myPlaneFour = this.placeMyPlane(planesServer[3].positionY, planesServer[3].positionX, isBlue ? ANGLE_90 : ANGLE_270, planesServer[3].fuel, planesServer[3].armor, planesServer[3].speed, planesServer[3].hasBomb, planesServer[3].firePower, 4, planesServer[3].planeType);
 				myPlanesCount += 1;
 				if (planesServer[3].flying) {
-					
+
 					let recoverX = this.checkXPlaneRecover(myPlaneFour, false);
 					myPlaneFourView = this.add.image(recoverX, 280, isBlue ? myPlaneFour.angle > 180 ? 'PlaneLeftBlueView' : 'PlaneRightBlueView' : myPlaneFour.angle > 180 ? 'PlaneLeftRedView' : 'PlaneLeftRedView');
 					this.takeOffPlaneRecover(myPlaneFour);
@@ -2314,10 +2322,10 @@ export class GameScene extends Phaser.Scene {
 		if (plane != null) {
 			let planeView = this.checkPlaneView(enemy, plane.planeIndex);
 			if (planeView != null && plane.x > 0) {
-				let speedK = plane.speed == 100 ? 3.5 : plane.speed < 100 ? 4.3 : 2.6;
+				//let speedK = plane.speed == 100 ? 3.2 : plane.speed < 100 ? 4.3 : 2.6;
 
 				if (isRight && planeView.x < 1305) {
-					planeView.x += (plane.speed * delta) / speedK;
+					planeView.x += (plane.speed * delta) / 3;
 					if (isBlue) {
 						planeView.setTexture("PlaneRightBlueView")
 					}
@@ -2326,7 +2334,7 @@ export class GameScene extends Phaser.Scene {
 					}
 				}
 				else if (!isRight && planeView.x > 1035) {
-					planeView.x -= (plane.speed * delta) / speedK;
+					planeView.x -= (plane.speed * delta) / 3;
 					if (isBlue) {
 						planeView.setTexture("PlaneLeftBlueView")
 					}
