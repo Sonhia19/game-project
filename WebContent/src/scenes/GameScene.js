@@ -1444,21 +1444,21 @@ export class GameScene extends Phaser.Scene {
 	damageMyStructure(bomb, structure) {
 		if (structure.active === true && bomb.active === true) {
 			let message;
-			if (structure.frame.name == 'tower') {
+			if (structure.frame.texture.key.includes('tower')) {
 				ledGreenTower.setVisible(false);
 				ledRedTower.setVisible(true);
 				message = "Torre aliada destruida";
-				myTowerView.destroy();
-			} else if (structure.frame.texture.key == 'fuel') {
+				if (myTowerView != null) { myTowerView.destroy(); }
+			} else if (structure.frame.texture.key.includes('fuel')) {
 				ledGreenFuel.setVisible(false);
 				ledRedFuel.setVisible(true);
 				message = "Tanque aliado destruido";
-				myFuelView.destroy();
+				if (myFuelView != null) { myFuelView.destroy(); }
 			} else {
 				ledGreenHangar.setVisible(false);
 				ledRedHangar.setVisible(true);
 				message = "Hangar aliado destruido";
-				myHangarView.destroy();
+				if (myHangarView != null) { myHangarView.destroy(); }
 			}
 			myStructuresCount -= 1;
 			bomb.destroy();
@@ -1476,21 +1476,21 @@ export class GameScene extends Phaser.Scene {
 	damageEnemyStructure(bomb, structure) {
 		if (structure.active === true && bomb.active === true) {
 			let message;
-			if (structure.frame.name == 'tower') {
+			if (structure.frame.texture.key.includes('tower')) {
 				ledGreenTowerEnemy.setVisible(false);
 				ledRedTowerEnemy.setVisible(true);
 				message = "Torre enemiga destruida";
-				enemyTowerView.destroy();
-			} else if (structure.frame.texture.key == 'fuel') {
+				if (enemyTowerView != null) { enemyTowerView.destroy(); }
+			} else if (structure.frame.texture.key.includes('fuel')) {
 				ledGreenFuelEnemy.setVisible(false);
 				ledRedFuelEnemy.setVisible(true);
 				message = "Tanque enemigo destruido";
-				enemyFuelView.destroy();
+				if (enemyFuelView != null) { enemyFuelView.destroy(); }
 			} else {
 				ledGreenHangarEnemy.setVisible(false);
 				ledRedHangarEnemy.setVisible(true);
 				message = "Hangar enemigo destruido";
-				enemyHangarView.destroy();
+				if (enemyHangarView != null) { enemyHangarView.destroy(); }
 			}
 			bomb.destroy();
 			structure.destroy();
