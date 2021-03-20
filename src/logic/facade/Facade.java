@@ -301,7 +301,6 @@ public class Facade implements IFacade {
         response.setAction(null);
 
         if (gameId != -1) {
-			gamePlayersMap.remove(gameId);
         	response.generateResponse("gameStatus", String.valueOf(GameStatus.ENEMY_FINISHED), "String");
         	response.generateResponse("gameId", String.valueOf(gameId), "int");
         } else {

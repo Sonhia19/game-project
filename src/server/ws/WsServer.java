@@ -46,7 +46,9 @@ public class WsServer {
 			if(response.getValue(1) != null) {
 				int gameId = Integer.valueOf(response.getValue(1).toString());
 				WsSynchronization.syncWithEnemy(facade, gameId, response, "disconnectSession");
+				facade.finishGame(gameId);
 			}
+			
 		} catch (IOException ex) {
 			System.out.println("Ha ocurrido un error al cerrar la conexion");
 		}
